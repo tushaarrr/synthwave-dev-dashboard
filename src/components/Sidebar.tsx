@@ -1,11 +1,14 @@
 
 import { useState } from "react";
+import { useAuth } from "./auth/AuthProvider";
 import { 
   Zap, 
   FileText, 
   Code, 
   Settings as SettingsIcon, 
-  Download 
+  Download,
+  LogOut,
+  User
 } from "lucide-react";
 
 interface SidebarProps {
@@ -15,6 +18,7 @@ interface SidebarProps {
 
 const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
+  const { user, signOut } = useAuth();
 
   const modules = [
     { id: 'stackwizard', name: 'StackWizard+', icon: Zap, color: 'text-neon-blue' },
@@ -24,8 +28,16 @@ const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
     { id: 'testcasegen', name: 'TestCaseGen', icon: Download, color: 'text-neon-pink' },
   ];
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return (
-    <div className={`glass-dark rounded-2xl p-4 transition-all duration-500 ${isExpanded ? 'w-64' : 'w-20'} animate-slide-in`}>
+    <div className={`glass-dark rounded-2xl p-4 transition-all duration-500 ${isExpanded ? 'w-64' : 'w-20'} animate-slide-in flex flex-col h-full`}>
       <div className="flex items-center justify-between mb-8">
         <div className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>
           <h1 className="text-2xl font-bold font-sora bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
@@ -41,7 +53,7 @@ const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
         </button>
       </div>
 
-      <nav className="space-y-3">
+      <nav className="space-y-3 flex-1">
         {modules.map((module) => (
           <button
             key={module.id}
@@ -61,6 +73,30 @@ const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
           </button>
         ))}
       </nav>
+
+      {user && (
+        <div className="mt-auto pt-4 border-t border-white/10">
+          <div className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 mb-3`}>
+            <div className="flex items-center gap-3 p-2">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center">
+                <User className="w-4 h-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{user.email}</p>
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 hover:bg-red-500/10 text-red-400 hover:text-red-300"
+          >
+            <LogOut className="w-5 h-5" />
+            <span className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 font-medium`}>
+              Sign Out
+            </span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
