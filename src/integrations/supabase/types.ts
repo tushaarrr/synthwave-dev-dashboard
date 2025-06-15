@@ -48,6 +48,36 @@ export type Database = {
         }
         Relationships: []
       }
+      prompt_history: {
+        Row: {
+          created_at: string
+          id: string
+          original_prompt: string
+          refined_prompt: string
+          score: number
+          tags: string[]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          original_prompt: string
+          refined_prompt: string
+          score: number
+          tags?: string[]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          original_prompt?: string
+          refined_prompt?: string
+          score?: number
+          tags?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

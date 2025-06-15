@@ -10,7 +10,8 @@ import {
   Download,
   LogOut,
   User,
-  FolderOpen
+  FolderOpen,
+  History
 } from "lucide-react";
 
 interface SidebarProps {
@@ -44,7 +45,12 @@ const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
     navigate('/projects');
   };
 
+  const handlePromptHistoryClick = () => {
+    navigate('/prompt-history');
+  };
+
   const isProjectsActive = location.pathname === '/projects';
+  const isPromptHistoryActive = location.pathname === '/prompt-history';
 
   return (
     <div className={`glass-dark rounded-2xl p-4 transition-all duration-500 ${isExpanded ? 'w-64' : 'w-20'} animate-slide-in flex flex-col h-full`}>
@@ -78,6 +84,23 @@ const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
             isProjectsActive ? 'text-white' : 'text-muted-foreground'
           }`}>
             Saved Projects
+          </span>
+        </button>
+
+        {/* Prompt History */}
+        <button
+          onClick={handlePromptHistoryClick}
+          className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 hover:scale-105 ${
+            isPromptHistoryActive 
+              ? 'glass neon-glow transform scale-105' 
+              : 'hover:bg-white/5'
+          }`}
+        >
+          <History className={`w-6 h-6 ${isPromptHistoryActive ? 'text-neon-purple animate-glow' : 'text-muted-foreground'}`} />
+          <span className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 font-medium ${
+            isPromptHistoryActive ? 'text-white' : 'text-muted-foreground'
+          }`}>
+            Prompt History
           </span>
         </button>
 
