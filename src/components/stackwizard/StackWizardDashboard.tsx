@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Copy, Download, Save, ExternalLink } from 'lucide-react';
+import { Copy, Download, Save, ExternalLink, Info } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import TechStackModule from './modules/TechStackModule';
 import GanttTimelineModule from './modules/GanttTimelineModule';
@@ -8,6 +9,7 @@ import ProjectRoadmapModule from './modules/ProjectRoadmapModule';
 import ProTipsModule from './modules/ProTipsModule';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface StackWizardDashboardProps {
   projectName: string;
@@ -275,6 +277,19 @@ const StackWizardDashboard = ({
     }
   };
 
+  // Calculate data completeness for status display
+  const dataCompleteness = {
+    modules: modules?.length || 0,
+    timeline: timeline?.length || 0,
+    architecture: Object.keys(architecture).length || 0,
+    testing: Object.keys(testingStrategy).length || 0,
+    team: Object.keys(teamPlan).length || 0,
+    budget: Object.keys(budgetEstimate).length || 0
+  };
+
+  const totalSections = Object.keys(dataCompleteness).length;
+  const completedSections = Object.values(dataCompleteness).filter(count => count > 0).length;
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -310,33 +325,34 @@ const StackWizardDashboard = ({
             </button>
           </div>
         </div>
+        
+        {/* Data Completeness Status */}
+        <div className="mt-4">
+          <Card className="glass-dark border-0">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <Info className="w-5 h-5 text-blue-400" />
+                <div className="flex-1">
+                  <div className="text-sm font-medium text-white">
+                    Blueprint Completion: {completedSections}/{totalSections} sections
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {modules.length} modules • {timeline.length} timeline items • {Object.keys(architecture).length > 0 ? '✓' : '○'} architecture • {Object.keys(testingStrategy).length > 0 ? '✓' : '○'} testing strategy
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-green-400">
+                    {Math.round((completedSections / totalSections) * 100)}%
+                  </div>
+                  <div className="text-xs text-muted-foreground">Complete</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       <div id="stackwizard-dashboard" className="space-y-12">
-        {/* Debug Section - Now More Detailed */}
-        <div className="p-6 bg-gray-800 rounded-lg text-sm space-y-2">
-          <h4 className="font-bold mb-3 text-yellow-400">DETAILED DEBUG INFO:</h4>
-          <div className="grid grid-cols-1 gap-4">
-            <div>
-              <p className="text-green-400 mb-2">Data Counts:</p>
-              <p>• Modules: {modules?.length || 0} ({modules?.length > 0 ? '✅' : '❌'})</p>
-              <p>• Timeline: {timeline?.length || 0} ({timeline?.length > 0 ? '✅' : '❌'})</p>
-              <p>• Architecture keys: {Object.keys(architecture).length} ({Object.keys(architecture).length > 0 ? '✅' : '❌'})</p>
-              <p>• Testing Strategy keys: {Object.keys(testingStrategy).length} ({Object.keys(testingStrategy).length > 0 ? '✅' : '❌'})</p>
-              <p>• Team Plan keys: {Object.keys(teamPlan).length} ({Object.keys(teamPlan).length > 0 ? '✅' : '❌'})</p>
-              <p>• Budget keys: {Object.keys(budgetEstimate).length} ({Object.keys(budgetEstimate).length > 0 ? '✅' : '❌'})</p>
-            </div>
-            <div>
-              <p className="text-blue-400 mb-2">Sample Content:</p>
-              {modules?.length > 0 && <p>• Module: {modules[0]?.name}</p>}
-              {architecture?.pattern && <p>• Arch Pattern: {architecture.pattern}</p>}
-              {testingStrategy?.types && <p>• Testing Types: {JSON.stringify(testingStrategy.types)}</p>}
-              {teamPlan?.roles && <p>• Team Roles: {teamPlan.roles?.length} roles</p>}
-              {budgetEstimate?.development && <p>• Dev Budget: {budgetEstimate.development?.team_cost}</p>}
-            </div>
-          </div>
-        </div>
-
         {/* Tech Stack & Core Modules */}
         <TechStackModule 
           techStack={techStack} 

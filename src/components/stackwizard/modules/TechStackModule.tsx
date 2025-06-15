@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Code, Layers, Database, Cloud, Zap, Users, CheckCircle, Clock, DollarSign } from 'lucide-react';
+import { Code, Layers, Database, Cloud, Zap, Users, CheckCircle, Clock, DollarSign, Star, AlertCircle } from 'lucide-react';
 
 interface Module {
   name: string;
@@ -37,6 +37,9 @@ const TechStackModule = ({ techStack, modules, bonusModules }: TechStackModulePr
       case 'database': return <Database className="w-4 h-4" />;
       case 'hosting': return <Cloud className="w-4 h-4" />;
       case 'ai_services': return <Zap className="w-4 h-4" />;
+      case 'testing': return <CheckCircle className="w-4 h-4" />;
+      case 'monitoring': return <AlertCircle className="w-4 h-4" />;
+      case 'tools': return <Star className="w-4 h-4" />;
       default: return <Code className="w-4 h-4" />;
     }
   };
@@ -59,6 +62,14 @@ const TechStackModule = ({ techStack, modules, bonusModules }: TechStackModulePr
     }
   };
 
+  const calculateTotalHours = () => {
+    return modules.reduce((total, module) => total + (module.estimated_hours || 0), 0);
+  };
+
+  const calculateEstimatedCost = (hours: number) => {
+    return Math.round(hours * 25); // $25/hour estimate
+  };
+
   return (
     <Card className="glass-dark border-0 animate-fade-in">
       <CardHeader>
@@ -78,9 +89,9 @@ const TechStackModule = ({ techStack, modules, bonusModules }: TechStackModulePr
               <Layers className="w-5 h-5 text-neon-purple" />
               Technology Stack
             </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {Object.entries(techStack).map(([category, technologies]) => (
-                <div key={category} className="p-4 rounded-lg bg-white/5 border border-white/10">
+                <div key={category} className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/10 border border-white/20 hover:border-neon-blue/50 transition-all duration-300">
                   <div className="flex items-center gap-2 mb-3">
                     {getIconForCategory(category)}
                     <h5 className="font-semibold capitalize text-white">
@@ -89,17 +100,42 @@ const TechStackModule = ({ techStack, modules, bonusModules }: TechStackModulePr
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {Array.isArray(technologies) ? technologies.map((tech: string, index: number) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
+                      <Badge key={index} variant="secondary" className="text-xs bg-blue-500/20 text-blue-300 border-blue-500/30">
                         {tech}
                       </Badge>
                     )) : (
-                      <Badge variant="secondary" className="text-xs">
+                      <Badge variant="secondary" className="text-xs bg-blue-500/20 text-blue-300 border-blue-500/30">
                         {String(technologies)}
                       </Badge>
                     )}
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Project Summary */}
+        {modules && modules.length > 0 && (
+          <div className="p-4 rounded-lg bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20">
+            <h4 className="text-lg font-semibold text-purple-300 mb-3">📊 Development Summary</h4>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <div className="text-2xl font-bold text-white">{modules.length}</div>
+                <div className="text-xs text-muted-foreground">Core Modules</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">{calculateTotalHours()}h</div>
+                <div className="text-xs text-muted-foreground">Total Hours</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">${calculateEstimatedCost(calculateTotalHours())}</div>
+                <div className="text-xs text-muted-foreground">Est. Value</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">{Math.ceil(calculateTotalHours() / 40)}</div>
+                <div className="text-xs text-muted-foreground">Weeks (2-person)</div>
+              </div>
             </div>
           </div>
         )}
@@ -111,7 +147,7 @@ const TechStackModule = ({ techStack, modules, bonusModules }: TechStackModulePr
               <CheckCircle className="w-5 h-5 text-neon-green" />
               Core Development Modules
             </h4>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6">
               {modules.map((module, index) => (
                 <div key={index} className="p-6 rounded-lg bg-gradient-to-br from-white/5 to-white/10 border border-white/20 hover:border-neon-blue/50 transition-all duration-300">
                   <div className="flex items-start justify-between mb-4">
@@ -134,7 +170,7 @@ const TechStackModule = ({ techStack, modules, bonusModules }: TechStackModulePr
                         )}
                         {module.complexity && (
                           <Badge className={`text-xs ${getComplexityColor(module.complexity)}`}>
-                            {module.complexity}
+                            {module.complexity} Complexity
                           </Badge>
                         )}
                       </div>
@@ -148,7 +184,7 @@ const TechStackModule = ({ techStack, modules, bonusModules }: TechStackModulePr
                           {module.estimated_hours}h
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          Est. ${Math.round(module.estimated_hours * 25)}
+                          ~${calculateEstimatedCost(module.estimated_hours)} value
                         </div>
                       </div>
                     )}
@@ -189,7 +225,7 @@ const TechStackModule = ({ techStack, modules, bonusModules }: TechStackModulePr
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {bonusModules.map((bonus, index) => (
-                <div key={index} className="p-4 rounded-lg bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20">
+                <div key={index} className="p-4 rounded-lg bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300">
                   <div className="flex items-start justify-between mb-2">
                     <h5 className="font-semibold text-white">{bonus.name}</h5>
                     {bonus.cost_estimate && (
@@ -216,27 +252,27 @@ const TechStackModule = ({ techStack, modules, bonusModules }: TechStackModulePr
 
         {/* Development Phases */}
         <div className="p-6 rounded-lg bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20">
-          <h4 className="text-lg font-semibold text-green-300 mb-3">💡 Bootstrap Strategy</h4>
+          <h4 className="text-lg font-semibold text-green-300 mb-3">🚀 Bootstrap Strategy</h4>
           <div className="space-y-3 text-sm">
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-xs font-bold text-green-300">1</div>
               <div>
-                <div className="font-medium text-white">MVP Phase ($300-500)</div>
-                <div className="text-muted-foreground">Focus on core modules only. Use free tiers for hosting and tools.</div>
+                <div className="font-medium text-white">MVP Phase ($500-800)</div>
+                <div className="text-muted-foreground">Core features only. Use free tiers, 2-person team, 12-week timeline.</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-xs font-bold text-blue-300">2</div>
               <div>
-                <div className="font-medium text-white">Growth Phase ($1K-3K)</div>
-                <div className="text-muted-foreground">Add bonus modules, improve UI/UX, scale infrastructure.</div>
+                <div className="font-medium text-white">Growth Phase ($2K-5K)</div>
+                <div className="text-muted-foreground">Add bonus modules, improve UX, scale infrastructure, hire specialists.</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-xs font-bold text-purple-300">3</div>
               <div>
-                <div className="font-medium text-white">Scale Phase ($5K+)</div>
-                <div className="text-muted-foreground">Advanced features, team expansion, enterprise readiness.</div>
+                <div className="font-medium text-white">Scale Phase ($10K+)</div>
+                <div className="text-muted-foreground">Advanced features, team expansion, enterprise readiness, mobile apps.</div>
               </div>
             </div>
           </div>
