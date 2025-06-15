@@ -43,15 +43,15 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
         <div className="relative">
           <motion.div 
-            className="w-20 h-20 border-4 border-neon-coral/30 border-t-neon-coral rounded-full"
+            className="w-20 h-20 border-4 border-orange-300/30 border-t-orange-400 rounded-full"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-neon-aqua rounded-full"
+            className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-orange-300 rounded-full"
             animate={{ rotate: -360 }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
           />
@@ -79,22 +79,22 @@ const Dashboard = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen bg-zinc-900 text-orange-200">
         {/* 3D Background */}
         <FloatingGeometry />
         
         {/* Floating Orb */}
         <FloatingOrb />
 
-        {/* Animated Background */}
+        {/* Animated Background - matching landing page */}
         <div className="fixed inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-neon-coral/10 via-black to-neon-aqua/10"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-200/10 via-zinc-900 to-orange-200/10"></div>
           <motion.div 
             className="absolute inset-0 opacity-[0.02]"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(56, 249, 215, 0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(56, 249, 215, 0.3) 1px, transparent 1px)
+                linear-gradient(rgba(253, 186, 116, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(253, 186, 116, 0.3) 1px, transparent 1px)
               `,
               backgroundSize: '50px 50px'
             }}
@@ -145,12 +145,12 @@ const Dashboard = () => {
                     >
                       <div className="relative">
                         <motion.div 
-                          className="w-16 h-16 border-4 border-neon-coral/30 border-t-neon-coral rounded-full"
+                          className="w-16 h-16 border-4 border-orange-300/30 border-t-orange-400 rounded-full"
                           animate={{ rotate: 360 }}
                           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                         />
                         <motion.div 
-                          className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-neon-aqua rounded-full"
+                          className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-orange-300 rounded-full"
                           animate={{ rotate: -360 }}
                           transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
                         />
@@ -166,17 +166,17 @@ const Dashboard = () => {
                       >
                         {/* Module Container with Glass Effect */}
                         <motion.div
-                          className="relative p-8 rounded-3xl bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10"
+                          className="relative p-8 rounded-3xl glass-dark border border-orange-200/10"
                           initial={{ scale: 0.95, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ duration: 0.5, delay: 0.2 }}
                           whileHover={{
-                            boxShadow: "0 25px 50px rgba(56, 249, 215, 0.1)"
+                            boxShadow: "0 25px 50px rgba(253, 186, 116, 0.1)"
                           }}
                         >
                           {/* Glow Effect */}
                           <motion.div
-                            className="absolute inset-0 bg-gradient-to-br from-neon-coral/5 via-transparent to-neon-aqua/5 rounded-3xl"
+                            className="absolute inset-0 bg-gradient-to-br from-orange-400/5 via-transparent to-orange-300/5 rounded-3xl"
                             animate={{
                               opacity: [0.5, 0.8, 0.5],
                             }}

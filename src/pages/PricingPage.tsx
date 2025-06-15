@@ -21,7 +21,7 @@ const PricingPage = () => {
         "Community access",
         "Basic templates"
       ],
-      gradient: "from-gray-500 to-gray-600",
+      gradient: "from-zinc-500 to-zinc-600",
       buttonText: "Get Started",
       popular: false,
       icon: Zap
@@ -40,7 +40,7 @@ const PricingPage = () => {
         "Export capabilities",
         "Custom integrations"
       ],
-      gradient: "from-neon-coral to-neon-orange",
+      gradient: "from-orange-500 to-orange-600",
       buttonText: "Start Pro Trial",
       popular: true,
       icon: Star
@@ -60,7 +60,7 @@ const PricingPage = () => {
         "24/7 phone support",
         "Custom training"
       ],
-      gradient: "from-neon-purple to-indigo-600",
+      gradient: "from-orange-600 to-amber-600",
       buttonText: "Contact Sales",
       popular: false,
       icon: Crown
@@ -88,33 +88,47 @@ const PricingPage = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen relative overflow-hidden">
-        {/* Animated Background - matching landing page */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-          <div className="absolute top-0 left-0 w-full h-full bg-mesh opacity-30"></div>
-          <div className="absolute top-20 left-10 w-96 h-96 bg-neon-aqua/20 rounded-full blur-3xl animate-float"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-neon-coral/20 rounded-full blur-3xl animate-float-delayed"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-neon-purple/10 rounded-full blur-3xl animate-pulse-glow"></div>
+      <div className="min-h-screen bg-zinc-900 text-orange-200 relative overflow-hidden">
+        {/* Exact same background as landing page */}
+        <div className="fixed inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-200/10 via-zinc-900 to-orange-200/10"></div>
+          <motion.div 
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(253, 186, 116, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(253, 186, 116, 0.3) 1px, transparent 1px)
+              `,
+              backgroundSize: '50px 50px'
+            }}
+            animate={{
+              backgroundPosition: ['0px 0px', '50px 50px'],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
         </div>
 
         {/* Navigation */}
-        <nav className="relative z-10 p-6 backdrop-blur-xl bg-black/20 border-b border-white/10">
+        <nav className="relative z-10 p-6 glass-dark border-b border-orange-200/10">
           <div className="container mx-auto flex items-center justify-between">
             <button
               onClick={() => navigate('/')}
-              className="flex items-center gap-2 text-gray-400 hover:text-neon-aqua transition-all duration-300 group"
+              className="flex items-center gap-2 text-orange-300 hover:text-orange-200 transition-all duration-300 group"
             >
               <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
               Back to Home
             </button>
             <div className="flex items-center gap-4">
-              <span className="text-2xl font-bold font-sora bg-gradient-to-r from-neon-coral to-neon-aqua bg-clip-text text-transparent">
+              <span className="text-2xl font-bold font-sora gradient-text">
                 DevSynth
               </span>
               <button
                 onClick={() => navigate('/login')}
-                className="px-6 py-2 bg-gradient-to-r from-neon-coral to-neon-aqua rounded-xl font-semibold hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-neon-coral/25"
+                className="px-6 py-2 bg-gradient-to-r from-orange-400 to-orange-500 rounded-xl font-semibold text-zinc-900 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-orange-400/25"
               >
                 Try Now
               </button>
@@ -127,16 +141,16 @@ const PricingPage = () => {
           <FadeInUp>
             <div className="text-center mb-20">
               <div className="flex items-center justify-center gap-3 mb-6">
-                <Sparkles className="w-8 h-8 text-neon-coral animate-pulse" />
-                <h1 className="text-6xl font-bold font-sora bg-gradient-to-r from-neon-coral via-neon-aqua to-neon-purple bg-clip-text text-transparent">
+                <Sparkles className="w-8 h-8 text-orange-400 animate-pulse" />
+                <h1 className="text-6xl font-bold font-sora gradient-text">
                   Simple, Transparent Pricing
                 </h1>
-                <Sparkles className="w-8 h-8 text-neon-aqua animate-pulse" />
+                <Sparkles className="w-8 h-8 text-orange-300 animate-pulse" />
               </div>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-orange-200/80 max-w-3xl mx-auto leading-relaxed">
                 Choose the perfect plan for your development needs. 
-                <span className="text-neon-aqua font-semibold"> Start free</span> and 
-                <span className="text-neon-coral font-semibold"> scale as you grow</span>
+                <span className="text-orange-300 font-semibold"> Start free</span> and 
+                <span className="text-orange-400 font-semibold"> scale as you grow</span>
               </p>
             </div>
           </FadeInUp>
@@ -146,17 +160,17 @@ const PricingPage = () => {
             {plans.map((plan, index) => (
               <SlideIn key={plan.name} delay={index * 0.2} direction="up">
                 <motion.div
-                  className={`relative backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/2 rounded-3xl p-8 border transition-all duration-500 ${
+                  className={`relative glass-dark rounded-3xl p-8 border transition-all duration-500 ${
                     plan.popular 
-                      ? 'border-neon-coral/50 shadow-2xl shadow-neon-coral/20 scale-105' 
-                      : 'border-white/10 hover:border-neon-aqua/30'
+                      ? 'border-orange-400/50 shadow-2xl shadow-orange-400/20 scale-105' 
+                      : 'border-orange-200/10 hover:border-orange-300/30'
                   }`}
                   whileHover={{ scale: plan.popular ? 1.05 : 1.02, y: -5 }}
                   transition={{ duration: 0.3 }}
                 >
                   {plan.popular && (
                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                      <div className="bg-gradient-to-r from-neon-coral to-neon-orange px-6 py-2 rounded-full text-sm font-semibold text-white">
+                      <div className="bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-2 rounded-full text-sm font-semibold text-zinc-900">
                         Most Popular
                       </div>
                     </div>
@@ -164,18 +178,18 @@ const PricingPage = () => {
                   
                   <div className="flex items-center gap-4 mb-6">
                     <div className={`w-16 h-16 bg-gradient-to-br ${plan.gradient}/20 rounded-2xl flex items-center justify-center`}>
-                      <plan.icon className="w-8 h-8 text-neon-coral" />
+                      <plan.icon className="w-8 h-8 text-orange-400" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-white font-sora">{plan.name}</h3>
-                      <p className="text-gray-400">{plan.description}</p>
+                      <h3 className="text-2xl font-bold text-orange-200 font-sora">{plan.name}</h3>
+                      <p className="text-orange-200/60">{plan.description}</p>
                     </div>
                   </div>
 
                   <div className="mb-8">
                     <div className="flex items-baseline gap-2 mb-2">
-                      <span className="text-4xl font-bold text-white font-sora">{plan.price}</span>
-                      <span className="text-gray-400">/{plan.period}</span>
+                      <span className="text-4xl font-bold text-orange-200 font-sora">{plan.price}</span>
+                      <span className="text-orange-200/60">/{plan.period}</span>
                     </div>
                   </div>
 
@@ -188,10 +202,10 @@ const PricingPage = () => {
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.1 }}
                       >
-                        <div className="w-5 h-5 bg-gradient-to-r from-emerald-400 to-neon-aqua rounded-full flex items-center justify-center">
-                          <Check className="w-3 h-3 text-white" />
+                        <div className="w-5 h-5 bg-gradient-to-r from-orange-400 to-orange-500 rounded-full flex items-center justify-center">
+                          <Check className="w-3 h-3 text-zinc-900" />
                         </div>
-                        <span className="text-gray-300">{feature}</span>
+                        <span className="text-orange-200/80">{feature}</span>
                       </motion.div>
                     ))}
                   </div>
@@ -199,10 +213,10 @@ const PricingPage = () => {
                   <HoverGlow>
                     <button
                       onClick={() => navigate('/login')}
-                      className={`w-full py-4 rounded-2xl font-semibold text-white transition-all duration-300 ${
+                      className={`w-full py-4 rounded-2xl font-semibold transition-all duration-300 ${
                         plan.popular
-                          ? `bg-gradient-to-r ${plan.gradient} hover:scale-105 shadow-lg shadow-neon-coral/25`
-                          : 'bg-gradient-to-r from-white/10 to-white/5 border border-white/20 hover:border-neon-aqua/30 hover:scale-105'
+                          ? `bg-gradient-to-r ${plan.gradient} hover:scale-105 shadow-lg shadow-orange-400/25 text-zinc-900`
+                          : 'glass-dark border border-orange-200/20 hover:border-orange-300/30 hover:scale-105 text-orange-200'
                       }`}
                     >
                       {plan.buttonText}
@@ -216,10 +230,10 @@ const PricingPage = () => {
           {/* FAQ Section */}
           <FadeInUp delay={0.6}>
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold font-sora bg-gradient-to-r from-neon-coral to-neon-aqua bg-clip-text text-transparent mb-4">
+              <h2 className="text-4xl font-bold font-sora gradient-text mb-4">
                 Frequently Asked Questions
               </h2>
-              <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              <p className="text-xl text-orange-200/80 max-w-2xl mx-auto">
                 Everything you need to know about our pricing and plans
               </p>
             </div>
@@ -229,11 +243,11 @@ const PricingPage = () => {
             {faqs.map((faq, index) => (
               <SlideIn key={index} delay={index * 0.1} direction="up">
                 <motion.div
-                  className="backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/2 rounded-2xl p-6 border border-white/10 hover:border-neon-aqua/30 transition-all duration-300"
+                  className="glass-dark rounded-2xl p-6 border border-orange-200/10 hover:border-orange-300/30 transition-all duration-300"
                   whileHover={{ scale: 1.02 }}
                 >
-                  <h3 className="text-xl font-semibold text-white mb-3 font-sora">{faq.question}</h3>
-                  <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
+                  <h3 className="text-xl font-semibold text-orange-200 mb-3 font-sora">{faq.question}</h3>
+                  <p className="text-orange-200/70 leading-relaxed">{faq.answer}</p>
                 </motion.div>
               </SlideIn>
             ))}
@@ -242,25 +256,25 @@ const PricingPage = () => {
           {/* CTA Section */}
           <FadeInUp delay={1.0}>
             <div className="text-center">
-              <div className="backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/2 rounded-3xl p-16 border border-white/10 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-neon-coral/5 via-neon-aqua/5 to-neon-purple/5"></div>
+              <div className="glass-dark rounded-3xl p-16 border border-orange-200/10 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-400/5 via-orange-300/5 to-orange-500/5"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-center gap-4 mb-8">
-                    <Sparkles className="w-10 h-10 text-neon-coral animate-pulse" />
-                    <h2 className="text-5xl font-bold font-sora bg-gradient-to-r from-neon-coral via-neon-aqua to-neon-purple bg-clip-text text-transparent">
+                    <Sparkles className="w-10 h-10 text-orange-400 animate-pulse" />
+                    <h2 className="text-5xl font-bold font-sora gradient-text">
                       Ready to Get Started?
                     </h2>
-                    <Sparkles className="w-10 h-10 text-neon-aqua animate-pulse" />
+                    <Sparkles className="w-10 h-10 text-orange-300 animate-pulse" />
                   </div>
-                  <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-                    Join <span className="text-neon-coral font-bold">thousands of developers</span> who trust DevSynth AI to 
-                    <span className="text-neon-aqua font-bold"> accelerate their development process</span>
+                  <p className="text-xl text-orange-200/80 mb-12 max-w-3xl mx-auto leading-relaxed">
+                    Join <span className="text-orange-400 font-bold">thousands of developers</span> who trust DevSynth AI to 
+                    <span className="text-orange-300 font-bold"> accelerate their development process</span>
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <HoverGlow>
                       <button
                         onClick={() => navigate('/login')}
-                        className="px-12 py-4 bg-gradient-to-r from-neon-coral to-neon-aqua rounded-2xl text-lg font-bold hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-neon-coral/25 group"
+                        className="px-12 py-4 bg-gradient-to-r from-orange-400 to-orange-500 rounded-2xl text-lg font-bold text-zinc-900 hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-orange-400/25 group"
                       >
                         <span className="flex items-center gap-3">
                           Start Free Trial
@@ -270,7 +284,7 @@ const PricingPage = () => {
                     </HoverGlow>
                     <button
                       onClick={() => navigate('/contact')}
-                      className="px-12 py-4 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-2xl text-lg font-semibold text-white hover:border-neon-aqua/30 hover:scale-105 transition-all duration-300"
+                      className="px-12 py-4 glass-dark border border-orange-200/20 rounded-2xl text-lg font-semibold text-orange-200 hover:border-orange-300/30 hover:scale-105 transition-all duration-300"
                     >
                       Contact Sales
                     </button>

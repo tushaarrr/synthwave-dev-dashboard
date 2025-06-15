@@ -63,10 +63,10 @@ const SQLHistoryPage = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-900 text-orange-200 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Authentication Required</h1>
-          <p className="text-muted-foreground mb-6">Please log in to view your SQL history</p>
+          <p className="text-orange-200/70 mb-6">Please log in to view your SQL history</p>
           <Button onClick={() => navigate('/login')}>Go to Login</Button>
         </div>
       </div>
@@ -74,47 +74,47 @@ const SQLHistoryPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-zinc-900 text-orange-200">
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center gap-4 mb-8">
           <Button
             variant="outline"
             onClick={() => navigate('/')}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 border-orange-200/20 text-orange-200 hover:bg-orange-500/10"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to DevSynth
           </Button>
           <div>
-            <h1 className="text-3xl font-bold font-sora bg-gradient-to-r from-neon-orange to-neon-pink bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold font-sora gradient-text">
               SQL Analysis History
             </h1>
-            <p className="text-muted-foreground">Review your past SQL optimizations and insights</p>
+            <p className="text-orange-200/70">Review your past SQL optimizations and insights</p>
           </div>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <RefreshCw className="w-8 h-8 animate-spin text-neon-orange" />
+            <RefreshCw className="w-8 h-8 animate-spin text-orange-400" />
           </div>
         ) : history.length === 0 ? (
           <div className="text-center py-12">
-            <Database className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+            <Database className="w-16 h-16 text-orange-200/40 mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">No SQL Analysis History</h2>
-            <p className="text-muted-foreground mb-6">Start analyzing SQL queries to see them here</p>
+            <p className="text-orange-200/70 mb-6">Start analyzing SQL queries to see them here</p>
             <Button onClick={() => navigate('/')}>Analyze SQL Queries</Button>
           </div>
         ) : (
           <div className="grid gap-6">
             {history.map((entry) => (
-              <Card key={entry.id} className="glass-dark border-white/10">
+              <Card key={entry.id} className="glass-dark border-orange-200/10 bg-zinc-800/50">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <CardTitle className="text-lg font-sora text-white mb-2">
+                      <CardTitle className="text-lg font-sora text-orange-200 mb-2">
                         SQL Query Analysis
                       </CardTitle>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-4 text-sm text-orange-200/60">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
                           {format(new Date(entry.created_at), 'MMM dd, yyyy • hh:mm a')}
@@ -126,7 +126,7 @@ const SQLHistoryPage = () => {
                         size="sm"
                         variant="outline"
                         onClick={() => reAnalyze(entry.original_query)}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 border-orange-200/20 text-orange-200 hover:bg-orange-500/10"
                       >
                         <RefreshCw className="w-4 h-4" />
                         Re-analyze
@@ -135,7 +135,7 @@ const SQLHistoryPage = () => {
                         size="sm"
                         variant="outline"
                         onClick={() => copyToClipboard(entry.original_query)}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 border-orange-200/20 text-orange-200 hover:bg-orange-500/10"
                       >
                         <Copy className="w-4 h-4" />
                         Copy
@@ -147,8 +147,8 @@ const SQLHistoryPage = () => {
                 <CardContent className="space-y-4">
                   {/* Query Preview */}
                   <div>
-                    <h4 className="text-sm font-medium mb-2 text-neon-orange">Original Query</h4>
-                    <div className="bg-black/30 rounded-lg p-3 font-mono text-sm">
+                    <h4 className="text-sm font-medium mb-2 text-orange-300">Original Query</h4>
+                    <div className="bg-zinc-900/50 rounded-lg p-3 font-mono text-sm">
                       {truncateQuery(entry.original_query)}
                     </div>
                   </div>
@@ -156,7 +156,7 @@ const SQLHistoryPage = () => {
                   {/* Tags */}
                   {entry.tags && entry.tags.length > 0 && (
                     <div>
-                      <h4 className="text-sm font-medium mb-2 text-neon-purple flex items-center gap-2">
+                      <h4 className="text-sm font-medium mb-2 text-orange-400 flex items-center gap-2">
                         <Tag className="w-4 h-4" />
                         Performance Tags
                       </h4>
@@ -176,8 +176,8 @@ const SQLHistoryPage = () => {
                   {/* Explanation */}
                   {entry.explanation && (
                     <div>
-                      <h4 className="text-sm font-medium mb-2 text-neon-blue">Explanation</h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
+                      <h4 className="text-sm font-medium mb-2 text-orange-300">Explanation</h4>
+                      <p className="text-sm text-orange-200/70 leading-relaxed">
                         {entry.explanation}
                       </p>
                     </div>
@@ -186,16 +186,16 @@ const SQLHistoryPage = () => {
                   {/* Suggestions Preview */}
                   {entry.suggestions && entry.suggestions.length > 0 && (
                     <div>
-                      <h4 className="text-sm font-medium mb-2 text-neon-green">Key Suggestions</h4>
+                      <h4 className="text-sm font-medium mb-2 text-orange-400">Key Suggestions</h4>
                       <div className="space-y-1">
                         {entry.suggestions.slice(0, 2).map((suggestion, index) => (
-                          <div key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <div className="w-1.5 h-1.5 bg-neon-green rounded-full mt-2 flex-shrink-0"></div>
+                          <div key={index} className="flex items-start gap-2 text-sm text-orange-200/70">
+                            <div className="w-1.5 h-1.5 bg-orange-400 rounded-full mt-2 flex-shrink-0"></div>
                             {suggestion}
                           </div>
                         ))}
                         {entry.suggestions.length > 2 && (
-                          <p className="text-xs text-muted-foreground/70 italic">
+                          <p className="text-xs text-orange-200/50 italic">
                             +{entry.suggestions.length - 2} more suggestions
                           </p>
                         )}
