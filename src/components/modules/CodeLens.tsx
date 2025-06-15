@@ -13,7 +13,7 @@ const CodeLens = () => {
   const { user } = useAuth();
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("python");
-  const { analyzeCode, isLoading, analysisResult } = useCodeLens();
+  const { analyzeCode, isAnalyzing, analysis } = useCodeLens();
 
   const languages = [
     { value: "python", label: "Python" },
@@ -45,7 +45,7 @@ const CodeLens = () => {
     toast.success("Copied to clipboard!");
   };
 
-  if (isLoading) return <LoadingState module="codelens" />;
+  if (isAnalyzing) return <LoadingState module="codelens" />;
 
   return (
     <div className="space-y-6">
@@ -98,9 +98,9 @@ const CodeLens = () => {
           <Button
             onClick={handleAnalyze}
             className="w-full bg-gradient-to-r from-neon-green to-neon-blue rounded-xl py-3 font-semibold hover:scale-105 transition-all duration-300"
-            disabled={isLoading}
+            disabled={isAnalyzing}
           >
-            {isLoading ? (
+            {isAnalyzing ? (
               <>
                 <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
                 Analyzing Code...
@@ -112,7 +112,7 @@ const CodeLens = () => {
         </div>
       </div>
 
-      {analysisResult && (
+      {analysis && (
         <div className="grid gap-4">
           <OutputCard
             title="Complexity Analysis"
@@ -121,21 +121,21 @@ const CodeLens = () => {
             content={
               <div className="space-y-3">
                 <div className="font-mono text-sm bg-black/30 p-3 rounded-lg">
-                  {analysisResult.complexity || "Analysis not available"}
+                  {analysis.complexity || "Analysis not available"}
                 </div>
               </div>
             }
             delay={100}
           />
 
-          {analysisResult.bottlenecks && analysisResult.bottlenecks.length > 0 && (
+          {analysis.bottlenecks && analysis.bottlenecks.length > 0 && (
             <OutputCard
               title="Performance Bottlenecks"
               tag="Issues Found"
               tagColor="bg-yellow-500"
               content={
                 <div className="space-y-2">
-                  {analysisResult.bottlenecks.map((bottleneck, index) => (
+                  {analysis.bottlenecks.map((bottleneck, index) => (
                     <div key={index} className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                       <span className="text-sm">{bottleneck}</span>
@@ -147,21 +147,21 @@ const CodeLens = () => {
             />
           )}
 
-          {analysisResult.suggestions && (
+          {analysis.suggestions && (
             <OutputCard
               title="Optimization Suggestions"
               tag="Improvements"
               tagColor="bg-neon-purple"
               content={
                 <div className="space-y-3">
-                  <p className="text-sm leading-relaxed">{analysisResult.suggestions}</p>
+                  <p className="text-sm leading-relaxed">{analysis.suggestions}</p>
                 </div>
               }
               delay={300}
             />
           )}
 
-          {analysisResult.optimized_code && (
+          {analysis.optimizedCode && (
             <OutputCard
               title="Optimized Code"
               tag="Enhanced"
@@ -172,7 +172,7 @@ const CodeLens = () => {
                     <Editor
                       height="250px"
                       language={language}
-                      value={analysisResult.optimized_code}
+                      value={analysis.optimizedCode}
                       theme="vs-dark"
                       options={{
                         readOnly: true,
@@ -188,7 +188,7 @@ const CodeLens = () => {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => copyToClipboard(analysisResult.optimized_code || "")}
+                      onClick={() => copyToClipboard(analysis.optimizedCode || "")}
                       className="flex items-center gap-2"
                     >
                       <Copy className="w-4 h-4" />
@@ -201,14 +201,14 @@ const CodeLens = () => {
             />
           )}
 
-          {analysisResult.explanation && (
+          {analysis.explanation && (
             <OutputCard
               title="AI Explanation"
               tag="How it Works"
               tagColor="bg-neon-orange"
               content={
                 <div className="space-y-3">
-                  <p className="text-sm leading-relaxed">{analysisResult.explanation}</p>
+                  <p className="text-sm leading-relaxed">{analysis.explanation}</p>
                 </div>
               }
               delay={500}
