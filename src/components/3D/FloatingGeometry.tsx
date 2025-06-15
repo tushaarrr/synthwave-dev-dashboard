@@ -7,13 +7,13 @@ function FloatingMesh({ mouse, scrollY }: { mouse: { x: number; y: number }, scr
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
 
-  // Enhanced shader material for maximum visibility in hero section
+  // Maximum visibility shader material for hero section
   const gradientMaterial = useMemo(() => {
     return new THREE.ShaderMaterial({
       uniforms: {
         time: { value: 0 },
-        opacity: { value: 1.0 }, // Full opacity for hero visibility
-        glowIntensity: { value: 2.2 }, // Enhanced glow for prominence
+        opacity: { value: 1.0 }, // Full opacity
+        glowIntensity: { value: 3.0 }, // Maximum glow for visibility
         scrollOffset: { value: 0 }
       },
       vertexShader: `
@@ -25,10 +25,10 @@ function FloatingMesh({ mouse, scrollY }: { mouse: { x: number; y: number }, scr
           vPosition = position;
           vNormal = normal;
           
-          // Gentle parallax movement based on scroll
+          // Gentle parallax movement
           vec3 newPosition = position;
-          newPosition.y += scrollOffset * 0.0005;
-          newPosition.x += scrollOffset * 0.0002;
+          newPosition.y += scrollOffset * 0.0003;
+          newPosition.x += scrollOffset * 0.0001;
           
           gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
         }
@@ -41,19 +41,19 @@ function FloatingMesh({ mouse, scrollY }: { mouse: { x: number; y: number }, scr
         varying vec3 vNormal;
         
         void main() {
-          // Bright, highly visible orange colors for hero section
-          vec3 primaryColor = vec3(1.0, 0.75, 0.4);   // Bright orange
-          vec3 accentColor = vec3(1.0, 0.9, 0.6);     // Light orange accent
+          // Maximum brightness orange colors
+          vec3 primaryColor = vec3(1.0, 0.6, 0.2);   // Vibrant orange
+          vec3 accentColor = vec3(1.0, 0.8, 0.4);    // Bright orange accent
           
-          // Enhanced gradient for better visibility
-          float gradient = (vPosition.y + 3.0) / 6.0;
+          // High contrast gradient
+          float gradient = (vPosition.y + 2.0) / 4.0;
           vec3 finalColor = mix(primaryColor, accentColor, gradient);
           
-          // Strong glow effect for hero section prominence
-          float fresnel = pow(1.0 - dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)), 1.8);
-          vec3 glowEffect = finalColor * fresnel * glowIntensity * 0.8;
+          // Maximum glow effect for visibility
+          float fresnel = pow(1.0 - dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)), 2.0);
+          vec3 glowEffect = finalColor * fresnel * glowIntensity;
           
-          // Maximum brightness and contrast for hero visibility
+          // Ultra-bright output for maximum visibility
           gl_FragColor = vec4(finalColor + glowEffect, opacity);
         }
       `,
@@ -65,16 +65,16 @@ function FloatingMesh({ mouse, scrollY }: { mouse: { x: number; y: number }, scr
 
   useFrame((state) => {
     if (meshRef.current) {
-      // Slow, elegant rotation for hero section
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.06;
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.04;
+      // Slow rotation for elegance
+      meshRef.current.rotation.x = state.clock.elapsedTime * 0.1;
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.08;
       
-      // Minimal mouse interaction for subtle elegance
-      meshRef.current.rotation.x += mouse.y * 0.00008;
-      meshRef.current.rotation.y += mouse.x * 0.00008;
+      // Subtle mouse interaction
+      meshRef.current.rotation.x += mouse.y * 0.0001;
+      meshRef.current.rotation.y += mouse.x * 0.0001;
       
-      // Gentle parallax tilt based on scroll
-      const scrollTilt = scrollY * 0.0001;
+      // Gentle scroll parallax
+      const scrollTilt = scrollY * 0.00005;
       meshRef.current.rotation.z = scrollTilt;
     }
     
@@ -87,7 +87,7 @@ function FloatingMesh({ mouse, scrollY }: { mouse: { x: number; y: number }, scr
 
   return (
     <mesh ref={meshRef} position={[0, 0, 0]}>
-      <torusGeometry args={[3.5, 0.15, 24, 120]} />
+      <torusGeometry args={[4.0, 0.2, 32, 128]} />
       <primitive object={gradientMaterial} ref={materialRef} />
     </mesh>
   );
@@ -110,8 +110,8 @@ export default function FloatingGeometry({ scrollY = 0 }: { scrollY?: number }) 
     <div className="fixed inset-0 z-0 pointer-events-none">
       <Canvas 
         camera={{ 
-          position: [0, 0, 6], 
-          fov: 50 
+          position: [0, 0, 8], 
+          fov: 60 
         }}
         style={{ 
           position: 'absolute',
@@ -121,6 +121,8 @@ export default function FloatingGeometry({ scrollY = 0 }: { scrollY?: number }) 
           height: '100%'
         }}
       >
+        <ambientLight intensity={0.3} />
+        <pointLight position={[10, 10, 10]} intensity={0.5} />
         <FloatingMesh mouse={mouseRef.current} scrollY={scrollY} />
       </Canvas>
     </div>
