@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Copy, Download, Save, ExternalLink } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
@@ -14,7 +13,7 @@ interface StackWizardDashboardProps {
   projectName: string;
   projectDescription: string;
   requirements: string;
-  planData: any; // Using any for now to handle both legacy and new formats
+  planData: any;
 }
 
 const StackWizardDashboard = ({ 
@@ -46,7 +45,11 @@ const StackWizardDashboard = ({
     timeline: typeof timeline,
     suggestions: typeof suggestions,
     modules: Array.isArray(modules),
-    bonusModules: Array.isArray(bonusModules)
+    bonusModules: Array.isArray(bonusModules),
+    architecture,
+    testingStrategy,
+    teamPlan,
+    budgetEstimate
   });
 
   const copyAllContent = async () => {
@@ -179,7 +182,7 @@ const StackWizardDashboard = ({
       }
 
       // Budget Estimate
-      if (budgetEstimate.total_project) {
+      if (budgetEstimate.total_mvp) {
         if (yPos > 220) {
           pdf.addPage();
           yPos = 30;
@@ -192,7 +195,7 @@ const StackWizardDashboard = ({
 
         pdf.setFontSize(12);
         pdf.setFont('helvetica', 'normal');
-        pdf.text(`Total Project Cost: ${budgetEstimate.total_project}`, 25, yPos);
+        pdf.text(`Total MVP Cost: ${budgetEstimate.total_mvp}`, 25, yPos);
         yPos += 10;
 
         if (budgetEstimate.development) {
@@ -310,7 +313,7 @@ const StackWizardDashboard = ({
       </div>
 
       <div id="stackwizard-dashboard" className="space-y-12">
-        {/* Tech Stack */}
+        {/* Tech Stack & Core Modules */}
         <TechStackModule techStack={techStack} modules={modules} bonusModules={bonusModules} />
 
         {/* Gantt Timeline */}
@@ -319,7 +322,7 @@ const StackWizardDashboard = ({
         {/* Budget & Team Planning */}
         <BudgetEstimationModule budgetEstimate={budgetEstimate} teamPlan={teamPlan} />
 
-        {/* Project Roadmap */}
+        {/* Project Roadmap - Architecture & Testing */}
         <ProjectRoadmapModule architecture={architecture} testingStrategy={testingStrategy} />
 
         {/* Pro Tips */}
