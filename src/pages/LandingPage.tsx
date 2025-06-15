@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -133,106 +134,118 @@ const LandingPage = () => {
   return (
     <PageTransition>
       <div className="min-h-screen bg-zinc-900 text-white overflow-x-hidden relative">
-        {/* 3D Background */}
+        {/* Enhanced 3D Background */}
         <FloatingGeometry />
         
         {/* Floating Orb */}
         <FloatingOrb />
 
-        {/* HIGHLY VISIBLE Animated Background with STRONG Ring Animations */}
+        {/* ENHANCED Animated Background with ULTRA VISIBLE Ring Animations */}
         <motion.div 
           className="fixed inset-0 z-0"
           style={{ y: backgroundY }}
         >
-          {/* Primary dark background */}
-          <div className="absolute inset-0 bg-zinc-900"></div>
+          {/* Primary dark background with subtle grid */}
+          <div className="absolute inset-0 bg-zinc-900">
+            {/* Enhanced grid pattern */}
+            <div 
+              className="absolute inset-0 opacity-30"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(253, 186, 116, 0.2) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(253, 186, 116, 0.2) 1px, transparent 1px)
+                `,
+                backgroundSize: '50px 50px'
+              }}
+            />
+          </div>
           
-          {/* HIGHLY VISIBLE floating orbs with strong glow and opacity */}
+          {/* ULTRA BRIGHT floating orbs with maximum glow */}
           <motion.div 
-            className="absolute top-1/4 left-1/4 w-[32rem] h-[32rem] bg-orange-200/40 rounded-full blur-3xl"
+            className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-orange-200/60 rounded-full blur-3xl"
             animate={{ 
-              scale: [1, 1.6, 1],
-              opacity: [0.4, 0.6, 0.4],
-              x: [0, 120, 0],
-              y: [0, 80, 0]
+              scale: [1, 1.8, 1],
+              opacity: [0.6, 0.8, 0.6],
+              x: [0, 150, 0],
+              y: [0, 100, 0]
             }}
             transition={{ duration: 8, repeat: Infinity }}
           />
           <motion.div 
-            className="absolute bottom-1/4 right-1/4 w-[36rem] h-[36rem] bg-orange-300/35 rounded-full blur-3xl"
+            className="absolute bottom-1/4 right-1/4 w-[44rem] h-[44rem] bg-orange-300/50 rounded-full blur-3xl"
             animate={{ 
               scale: [1.2, 1, 1.2],
-              opacity: [0.35, 0.5, 0.35],
-              x: [0, -80, 0],
-              y: [0, -100, 0]
+              opacity: [0.5, 0.7, 0.5],
+              x: [0, -100, 0],
+              y: [0, -120, 0]
             }}
             transition={{ duration: 10, repeat: Infinity }}
           />
           
-          {/* ULTRA VISIBLE ring animations with VERY thick borders and bright colors */}
+          {/* MAXIMUM VISIBILITY ring animations with ULTRA thick borders and brightest colors */}
           <motion.div 
-            className="absolute top-10 right-20 w-96 h-96 border-[12px] border-orange-300 rounded-full opacity-80"
-            animate={{ 
-              rotate: [0, 360],
-              scale: [1, 1.4, 1]
-            }}
-            transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.div 
-            className="absolute bottom-20 left-20 w-[28rem] h-[28rem] border-[10px] border-orange-200 rounded-full opacity-75"
-            animate={{ 
-              rotate: [360, 0],
-              scale: [1.1, 0.8, 1.1]
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.div 
-            className="absolute top-1/3 right-1/4 w-64 h-64 border-[8px] border-orange-100 rounded-full opacity-70"
-            animate={{ 
-              rotate: [0, -360],
-              scale: [0.8, 1.3, 0.8]
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.div 
-            className="absolute bottom-1/3 left-1/4 w-80 h-80 border-[10px] border-orange-300 rounded-full opacity-85"
-            animate={{ 
-              rotate: [180, 540],
-              scale: [1, 0.7, 1]
-            }}
-            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.div 
-            className="absolute top-20 left-1/2 w-72 h-72 border-[8px] border-orange-200 rounded-full opacity-80"
-            animate={{ 
-              rotate: [90, 450],
-              scale: [0.9, 1.5, 0.9]
-            }}
-            transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.div 
-            className="absolute bottom-32 right-1/3 w-[20rem] h-[20rem] border-[12px] border-orange-100 rounded-full opacity-75"
-            animate={{ 
-              rotate: [270, -90],
-              scale: [1.2, 0.8, 1.2]
-            }}
-            transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
-          />
-          
-          {/* Additional rings for maximum visibility */}
-          <motion.div 
-            className="absolute top-1/2 left-10 w-56 h-56 border-[6px] border-orange-300/90 rounded-full"
+            className="absolute top-10 right-20 w-[30rem] h-[30rem] border-[20px] border-orange-300/90 rounded-full"
             animate={{ 
               rotate: [0, 360],
               scale: [1, 1.6, 1]
             }}
+            transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div 
+            className="absolute bottom-20 left-20 w-[35rem] h-[35rem] border-[18px] border-orange-200/85 rounded-full"
+            animate={{ 
+              rotate: [360, 0],
+              scale: [1.1, 0.7, 1.1]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div 
+            className="absolute top-1/3 right-1/4 w-80 h-80 border-[16px] border-orange-100/80 rounded-full"
+            animate={{ 
+              rotate: [0, -360],
+              scale: [0.8, 1.5, 0.8]
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div 
+            className="absolute bottom-1/3 left-1/4 w-96 h-96 border-[18px] border-orange-300/95 rounded-full"
+            animate={{ 
+              rotate: [180, 540],
+              scale: [1, 0.6, 1]
+            }}
+            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div 
+            className="absolute top-20 left-1/2 w-[22rem] h-[22rem] border-[14px] border-orange-200/90 rounded-full"
+            animate={{ 
+              rotate: [90, 450],
+              scale: [0.9, 1.7, 0.9]
+            }}
+            transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div 
+            className="absolute bottom-32 right-1/3 w-[25rem] h-[25rem] border-[20px] border-orange-100/85 rounded-full"
+            animate={{ 
+              rotate: [270, -90],
+              scale: [1.2, 0.7, 1.2]
+            }}
+            transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
+          />
+          
+          {/* Additional ultra-bright rings for maximum visibility */}
+          <motion.div 
+            className="absolute top-1/2 left-10 w-72 h-72 border-[12px] border-orange-300/95 rounded-full"
+            animate={{ 
+              rotate: [0, 360],
+              scale: [1, 1.8, 1]
+            }}
             transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute bottom-1/4 right-10 w-64 h-64 border-[8px] border-orange-200/85 rounded-full"
+            className="absolute bottom-1/4 right-10 w-80 h-80 border-[16px] border-orange-200/90 rounded-full"
             animate={{ 
               rotate: [180, -180],
-              scale: [0.9, 1.4, 0.9]
+              scale: [0.9, 1.6, 0.9]
             }}
             transition={{ duration: 11, repeat: Infinity, ease: "linear" }}
           />
@@ -240,7 +253,7 @@ const LandingPage = () => {
 
         {/* Navigation */}
         <motion.nav 
-          className="fixed top-0 w-full z-50 backdrop-blur-xl bg-zinc-900/90 border-b border-zinc-700"
+          className="fixed top-0 w-full z-50 backdrop-blur-xl bg-zinc-900/95 border-b border-zinc-700"
           initial={{ y: -100 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.8, type: "spring" }}
@@ -320,7 +333,7 @@ const LandingPage = () => {
           </div>
         </motion.nav>
 
-        {/* Hero Section */}
+        {/* Hero Section with ENHANCED text visibility */}
         <section className="relative min-h-screen flex items-center justify-center pt-20">
           <motion.div 
             className="container mx-auto px-6 text-center relative z-10"
@@ -329,35 +342,41 @@ const LandingPage = () => {
             <div className="max-w-5xl mx-auto">
               {/* Badge */}
               <FadeInUp delay={0.2}>
-                <div className="inline-flex items-center gap-2 bg-zinc-800/80 border border-zinc-600 rounded-full px-4 py-2 mb-8 backdrop-blur-sm">
+                <div className="inline-flex items-center gap-2 bg-zinc-800/90 border border-zinc-600 rounded-full px-4 py-2 mb-8 backdrop-blur-sm">
                   <Zap className="w-4 h-4 text-orange-300" />
                   <span className="text-sm text-orange-200 font-medium">AI-Powered Developer Suite</span>
                 </div>
               </FadeInUp>
 
-              {/* Main Headline */}
+              {/* Main Headline with MAXIMUM visibility */}
               <FadeInUp delay={0.4}>
                 <h1 className="text-6xl md:text-8xl font-bold font-sora mb-8 leading-tight">
                   <span 
-                    className="block text-white"
-                    style={{ textShadow: "0 0 20px rgba(255, 255, 255, 0.5)" }}
+                    className="block text-white drop-shadow-2xl"
+                    style={{ 
+                      textShadow: "0 0 40px rgba(255, 255, 255, 0.8), 0 0 80px rgba(255, 255, 255, 0.4)"
+                    }}
                   >
                     Code Smarter
                   </span>
                   <motion.span 
-                    className="block text-orange-300"
-                    style={{ textShadow: "0 0 20px rgba(253, 186, 116, 0.7)" }}
+                    className="block text-orange-300 drop-shadow-2xl"
+                    style={{ 
+                      textShadow: "0 0 40px rgba(253, 186, 116, 0.9), 0 0 80px rgba(253, 186, 116, 0.5)"
+                    }}
                   >
                     Build Faster
                   </motion.span>
                 </h1>
               </FadeInUp>
               
-              {/* Subheadline */}
+              {/* Subheadline with enhanced visibility */}
               <FadeInUp delay={0.6}>
                 <p 
-                  className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed font-medium"
-                  style={{ textShadow: "0 0 15px rgba(255, 255, 255, 0.3)" }}
+                  className="text-xl md:text-2xl text-gray-100 mb-12 max-w-3xl mx-auto leading-relaxed font-medium drop-shadow-lg"
+                  style={{ 
+                    textShadow: "0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.3)"
+                  }}
                 >
                   Transform your development workflow with intelligent code analysis, 
                   SQL optimization, and AI-driven productivity tools that feel like magic.

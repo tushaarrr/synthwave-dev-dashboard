@@ -1,48 +1,7 @@
 
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
-
-function AnimatedPoints({ mouse }: { mouse: { x: number; y: number } }) {
-  const ref = useRef<THREE.Points>(null);
-  
-  const particlesPosition = useMemo(() => {
-    const positions = new Float32Array(2000 * 3);
-    
-    for (let i = 0; i < 2000; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 10;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
-    }
-    
-    return positions;
-  }, []);
-
-  useFrame((state) => {
-    if (ref.current) {
-      ref.current.rotation.x = state.clock.elapsedTime * 0.05;
-      ref.current.rotation.y = state.clock.elapsedTime * 0.1;
-      
-      // Subtle mouse interaction
-      ref.current.rotation.x += mouse.y * 0.0001;
-      ref.current.rotation.y += mouse.x * 0.0001;
-    }
-  });
-
-  return (
-    <Points ref={ref} positions={particlesPosition} stride={3} frustumCulled={false}>
-      <PointMaterial
-        transparent
-        color="#8b5cf6"
-        size={0.02}
-        sizeAttenuation={true}
-        depthWrite={false}
-        opacity={0.6}
-      />
-    </Points>
-  );
-}
 
 function FloatingMesh({ mouse }: { mouse: { x: number; y: number } }) {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -53,8 +12,8 @@ function FloatingMesh({ mouse }: { mouse: { x: number; y: number } }) {
     return new THREE.ShaderMaterial({
       uniforms: {
         time: { value: 0 },
-        opacity: { value: 0.5 },
-        glowIntensity: { value: 1.0 }
+        opacity: { value: 0.9 }, // Increased opacity
+        glowIntensity: { value: 2.0 } // Increased glow
       },
       vertexShader: `
         varying vec3 vPosition;
@@ -74,22 +33,22 @@ function FloatingMesh({ mouse }: { mouse: { x: number; y: number } }) {
         varying vec3 vNormal;
         
         void main() {
-          // Gradient from neon aqua to electric blue-purple
-          vec3 color1 = vec3(0.22, 0.976, 0.843); // #38f9d7 neon aqua
-          vec3 color2 = vec3(0.373, 0.373, 1.0);  // #5f5fff electric blue-purple
+          // Bright neon orange colors
+          vec3 color1 = vec3(1.0, 0.6, 0.2); // Bright orange
+          vec3 color2 = vec3(1.0, 0.8, 0.4);  // Light orange
           
           // Create gradient based on position
           float gradient = (vPosition.y + 2.0) / 4.0;
           vec3 finalColor = mix(color1, color2, gradient);
           
           // Add pulse effect every 8 seconds
-          float pulse = sin(time * 0.785) * 0.3 + 0.7; // 0.785 ≈ 2π/8 for 8-second cycle
+          float pulse = sin(time * 0.785) * 0.4 + 0.8; // Stronger pulse
           
-          // Fresnel effect for glow
-          float fresnel = pow(1.0 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+          // Enhanced fresnel effect for glow
+          float fresnel = pow(1.0 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 1.5);
           float glowEffect = fresnel * glowIntensity * pulse;
           
-          gl_FragColor = vec4(finalColor + glowEffect, opacity * pulse);
+          gl_FragColor = vec4(finalColor + glowEffect * 0.5, opacity * pulse);
         }
       `,
       transparent: true,
@@ -116,7 +75,7 @@ function FloatingMesh({ mouse }: { mouse: { x: number; y: number } }) {
 
   return (
     <mesh ref={meshRef}>
-      <torusGeometry args={[2, 0.1, 16, 100]} />
+      <torusGeometry args={[2.5, 0.15, 16, 100]} />
       <primitive object={gradientMaterial} ref={materialRef} />
     </mesh>
   );
@@ -136,9 +95,8 @@ export default function FloatingGeometry() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-0 opacity-40">
+    <div className="fixed inset-0 z-0 opacity-70">
       <Canvas camera={{ position: [0, 0, 5], fov: 60 }}>
-        <AnimatedPoints mouse={mouseRef.current} />
         <FloatingMesh mouse={mouseRef.current} />
       </Canvas>
     </div>
