@@ -12,6 +12,12 @@ import ProjectsPage from "./pages/ProjectsPage";
 import PromptHistoryPage from "./pages/PromptHistoryPage";
 import CodeHistoryPage from "./pages/CodeHistoryPage";
 import SQLHistoryPage from "./pages/SQLHistoryPage";
+import AboutPage from "./pages/AboutPage";
+import FeaturesPage from "./pages/FeaturesPage";
+import PricingPage from "./pages/PricingPage";
+import ContactPage from "./pages/ContactPage";
+import TermsPage from "./pages/TermsPage";
+import PrivacyPage from "./pages/PrivacyPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +37,12 @@ const App = () => (
             <Route path="/prompt-history" element={<PromptHistoryPage />} />
             <Route path="/code-history" element={<CodeHistoryPage />} />
             <Route path="/sql-history" element={<SQLHistoryPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/features" element={<FeaturesPage />} />
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

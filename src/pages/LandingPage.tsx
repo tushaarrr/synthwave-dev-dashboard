@@ -234,24 +234,29 @@ const LandingPage = () => {
               </motion.div>
               
               <div className="hidden md:flex items-center space-x-8">
-                {['Features', 'Modules', 'Tech Stack', 'About'].map((item, index) => (
-                  <motion.a
-                    key={item}
-                    href={`#${item.toLowerCase().replace(' ', '')}`}
+                {[
+                  { name: 'About', path: '/about' },
+                  { name: 'Features', path: '/features' },
+                  { name: 'Pricing', path: '/pricing' },
+                  { name: 'Contact', path: '/contact' }
+                ].map((item, index) => (
+                  <motion.button
+                    key={item.name}
+                    onClick={() => navigate(item.path)}
                     className="text-gray-400 hover:text-white transition-all duration-300 relative"
                     whileHover={{ scale: 1.05 }}
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 + index * 0.1 }}
                   >
-                    {item}
+                    {item.name}
                     <motion.div
                       className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-neon-coral to-neon-aqua"
                       initial={{ scaleX: 0 }}
                       whileHover={{ scaleX: 1 }}
                       transition={{ duration: 0.3 }}
                     />
-                  </motion.a>
+                  </motion.button>
                 ))}
               </div>
 
@@ -724,65 +729,89 @@ const LandingPage = () => {
                 </div>
               </FadeInUp>
               
-              {[
-                {
-                  title: "Product",
-                  links: ["Features", "Modules", "Pricing", "Documentation"]
-                },
-                {
-                  title: "Company", 
-                  links: ["About", "Blog", "Careers", "Contact"]
-                },
-                {
-                  title: "Connect",
-                  links: []
-                }
-              ].map((section, index) => (
-                <SlideIn key={section.title} delay={index * 0.1} direction="up">
-                  <div>
-                    <h4 className="font-semibold text-white mb-6">{section.title}</h4>
-                    {section.title === "Connect" ? (
-                      <div className="flex space-x-4">
-                        {[Github, Twitter, Linkedin].map((Icon, i) => (
-                          <motion.a
-                            key={i}
-                            href="#"
-                            className="p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300"
-                            whileHover={{ 
-                              scale: 1.1,
-                              y: -2,
-                              boxShadow: "0 10px 20px rgba(255, 112, 67, 0.2)"
-                            }}
-                          >
-                            <Icon className="w-5 h-5 text-gray-400 hover:text-white transition-colors" />
-                          </motion.a>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        {section.links.map((link, i) => (
-                          <motion.a
-                            key={link}
-                            href="#"
-                            className="block text-gray-400 hover:text-white transition-colors relative"
-                            whileHover={{ x: 5 }}
-                          >
-                            {link}
-                          </motion.a>
-                        ))}
-                      </div>
-                    )}
+              <SlideIn delay={0.1} direction="up">
+                <div>
+                  <h4 className="font-semibold text-white mb-6">Product</h4>
+                  <div className="space-y-4">
+                    {[
+                      { name: "Features", path: "/features" },
+                      { name: "Pricing", path: "/pricing" },
+                      { name: "About", path: "/about" }
+                    ].map((link, i) => (
+                      <motion.button
+                        key={link.name}
+                        onClick={() => navigate(link.path)}
+                        className="block text-gray-400 hover:text-white transition-colors relative text-left"
+                        whileHover={{ x: 5 }}
+                      >
+                        {link.name}
+                      </motion.button>
+                    ))}
                   </div>
-                </SlideIn>
-              ))}
+                </div>
+              </SlideIn>
+
+              <SlideIn delay={0.2} direction="up">
+                <div>
+                  <h4 className="font-semibold text-white mb-6">Support</h4>
+                  <div className="space-y-4">
+                    {[
+                      { name: "Contact", path: "/contact" },
+                      { name: "Terms of Service", path: "/terms" },
+                      { name: "Privacy Policy", path: "/privacy" }
+                    ].map((link, i) => (
+                      <motion.button
+                        key={link.name}
+                        onClick={() => navigate(link.path)}
+                        className="block text-gray-400 hover:text-white transition-colors relative text-left"
+                        whileHover={{ x: 5 }}
+                      >
+                        {link.name}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+              </SlideIn>
+
+              <SlideIn delay={0.3} direction="up">
+                <div>
+                  <h4 className="font-semibold text-white mb-6">Connect</h4>
+                  <div className="flex space-x-4">
+                    {[Github, Twitter, Linkedin].map((Icon, i) => (
+                      <motion.a
+                        key={i}
+                        href="#"
+                        className="p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300"
+                        whileHover={{ 
+                          scale: 1.1,
+                          y: -2,
+                          boxShadow: "0 10px 20px rgba(255, 112, 67, 0.2)"
+                        }}
+                      >
+                        <Icon className="w-5 h-5 text-gray-400 hover:text-white transition-colors" />
+                      </motion.a>
+                    ))}
+                  </div>
+                </div>
+              </SlideIn>
             </div>
             
             <FadeInUp delay={0.5}>
               <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
                 <p className="text-gray-400">&copy; 2024 DevSynth AI. All rights reserved.</p>
                 <div className="flex space-x-6 mt-4 md:mt-0">
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+                  <button 
+                    onClick={() => navigate('/privacy')}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Privacy Policy
+                  </button>
+                  <button 
+                    onClick={() => navigate('/terms')}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Terms of Service
+                  </button>
                 </div>
               </div>
             </FadeInUp>
