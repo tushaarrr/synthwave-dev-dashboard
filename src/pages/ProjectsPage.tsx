@@ -13,7 +13,8 @@ import {
   Download, 
   Trash2, 
   Search,
-  Plus
+  Plus,
+  AlertCircle
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -33,33 +34,58 @@ const ProjectsPage = () => {
   const { user, loading: authLoading } = useAuth();
   const [projects, setProjects] = useState<SavedProject[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
+  console.log('ProjectsPage render - User:', user, 'AuthLoading:', authLoading, 'Loading:', loading);
+
   useEffect(() => {
+    console.log('ProjectsPage useEffect - User changed:', user);
     if (user) {
       fetchProjects();
+    } else if (!authLoading) {
+      console.log('No user and auth not loading, setting loading to false');
+      setLoading(false);
     }
-  }, [user]);
+  }, [user, authLoading]);
 
   const fetchProjects = async () => {
+    if (!user) {
+      console.log('No user available for fetching projects');
+      return;
+    }
+
+    console.log('Fetching projects for user:', user.id);
+    setError(null);
+    
     try {
       const { data, error } = await supabase
         .from('plans')
         .select('*')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      console.log('Supabase response:', { data, error });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+      
+      console.log('Projects fetched successfully:', data?.length || 0, 'projects');
       setProjects(data || []);
     } catch (error) {
       console.error('Error fetching projects:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch saved projects';
+      setError(errorMessage);
       toast({
         title: "Error",
-        description: "Failed to fetch saved projects",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
+      console.log('Setting loading to false');
       setLoading(false);
     }
   };
@@ -161,22 +187,57 @@ const ProjectsPage = () => {
     ).slice(0, 3);
   };
 
+  console.log('Rendering ProjectsPage - AuthLoading:', authLoading, 'User:', !!user, 'Loading:', loading, 'Error:', error);
+
   if (authLoading) {
-    return <LoadingState module="projects" />;
+    console.log('Showing auth loading state');
+    return <LoadingState module="authentication" />;
   }
 
   if (!user) {
+    console.log('Redirecting to login - no user');
     return <Navigate to="/login" replace />;
   }
 
   if (loading) {
+    console.log('Showing projects loading state');
     return <LoadingState module="projects" />;
+  }
+
+  if (error) {
+    console.log('Showing error state:', error);
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col items-center justify-center py-16">
+            <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
+            <h3 className="text-xl font-semibold text-foreground mb-2">
+              Error Loading Projects
+            </h3>
+            <p className="text-muted-foreground mb-6 text-center max-w-md">
+              {error}
+            </p>
+            <Button 
+              onClick={() => {
+                setError(null);
+                fetchProjects();
+              }}
+              className="bg-neon-blue hover:bg-neon-blue/80 text-black"
+            >
+              Try Again
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const filteredProjects = projects.filter(project =>
     project.project_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     project.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  console.log('Projects to display:', projects.length, 'Filtered:', filteredProjects.length);
 
   return (
     <div className="min-h-screen bg-background p-6">
