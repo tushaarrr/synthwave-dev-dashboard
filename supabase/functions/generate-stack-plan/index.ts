@@ -1,7 +1,6 @@
 
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,10 +16,15 @@ serve(async (req) => {
   try {
     const { projectName, projectDescription, specificRequirements } = await req.json();
     
+    console.log('Received request:', { projectName, projectDescription, specificRequirements });
+    
     const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY');
     if (!anthropicApiKey) {
+      console.error('Anthropic API key not found');
       throw new Error('Anthropic API key not configured');
     }
+
+    console.log('API key found, making request to Anthropic...');
 
     const prompt = `You are an AI assistant helping developers plan and manage tech projects.
 
@@ -58,11 +62,17 @@ Return a clean and structured output in the following sections:
       }),
     });
 
+    console.log('Anthropic response status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`Anthropic API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('Anthropic API error:', response.status, errorText);
+      throw new Error(`Anthropic API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('Anthropic response received successfully');
+    
     const aiResponse = data.content[0].text;
 
     // Parse the AI response into sections
@@ -73,18 +83,25 @@ Return a clean and structured output in the following sections:
     const ganttChart = sections.find(s => s.includes('Gantt Chart'))?.replace(/^\d\.\s*Gantt Chart[^:]*:?\s*/, '') || '';
     const suggestions = sections.find(s => s.includes('Suggestions'))?.replace(/^\d\.\s*Suggestions\s*/, '') || '';
 
-    return new Response(JSON.stringify({
+    const result = {
       techStack: techStack.trim(),
       timeline: timeline.trim(),
       ganttChart: ganttChart.trim(),
       suggestions: suggestions.trim(),
       fullResponse: aiResponse
-    }), {
+    };
+
+    console.log('Parsed result:', result);
+
+    return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Error in generate-stack-plan function:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: error.message,
+      details: 'Check the function logs for more information'
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
