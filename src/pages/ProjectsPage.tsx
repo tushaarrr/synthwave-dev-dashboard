@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Navigate } from 'react-router-dom';
@@ -28,6 +27,13 @@ interface SavedProject {
   tech_stack: string;
   timeline: string;
   suggestions: string;
+  modules?: any;
+  bonus_modules?: any;
+  architecture?: any;
+  testing_strategy?: any;
+  team_plan?: any;
+  budget_estimate?: any;
+  product_scope?: string;
 }
 
 const ProjectsPage = () => {
@@ -119,7 +125,7 @@ const ProjectsPage = () => {
       const pdf = new jsPDF();
       
       // Helper function to safely parse JSON or return fallback
-      const safeParseJson = (jsonString: string, fallback: any = null) => {
+      const safeParseJson = (jsonString: string | any, fallback: any = null) => {
         if (!jsonString) return fallback;
         try {
           return typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
