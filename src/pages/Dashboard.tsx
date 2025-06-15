@@ -79,16 +79,16 @@ const Dashboard = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-zinc-900 text-orange-200">
+      <div className="min-h-screen bg-zinc-900 text-white">
         {/* 3D Background */}
         <FloatingGeometry />
         
         {/* Floating Orb */}
         <FloatingOrb />
 
-        {/* Dark theme background */}
+        {/* Background Pattern */}
         <div className="fixed inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-200/10 via-zinc-900 to-orange-200/10"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-zinc-900 to-orange-500/5"></div>
           <motion.div 
             className="absolute inset-0 opacity-[0.02]"
             style={{
@@ -164,9 +164,9 @@ const Dashboard = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.1 }}
                       >
-                        {/* Module Container with Glass Effect */}
+                        {/* Module Container with Clean Dark Theme */}
                         <motion.div
-                          className="relative p-8 rounded-3xl glass-dark border border-orange-200/20 shadow-lg"
+                          className="relative p-8 rounded-lg bg-zinc-800 border border-zinc-700 shadow-lg"
                           initial={{ scale: 0.95, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ duration: 0.5, delay: 0.2 }}
@@ -174,19 +174,6 @@ const Dashboard = () => {
                             boxShadow: "0 25px 50px rgba(251, 146, 60, 0.1)"
                           }}
                         >
-                          {/* Glow Effect */}
-                          <motion.div
-                            className="absolute inset-0 bg-gradient-to-br from-orange-400/5 via-transparent to-orange-300/5 rounded-3xl"
-                            animate={{
-                              opacity: [0.5, 0.8, 0.5],
-                            }}
-                            transition={{
-                              duration: 3,
-                              repeat: Infinity,
-                              ease: "easeInOut"
-                            }}
-                          />
-                          
                           {/* Content */}
                           <div className="relative z-10">
                             {renderModule()}
