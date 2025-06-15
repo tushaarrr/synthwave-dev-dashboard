@@ -42,10 +42,10 @@ const StackWizardDashboard = ({
 
   console.log('Processed data for dashboard:', {
     techStack,
-    timeline,
-    suggestions,
-    modules,
-    bonusModules,
+    timeline: timeline.length,
+    suggestions: suggestions.length,
+    modules: modules.length,
+    bonusModules: bonusModules.length,
     architecture,
     testingStrategy,
     teamPlan,
@@ -315,6 +315,17 @@ const StackWizardDashboard = ({
       </div>
 
       <div id="stackwizard-dashboard" className="space-y-12">
+        {/* Debug info - remove in production */}
+        <div className="p-4 bg-gray-800 rounded-lg text-sm">
+          <h4 className="font-bold mb-2">Debug Info:</h4>
+          <p>Modules: {modules.length} items</p>
+          <p>Timeline: {Array.isArray(timeline) ? timeline.length : 'Not array'} items</p>
+          <p>Budget: {budgetEstimate ? 'exists' : 'missing'}</p>
+          <p>Team Plan: {teamPlan ? 'exists' : 'missing'}</p>
+          <p>Architecture: {architecture ? 'exists' : 'missing'}</p>
+          <p>Testing Strategy: {testingStrategy ? 'exists' : 'missing'}</p>
+        </div>
+
         {/* Tech Stack & Core Modules */}
         <TechStackModule 
           techStack={techStack} 
