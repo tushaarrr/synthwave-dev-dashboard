@@ -2,13 +2,18 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Zap, Database, Globe, Server, Palette, Brain, Plus } from 'lucide-react';
+import { Zap, Database, Globe, Server, Palette, Brain, Plus, Clock, AlertCircle, CheckCircle } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface Module {
   name: string;
   description: string;
+  detailed_description?: string;
+  technical_details?: string;
   dependencies: string[];
   ai_used: boolean;
+  complexity?: string;
+  estimated_hours?: string;
 }
 
 interface BonusModule {
@@ -100,6 +105,32 @@ const TechStackModule = ({ techStack, modules = [], bonusModules = [] }: TechSta
     return {};
   };
 
+  const getComplexityIcon = (complexity?: string) => {
+    switch (complexity?.toLowerCase()) {
+      case 'low':
+        return <CheckCircle className="w-4 h-4 text-green-400" />;
+      case 'medium':
+        return <Clock className="w-4 h-4 text-yellow-400" />;
+      case 'high':
+        return <AlertCircle className="w-4 h-4 text-red-400" />;
+      default:
+        return <Clock className="w-4 h-4 text-gray-400" />;
+    }
+  };
+
+  const getComplexityColor = (complexity?: string) => {
+    switch (complexity?.toLowerCase()) {
+      case 'low':
+        return 'bg-green-500/20 text-green-300 border-green-500/30';
+      case 'medium':
+        return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      case 'high':
+        return 'bg-red-500/20 text-red-300 border-red-500/30';
+      default:
+        return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+    }
+  };
+
   const techCategories = parseTechStack(techStack);
 
   return (
@@ -152,42 +183,92 @@ const TechStackModule = ({ techStack, modules = [], bonusModules = [] }: TechSta
         <div className="space-y-4">
           <h4 className="text-xl font-semibold font-sora flex items-center gap-2">
             <Zap className="w-5 h-5 text-neon-coral" />
-            Core Modules
+            Core Modules & Features
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-6">
             {modules.map((module, index) => (
-              <Card 
-                key={index}
-                className="glass-dark border-0 animate-fade-in hover:scale-[1.02] transition-all duration-300"
-                style={{ animationDelay: `${(index + 6) * 100}ms` }}
-              >
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium flex items-center gap-2">
-                    {module.ai_used && <Brain className="w-4 h-4 text-purple-400" />}
-                    <Zap className="w-4 h-4" />
-                    {module.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-0 space-y-3">
-                  <p className="text-xs text-muted-foreground">{module.description}</p>
-                  {module.dependencies.length > 0 && (
-                    <div>
-                      <span className="text-xs font-medium text-neon-coral">Dependencies:</span>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {module.dependencies.map((dep, depIndex) => (
-                          <Badge 
-                            key={depIndex}
-                            variant="outline"
-                            className="text-xs border-coral-500/30"
-                          >
-                            {dep}
+              <Collapsible key={index}>
+                <Card 
+                  className="glass-dark border-0 animate-fade-in hover:scale-[1.01] transition-all duration-300"
+                  style={{ animationDelay: `${(index + 6) * 100}ms` }}
+                >
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        {module.ai_used && <Brain className="w-5 h-5 text-purple-400" />}
+                        <Zap className="w-5 h-5 text-neon-coral" />
+                        <div>
+                          <CardTitle className="text-lg font-medium">{module.name}</CardTitle>
+                          <p className="text-sm text-muted-foreground mt-1">{module.description}</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-2 items-end">
+                        {module.complexity && (
+                          <Badge variant="outline" className={`text-xs ${getComplexityColor(module.complexity)} flex items-center gap-1`}>
+                            {getComplexityIcon(module.complexity)}
+                            {module.complexity}
                           </Badge>
-                        ))}
+                        )}
+                        {module.estimated_hours && (
+                          <Badge variant="secondary" className="text-xs bg-blue-500/20 text-blue-300">
+                            {module.estimated_hours}
+                          </Badge>
+                        )}
                       </div>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
+                  </CardHeader>
+                  
+                  <CardContent className="pt-0 space-y-4">
+                    {/* Dependencies */}
+                    {module.dependencies.length > 0 && (
+                      <div>
+                        <span className="text-xs font-medium text-neon-coral">Dependencies:</span>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {module.dependencies.map((dep, depIndex) => (
+                            <Badge 
+                              key={depIndex}
+                              variant="outline"
+                              className="text-xs border-coral-500/30"
+                            >
+                              {dep}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Expandable Details */}
+                    {(module.detailed_description || module.technical_details) && (
+                      <div>
+                        <CollapsibleTrigger className="text-sm bg-white/10 hover:bg-white/20 px-3 py-2 rounded transition-colors flex items-center gap-2">
+                          <Plus className="w-4 h-4" />
+                          View Detailed Requirements & Technical Specs
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-3">
+                          <div className="space-y-4 p-4 rounded bg-white/5 border border-white/10">
+                            {module.detailed_description && (
+                              <div>
+                                <h5 className="text-sm font-medium text-green-400 mb-2">Detailed Description:</h5>
+                                <p className="text-xs text-muted-foreground leading-relaxed">
+                                  {module.detailed_description}
+                                </p>
+                              </div>
+                            )}
+                            {module.technical_details && (
+                              <div>
+                                <h5 className="text-sm font-medium text-blue-400 mb-2">Technical Implementation:</h5>
+                                <p className="text-xs text-blue-300/80 leading-relaxed">
+                                  {module.technical_details}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </CollapsibleContent>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </Collapsible>
             ))}
           </div>
         </div>
@@ -198,7 +279,7 @@ const TechStackModule = ({ techStack, modules = [], bonusModules = [] }: TechSta
         <div className="space-y-4">
           <h4 className="text-xl font-semibold font-sora flex items-center gap-2">
             <Plus className="w-5 h-5 text-neon-green" />
-            Bonus Modules
+            Future Enhancement Modules
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {bonusModules.map((module, index) => (
