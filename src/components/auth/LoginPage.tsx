@@ -94,7 +94,7 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen bg-zinc-900 flex relative overflow-hidden">
-      {/* Enhanced Background Animations with Better Visibility */}
+      {/* Enhanced Background Animations WITHOUT Ring Circles */}
       <div className="fixed inset-0 z-0">
         {/* Primary dark background */}
         <div className="absolute inset-0 bg-zinc-900"></div>
@@ -148,58 +148,6 @@ const LoginPage = () => {
             repeat: Infinity,
             ease: "linear"
           }}
-        />
-        
-        {/* Multiple visible ring animations with strong borders */}
-        <motion.div 
-          className="absolute top-20 right-20 w-48 h-48 border-2 border-orange-200/60 rounded-full"
-          animate={{ 
-            rotate: [0, 360],
-            scale: [1, 1.3, 1]
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div 
-          className="absolute bottom-32 left-32 w-72 h-72 border-3 border-orange-300/50 rounded-full"
-          animate={{ 
-            rotate: [360, 0],
-            scale: [1.1, 1, 1.1]
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div 
-          className="absolute top-1/3 right-1/3 w-32 h-32 border-2 border-orange-100/70 rounded-full"
-          animate={{ 
-            rotate: [0, -360],
-            scale: [0.8, 1.2, 0.8]
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div 
-          className="absolute bottom-1/3 left-1/3 w-56 h-56 border-2 border-orange-200/45 rounded-full"
-          animate={{ 
-            rotate: [180, 540],
-            scale: [1, 0.8, 1]
-          }}
-          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-        />
-        
-        {/* Additional pulsing rings for more visibility */}
-        <motion.div 
-          className="absolute top-10 left-10 w-24 h-24 border border-orange-300/80 rounded-full"
-          animate={{ 
-            scale: [1, 1.5, 1],
-            opacity: [0.8, 0.3, 0.8]
-          }}
-          transition={{ duration: 6, repeat: Infinity }}
-        />
-        <motion.div 
-          className="absolute bottom-10 right-10 w-36 h-36 border border-orange-100/60 rounded-full"
-          animate={{ 
-            scale: [1.2, 0.8, 1.2],
-            opacity: [0.6, 1, 0.6]
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
         />
       </div>
 
