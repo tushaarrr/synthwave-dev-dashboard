@@ -120,7 +120,7 @@ const ProjectsPage = () => {
       
       // Title
       pdf.setFontSize(20);
-      pdf.text(project.project_name, 20, 30);
+      pdf.text(project.project_name || 'Untitled Project', 20, 30);
       
       // Date
       pdf.setFontSize(12);
@@ -130,7 +130,7 @@ const ProjectsPage = () => {
       pdf.setFontSize(14);
       pdf.text('Project Description:', 20, 65);
       pdf.setFontSize(10);
-      const descLines = pdf.splitTextToSize(project.description, 170);
+      const descLines = pdf.splitTextToSize(project.description || 'No description available', 170);
       pdf.text(descLines, 20, 75);
       
       let yPos = 90 + (descLines.length * 5);
@@ -139,7 +139,7 @@ const ProjectsPage = () => {
       pdf.setFontSize(14);
       pdf.text('Technology Stack:', 20, yPos);
       pdf.setFontSize(10);
-      const techLines = pdf.splitTextToSize(project.tech_stack, 170);
+      const techLines = pdf.splitTextToSize(project.tech_stack || 'No tech stack specified', 170);
       pdf.text(techLines, 20, yPos + 10);
       
       yPos += 25 + (techLines.length * 5);
@@ -148,7 +148,7 @@ const ProjectsPage = () => {
       pdf.setFontSize(14);
       pdf.text('Development Timeline:', 20, yPos);
       pdf.setFontSize(10);
-      const timelineLines = pdf.splitTextToSize(project.timeline, 170);
+      const timelineLines = pdf.splitTextToSize(project.timeline || 'No timeline specified', 170);
       pdf.text(timelineLines, 20, yPos + 10);
       
       yPos += 25 + (timelineLines.length * 5);
@@ -162,10 +162,10 @@ const ProjectsPage = () => {
       pdf.setFontSize(14);
       pdf.text('Recommendations:', 20, yPos);
       pdf.setFontSize(10);
-      const suggestionLines = pdf.splitTextToSize(project.suggestions, 170);
+      const suggestionLines = pdf.splitTextToSize(project.suggestions || 'No recommendations available', 170);
       pdf.text(suggestionLines, 20, yPos + 10);
       
-      pdf.save(`${project.project_name}-development-plan.pdf`);
+      pdf.save(`${project.project_name || 'project'}-development-plan.pdf`);
       
       toast({
         title: "Success!",
@@ -183,7 +183,7 @@ const ProjectsPage = () => {
   const extractTags = (techStack: string) => {
     const commonTechs = ['React', 'Next.js', 'Node.js', 'Python', 'TypeScript', 'PostgreSQL', 'MongoDB', 'AWS', 'Vercel', 'Supabase', 'Stripe', 'GraphQL', 'REST', 'Docker'];
     return commonTechs.filter(tech => 
-      techStack.toLowerCase().includes(tech.toLowerCase())
+      techStack && techStack.toLowerCase().includes(tech.toLowerCase())
     ).slice(0, 3);
   };
 
@@ -232,10 +232,14 @@ const ProjectsPage = () => {
     );
   }
 
-  const filteredProjects = projects.filter(project =>
-    project.project_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    project.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProjects = projects.filter(project => {
+    const projectName = project.project_name || '';
+    const description = project.description || '';
+    const searchLower = searchTerm.toLowerCase();
+    
+    return projectName.toLowerCase().includes(searchLower) ||
+           description.toLowerCase().includes(searchLower);
+  });
 
   console.log('Projects to display:', projects.length, 'Filtered:', filteredProjects.length);
 
@@ -304,7 +308,7 @@ const ProjectsPage = () => {
               >
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg font-semibold line-clamp-2">
-                    {project.project_name}
+                    {project.project_name || 'Untitled Project'}
                   </CardTitle>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Calendar className="w-3 h-3" />
@@ -313,11 +317,11 @@ const ProjectsPage = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-sm text-muted-foreground line-clamp-3">
-                    {project.description}
+                    {project.description || 'No description available'}
                   </p>
                   
                   <div className="flex flex-wrap gap-2">
-                    {extractTags(project.tech_stack).map((tag, tagIndex) => (
+                    {extractTags(project.tech_stack || '').map((tag, tagIndex) => (
                       <Badge 
                         key={tagIndex}
                         variant="secondary"
