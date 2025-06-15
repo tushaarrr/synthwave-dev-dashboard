@@ -28,8 +28,7 @@ const LandingPage = () => {
   const [scrollY, setScrollY] = useState(0);
   const { scrollYProgress } = useScroll();
   
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '8%']);
 
   useEffect(() => {
     // Redirect authenticated users to dashboard
@@ -131,38 +130,29 @@ const LandingPage = () => {
   return (
     <PageTransition>
       <div className="min-h-screen bg-zinc-900 text-white overflow-x-hidden relative">
-        {/* Enhanced 3D Background - Prominent and Visible */}
-        <div className="fixed inset-0 z-0">
-          <FloatingGeometry />
-        </div>
+        {/* Prominent 3D Ring Animation */}
+        <FloatingGeometry scrollY={scrollY} />
 
-        {/* Clean Dark Background */}
-        <motion.div 
-          className="fixed inset-0 z-0 bg-zinc-900"
-          style={{ y: backgroundY }}
-        >
-          {/* Subtle floating orbs only */}
+        {/* Clean Solid Background */}
+        <div className="fixed inset-0 z-0 bg-zinc-900">
+          {/* Subtle ambient lighting effects only */}
           <motion.div 
-            className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-200/20 rounded-full blur-3xl"
+            className="absolute top-1/3 left-1/4 w-96 h-96 bg-orange-200/10 rounded-full blur-3xl"
             animate={{ 
-              scale: [1, 1.3, 1],
-              opacity: [0.2, 0.3, 0.2],
-              x: [0, 60, 0],
-              y: [0, 40, 0]
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.15, 0.1]
             }}
             transition={{ duration: 8, repeat: Infinity }}
           />
           <motion.div 
-            className="absolute bottom-1/4 right-1/4 w-[28rem] h-[28rem] bg-orange-300/15 rounded-full blur-3xl"
+            className="absolute bottom-1/3 right-1/4 w-[28rem] h-[28rem] bg-orange-300/8 rounded-full blur-3xl"
             animate={{ 
-              scale: [1.2, 1, 1.2],
-              opacity: [0.15, 0.25, 0.15],
-              x: [0, -40, 0],
-              y: [0, -60, 0]
+              scale: [1.1, 0.9, 1.1],
+              opacity: [0.08, 0.12, 0.08]
             }}
             transition={{ duration: 10, repeat: Infinity }}
           />
-        </motion.div>
+        </div>
 
         {/* Navigation */}
         <motion.nav 
@@ -194,7 +184,7 @@ const LandingPage = () => {
                 </div>
                 <motion.span 
                   className="text-xl font-bold font-sora text-white"
-                  style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.5)" }}
+                  style={{ textShadow: "0 0 15px rgba(255, 255, 255, 0.7)" }}
                 >
                   OneAI
                 </motion.span>
@@ -211,7 +201,7 @@ const LandingPage = () => {
                     key={item.name}
                     onClick={() => navigate(item.path)}
                     className="text-gray-200 hover:text-white transition-all duration-300 relative font-medium font-inter"
-                    style={{ textShadow: "0 0 8px rgba(255, 255, 255, 0.3)" }}
+                    style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.4)" }}
                     whileHover={{ scale: 1.05 }}
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -267,7 +257,7 @@ const LandingPage = () => {
                   <span 
                     className="block text-white drop-shadow-2xl"
                     style={{ 
-                      textShadow: "0 0 40px rgba(255, 255, 255, 0.8), 0 0 80px rgba(255, 255, 255, 0.4)"
+                      textShadow: "0 0 50px rgba(255, 255, 255, 0.9), 0 0 100px rgba(255, 255, 255, 0.5)"
                     }}
                   >
                     Code Smarter
@@ -275,7 +265,7 @@ const LandingPage = () => {
                   <motion.span 
                     className="block text-orange-300 drop-shadow-2xl"
                     style={{ 
-                      textShadow: "0 0 40px rgba(253, 186, 116, 0.9), 0 0 80px rgba(253, 186, 116, 0.5)"
+                      textShadow: "0 0 50px rgba(253, 186, 116, 1), 0 0 100px rgba(253, 186, 116, 0.6)"
                     }}
                   >
                     Build Faster
@@ -288,7 +278,7 @@ const LandingPage = () => {
                 <p 
                   className="text-xl md:text-2xl text-gray-100 mb-12 max-w-3xl mx-auto leading-relaxed font-medium drop-shadow-lg font-inter"
                   style={{ 
-                    textShadow: "0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.3)"
+                    textShadow: "0 0 40px rgba(255, 255, 255, 0.7), 0 0 80px rgba(255, 255, 255, 0.4)"
                   }}
                 >
                   Transform your development workflow with intelligent code analysis, 
