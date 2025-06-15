@@ -28,15 +28,17 @@ const StackWizard = () => {
   const handleSubmit = async (data: { projectName: string; description: string; requirements: string }) => {
     try {
       setProjectData(data);
-      await generatePlan(data.projectName, data.description, data.requirements);
+      const planResult = await generatePlan(data.projectName, data.description, data.requirements);
+      console.log('Generated plan result:', planResult);
       toast({
         title: "Success!",
-        description: "Complete development strategy generated",
+        description: "Complete SaaS development blueprint generated",
       });
     } catch (error) {
+      console.error('StackWizard generation error:', error);
       toast({
         title: "Error",
-        description: "Failed to generate strategy plan. Please try again.",
+        description: "Failed to generate SaaS blueprint. Please try again.",
         variant: "destructive",
       });
     }
@@ -56,10 +58,7 @@ const StackWizard = () => {
           projectName={projectData.projectName}
           projectDescription={projectData.description}
           requirements={projectData.requirements}
-          techStack={result.techStack}
-          timeline={result.timeline}
-          ganttChart={result.ganttChart}
-          suggestions={result.suggestions}
+          planData={result}
         />
       )}
     </div>

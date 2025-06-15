@@ -12,32 +12,38 @@ import { useAuth } from '@/components/auth/AuthProvider';
 
 interface StackWizardDashboardProps {
   projectName: string;
-  techStack: string;
-  timeline: string;
-  ganttChart: string;
-  suggestions: string;
   projectDescription: string;
   requirements: string;
+  planData: any; // Using any for now to handle both legacy and new formats
 }
 
 const StackWizardDashboard = ({ 
   projectName, 
-  techStack, 
-  timeline, 
-  ganttChart, 
-  suggestions,
   projectDescription,
-  requirements
+  requirements,
+  planData
 }: StackWizardDashboardProps) => {
   const { user } = useAuth();
 
+  // Handle both legacy and new data formats
+  const techStack = planData.tech_stack || planData.techStack || '';
+  const timeline = planData.timeline || '';
+  const suggestions = planData.suggestions || [];
+  const modules = planData.modules || [];
+  const bonusModules = planData.bonus_modules || [];
+  const architecture = planData.architecture || {};
+  const testingStrategy = planData.testing_strategy || {};
+  const teamPlan = planData.team_plan || {};
+  const budgetEstimate = planData.budget_estimate || {};
+  const productScope = planData.product_scope || projectDescription;
+
   const copyAllContent = async () => {
-    const content = `Project: ${projectName}\n\nTech Stack:\n${techStack}\n\nTimeline:\n${timeline}\n\nSuggestions:\n${suggestions}`;
+    const content = `Project: ${projectName}\n\nProduct Scope:\n${productScope}\n\nTech Stack:\n${JSON.stringify(techStack, null, 2)}\n\nModules:\n${JSON.stringify(modules, null, 2)}\n\nTimeline:\n${JSON.stringify(timeline, null, 2)}\n\nSuggestions:\n${JSON.stringify(suggestions, null, 2)}`;
     try {
       await navigator.clipboard.writeText(content);
       toast({
         title: "Copied!",
-        description: "Complete project plan copied to clipboard",
+        description: "Complete SaaS blueprint copied to clipboard",
       });
     } catch (error) {
       toast({
@@ -52,7 +58,7 @@ const StackWizardDashboard = ({
     try {
       toast({
         title: "Generating PDF...",
-        description: "Creating your development strategy document",
+        description: "Creating your SaaS development blueprint document",
       });
 
       const jsPDF = (await import('jspdf')).default;
@@ -66,7 +72,7 @@ const StackWizardDashboard = ({
       
       pdf.setFontSize(16);
       pdf.setFont('helvetica', 'normal');
-      pdf.text('Development Strategy Report', 20, yPos + 15);
+      pdf.text('SaaS Development Blueprint', 20, yPos + 15);
       
       pdf.setFontSize(12);
       pdf.text(`Generated: ${new Date().toLocaleDateString()}`, 20, yPos + 30);
@@ -74,209 +80,120 @@ const StackWizardDashboard = ({
 
       yPos = 90;
 
-      // Project Description
+      // Product Scope
       pdf.setFontSize(16);
       pdf.setFont('helvetica', 'bold');
-      pdf.text('Project Overview', 20, yPos);
+      pdf.text('Product Scope & Vision', 20, yPos);
       
       pdf.setFontSize(11);
       pdf.setFont('helvetica', 'normal');
-      const descLines = pdf.splitTextToSize(projectDescription, 170);
-      pdf.text(descLines, 20, yPos + 10);
+      const scopeLines = pdf.splitTextToSize(productScope, 170);
+      pdf.text(scopeLines, 20, yPos + 10);
       
-      yPos += 20 + (descLines.length * 5);
+      yPos += 20 + (scopeLines.length * 5);
 
-      // Requirements
-      if (requirements) {
-        pdf.setFontSize(14);
+      // Modules Section
+      if (modules.length > 0) {
+        if (yPos > 250) {
+          pdf.addPage();
+          yPos = 30;
+        }
+
+        pdf.setFontSize(16);
         pdf.setFont('helvetica', 'bold');
-        pdf.text('Requirements', 20, yPos);
-        
-        pdf.setFontSize(11);
+        pdf.text('Core Modules', 20, yPos);
+        yPos += 15;
+
+        modules.forEach((module: any) => {
+          if (yPos > 260) {
+            pdf.addPage();
+            yPos = 30;
+          }
+          
+          pdf.setFontSize(12);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(`• ${module.name}`, 25, yPos);
+          
+          pdf.setFontSize(10);
+          pdf.setFont('helvetica', 'normal');
+          const descLines = pdf.splitTextToSize(module.description, 160);
+          pdf.text(descLines, 30, yPos + 6);
+          
+          yPos += 12 + (descLines.length * 4);
+          
+          if (module.dependencies && module.dependencies.length > 0) {
+            pdf.text(`Dependencies: ${module.dependencies.join(', ')}`, 30, yPos);
+            yPos += 6;
+          }
+          
+          if (module.ai_used) {
+            pdf.text('🤖 AI-Powered Feature', 30, yPos);
+            yPos += 6;
+          }
+          
+          yPos += 5;
+        });
+      }
+
+      // Architecture Section
+      if (architecture.pattern) {
+        if (yPos > 220) {
+          pdf.addPage();
+          yPos = 30;
+        }
+
+        pdf.setFontSize(16);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Architecture Recommendations', 20, yPos);
+        yPos += 15;
+
+        pdf.setFontSize(12);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(`Pattern: ${architecture.pattern}`, 25, yPos);
+        pdf.setFontSize(10);
         pdf.setFont('helvetica', 'normal');
-        const reqLines = pdf.splitTextToSize(requirements, 170);
-        pdf.text(reqLines, 20, yPos + 10);
-        
-        yPos += 20 + (reqLines.length * 5);
+        const patternLines = pdf.splitTextToSize(architecture.reason, 160);
+        pdf.text(patternLines, 30, yPos + 6);
+        yPos += 12 + (patternLines.length * 4);
+
+        pdf.setFontSize(12);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(`API Style: ${architecture.api_style}`, 25, yPos);
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'normal');
+        const apiLines = pdf.splitTextToSize(architecture.api_reason, 160);
+        pdf.text(apiLines, 30, yPos + 6);
+        yPos += 12 + (apiLines.length * 4);
       }
 
-      // Check if we need a new page
-      if (yPos > 250) {
-        pdf.addPage();
-        yPos = 30;
-      }
+      // Budget Estimate
+      if (budgetEstimate.total_project) {
+        if (yPos > 220) {
+          pdf.addPage();
+          yPos = 30;
+        }
 
-      // Technology Stack
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Technology Stack', 20, yPos);
-      
-      const techLines = techStack.split('\n').filter(line => line.trim());
-      
-      pdf.setFontSize(11);
-      pdf.setFont('helvetica', 'normal');
-      yPos += 15;
+        pdf.setFontSize(16);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Budget Estimation', 20, yPos);
+        yPos += 15;
 
-      for (const line of techLines) {
-        const cleanLine = line.replace(/[#*-]/g, '').trim();
-        if (!cleanLine) continue;
+        pdf.setFontSize(12);
+        pdf.setFont('helvetica', 'normal');
+        pdf.text(`Total Project Cost: ${budgetEstimate.total_project}`, 25, yPos);
+        yPos += 10;
 
-        if (cleanLine.toLowerCase().includes('frontend') || 
-            cleanLine.toLowerCase().includes('backend') || 
-            cleanLine.toLowerCase().includes('database') ||
-            cleanLine.toLowerCase().includes('devops')) {
-          
-          if (yPos > 270) {
-            pdf.addPage();
-            yPos = 30;
-          }
-          
-          pdf.setFont('helvetica', 'bold');
-          pdf.text(`${cleanLine}`, 25, yPos);
-          pdf.setFont('helvetica', 'normal');
+        if (budgetEstimate.development) {
+          pdf.text(`Development Team: ${budgetEstimate.development.team_cost}`, 25, yPos);
           yPos += 8;
-        } else if (cleanLine.includes(':')) {
-          const [tech, desc] = cleanLine.split(':');
-          pdf.text(`  - ${tech.trim()}: ${desc.trim()}`, 30, yPos);
-          yPos += 6;
-        } else {
-          pdf.text(`  - ${cleanLine}`, 30, yPos);
-          yPos += 6;
-        }
-
-        if (yPos > 270) {
-          pdf.addPage();
-          yPos = 30;
-        }
-      }
-
-      yPos += 10;
-
-      // Development Timeline
-      if (yPos > 240) {
-        pdf.addPage();
-        yPos = 30;
-      }
-
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Development Timeline', 20, yPos);
-      
-      pdf.setFontSize(11);
-      pdf.setFont('helvetica', 'normal');
-      yPos += 15;
-
-      const timelineLines = timeline.split('\n').filter(line => line.trim());
-      for (const line of timelineLines) {
-        const cleanLine = line.replace(/[#*-]/g, '').trim();
-        if (!cleanLine) continue;
-
-        if (cleanLine.toLowerCase().includes('week') || cleanLine.toLowerCase().includes('phase')) {
-          if (yPos > 270) {
-            pdf.addPage();
-            yPos = 30;
-          }
-          pdf.setFont('helvetica', 'bold');
-          pdf.text(`${cleanLine}`, 25, yPos);
-          pdf.setFont('helvetica', 'normal');
+          pdf.text(`Duration: ${budgetEstimate.development.duration}`, 25, yPos);
           yPos += 8;
-        } else {
-          const wrappedLines = pdf.splitTextToSize(cleanLine, 160);
-          pdf.text(wrappedLines, 30, yPos);
-          yPos += wrappedLines.length * 6;
         }
 
-        if (yPos > 270) {
-          pdf.addPage();
-          yPos = 30;
+        if (budgetEstimate.infrastructure) {
+          pdf.text(`Monthly Infrastructure: ${budgetEstimate.infrastructure.total_monthly}`, 25, yPos);
+          yPos += 8;
         }
-      }
-
-      yPos += 10;
-
-      // Budget Estimation
-      if (yPos > 240) {
-        pdf.addPage();
-        yPos = 30;
-      }
-
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Budget Estimation', 20, yPos);
-      
-      pdf.setFontSize(11);
-      pdf.setFont('helvetica', 'normal');
-      yPos += 15;
-
-      const budgetItems = [
-        'Development Team (1-2 developers): $8,000 - $15,000/month',
-        'Infrastructure (Hosting, DB, Services): $100 - $500/month',
-        'Third-party Services (APIs, Tools): $200 - $800/month',
-        'Total Project Cost (3-6 months): $25,000 - $95,000'
-      ];
-
-      for (const item of budgetItems) {
-        pdf.text(`• ${item}`, 25, yPos);
-        yPos += 8;
-      }
-
-      yPos += 10;
-
-      // Team Structure
-      if (yPos > 240) {
-        pdf.addPage();
-        yPos = 30;
-      }
-
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Recommended Team Structure', 20, yPos);
-      
-      pdf.setFontSize(11);
-      pdf.setFont('helvetica', 'normal');
-      yPos += 15;
-
-      const teamRoles = [
-        'Frontend Developer: UI/UX implementation, responsive design',
-        'Backend Developer: API development, database design, security',
-        'DevOps Engineer: CI/CD setup, infrastructure management',
-        'Product Manager: Requirements gathering, project coordination'
-      ];
-
-      for (const role of teamRoles) {
-        pdf.text(`• ${role}`, 25, yPos);
-        yPos += 8;
-      }
-
-      yPos += 10;
-
-      // Recommendations
-      if (yPos > 200) {
-        pdf.addPage();
-        yPos = 30;
-      }
-
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Recommendations & Best Practices', 20, yPos);
-      
-      pdf.setFontSize(11);
-      pdf.setFont('helvetica', 'normal');
-      yPos += 15;
-
-      const suggestionLines = suggestions.split('\n').filter(line => line.trim());
-      for (const line of suggestionLines) {
-        const cleanLine = line.replace(/[#*-]/g, '').trim();
-        if (!cleanLine) continue;
-
-        if (yPos > 270) {
-          pdf.addPage();
-          yPos = 30;
-        }
-
-        const wrappedLines = pdf.splitTextToSize(`• ${cleanLine}`, 170);
-        pdf.text(wrappedLines, 25, yPos);
-        yPos += wrappedLines.length * 6 + 3;
       }
 
       // Add footer to all pages
@@ -288,11 +205,11 @@ const StackWizardDashboard = ({
         pdf.text(`Generated by DevSynth AI StackWizard+ | Page ${i} of ${totalPages}`, 20, 285);
       }
 
-      pdf.save(`${projectName}-development-strategy.pdf`);
+      pdf.save(`${projectName}-saas-blueprint.pdf`);
       
       toast({
         title: "Success!",
-        description: "Development strategy exported as PDF document",
+        description: "SaaS blueprint exported as PDF document",
       });
     } catch (error) {
       console.error('PDF export error:', error);
@@ -315,17 +232,24 @@ const StackWizardDashboard = ({
           project_name: projectName,
           description: projectDescription,
           requirements: requirements,
-          tech_stack: techStack,
-          timeline: timeline,
-          gantt_chart: ganttChart,
-          suggestions: suggestions
+          product_scope: productScope,
+          tech_stack: typeof techStack === 'string' ? techStack : JSON.stringify(techStack),
+          timeline: typeof timeline === 'string' ? timeline : JSON.stringify(timeline),
+          gantt_chart: planData.ganttChart || JSON.stringify(timeline),
+          suggestions: typeof suggestions === 'string' ? suggestions : JSON.stringify(suggestions),
+          modules: modules,
+          bonus_modules: bonusModules,
+          architecture: architecture,
+          testing_strategy: testingStrategy,
+          team_plan: teamPlan,
+          budget_estimate: budgetEstimate
         });
 
       if (error) throw error;
 
       toast({
         title: "Saved!",
-        description: "Project plan saved to your workspace",
+        description: "SaaS blueprint saved to your workspace",
       });
     } catch (error) {
       toast({
@@ -342,10 +266,10 @@ const StackWizardDashboard = ({
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg border-b border-white/10 p-6 -mx-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold font-sora bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold font-sora bg-gradient-to-r from-neon-orange via-neon-coral to-neon-yellow bg-clip-text text-transparent">
               {projectName}
             </h1>
-            <p className="text-muted-foreground mt-1">Complete Development Strategy Dashboard</p>
+            <p className="text-muted-foreground mt-1">Complete SaaS Development Blueprint</p>
           </div>
           <div className="flex gap-3">
             <button
@@ -359,14 +283,14 @@ const StackWizardDashboard = ({
               onClick={copyAllContent}
               className="glass-dark rounded-xl px-4 py-2 flex items-center gap-2 hover:scale-105 transition-all duration-300 neon-glow"
             >
-              <Copy className="w-4 h-4 text-neon-blue" />
+              <Copy className="w-4 h-4 text-neon-coral" />
               <span className="text-sm font-medium">Copy All</span>
             </button>
             <button
               onClick={exportToPDF}
               className="glass-dark rounded-xl px-4 py-2 flex items-center gap-2 hover:scale-105 transition-all duration-300 neon-glow"
             >
-              <Download className="w-4 h-4 text-neon-purple" />
+              <Download className="w-4 h-4 text-neon-orange" />
               <span className="text-sm font-medium">Export PDF</span>
             </button>
           </div>
@@ -375,16 +299,16 @@ const StackWizardDashboard = ({
 
       <div id="stackwizard-dashboard" className="space-y-12">
         {/* Tech Stack */}
-        <TechStackModule techStack={techStack} />
+        <TechStackModule techStack={techStack} modules={modules} bonusModules={bonusModules} />
 
         {/* Gantt Timeline */}
-        <GanttTimelineModule timeline={timeline} />
+        <GanttTimelineModule timeline={timeline} timelineData={planData.timeline} />
 
         {/* Budget & Team Planning */}
-        <BudgetEstimationModule />
+        <BudgetEstimationModule budgetEstimate={budgetEstimate} teamPlan={teamPlan} />
 
         {/* Project Roadmap */}
-        <ProjectRoadmapModule />
+        <ProjectRoadmapModule architecture={architecture} testingStrategy={testingStrategy} />
 
         {/* Pro Tips */}
         <ProTipsModule suggestions={suggestions} />

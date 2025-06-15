@@ -50,38 +50,59 @@ export type Database = {
       }
       plans: {
         Row: {
+          architecture: Json | null
+          bonus_modules: Json | null
+          budget_estimate: Json | null
           created_at: string | null
           description: string | null
           gantt_chart: string | null
           id: string
+          modules: Json | null
+          product_scope: string | null
           project_name: string | null
           requirements: string | null
           suggestions: string | null
+          team_plan: Json | null
           tech_stack: string | null
+          testing_strategy: Json | null
           timeline: string | null
           user_id: string | null
         }
         Insert: {
+          architecture?: Json | null
+          bonus_modules?: Json | null
+          budget_estimate?: Json | null
           created_at?: string | null
           description?: string | null
           gantt_chart?: string | null
           id?: string
+          modules?: Json | null
+          product_scope?: string | null
           project_name?: string | null
           requirements?: string | null
           suggestions?: string | null
+          team_plan?: Json | null
           tech_stack?: string | null
+          testing_strategy?: Json | null
           timeline?: string | null
           user_id?: string | null
         }
         Update: {
+          architecture?: Json | null
+          bonus_modules?: Json | null
+          budget_estimate?: Json | null
           created_at?: string | null
           description?: string | null
           gantt_chart?: string | null
           id?: string
+          modules?: Json | null
+          product_scope?: string | null
           project_name?: string | null
           requirements?: string | null
           suggestions?: string | null
+          team_plan?: Json | null
           tech_stack?: string | null
+          testing_strategy?: Json | null
           timeline?: string | null
           user_id?: string | null
         }
