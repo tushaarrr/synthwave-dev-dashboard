@@ -8,10 +8,7 @@ import { AuthProvider } from "@/components/auth/AuthProvider";
 import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
 import LoginPage from "./components/auth/LoginPage";
-import ProfilePage from "./pages/ProfilePage";
 import ProjectsPage from "./pages/ProjectsPage";
-import ImageGenModule from "./components/ImageGenModule";
-import TestCaseGenModule from "./components/TestCaseGenModule";
 import PromptHistoryPage from "./pages/PromptHistoryPage";
 import CodeHistoryPage from "./pages/CodeHistoryPage";
 import SQLHistoryPage from "./pages/SQLHistoryPage";
@@ -36,10 +33,7 @@ const App = () => (
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="/imagegen" element={<ImageGenModule />} />
-            <Route path="/testcasegen" element={<TestCaseGenModule />} />
             <Route path="/prompt-history" element={<PromptHistoryPage />} />
             <Route path="/code-history" element={<CodeHistoryPage />} />
             <Route path="/sql-history" element={<SQLHistoryPage />} />

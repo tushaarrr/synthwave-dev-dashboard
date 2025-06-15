@@ -108,36 +108,6 @@ export type Database = {
         }
         Relationships: []
       }
-      profiles: {
-        Row: {
-          avatar_url: string | null
-          created_at: string
-          email: string | null
-          full_name: string | null
-          id: string
-          plan_tier: string | null
-          updated_at: string
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string
-          email?: string | null
-          full_name?: string | null
-          id: string
-          plan_tier?: string | null
-          updated_at?: string
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string
-          email?: string | null
-          full_name?: string | null
-          id?: string
-          plan_tier?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
       prompt_history: {
         Row: {
           created_at: string
@@ -200,44 +170,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
-      }
-      test_cases: {
-        Row: {
-          created_at: string
-          framework: string | null
-          generated_tests: Json | null
-          id: string
-          project_id: string | null
-          raw_code: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          framework?: string | null
-          generated_tests?: Json | null
-          id?: string
-          project_id?: string | null
-          raw_code?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          framework?: string | null
-          generated_tests?: Json | null
-          id?: string
-          project_id?: string | null
-          raw_code?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "test_cases_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "plans"
-            referencedColumns: ["id"]
-          },
-        ]
       }
     }
     Views: {
