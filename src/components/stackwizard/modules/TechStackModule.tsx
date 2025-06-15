@@ -2,24 +2,23 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Zap, Code, Database, Server, Palette, Globe, Shield, Bot } from 'lucide-react';
+import { Code, Layers, Database, Cloud, Zap, Users, CheckCircle, Clock, DollarSign } from 'lucide-react';
 
 interface Module {
   name: string;
   description: string;
-  detailed_description?: string;
-  technical_details?: string;
-  dependencies?: string[];
-  ai_used?: boolean;
-  complexity?: string;
-  estimated_hours?: string;
-  key_features?: string[];
-  acceptance_criteria?: string[];
+  dependencies: string[];
+  ai_used: boolean;
+  estimated_hours?: number;
+  complexity?: 'Low' | 'Medium' | 'High';
+  priority?: 'Critical' | 'Important' | 'Nice-to-have';
 }
 
 interface BonusModule {
   name: string;
   description: string;
+  estimated_hours?: number;
+  cost_estimate?: string;
 }
 
 interface TechStackModuleProps {
@@ -29,180 +28,221 @@ interface TechStackModuleProps {
 }
 
 const TechStackModule = ({ techStack, modules, bonusModules }: TechStackModuleProps) => {
-  console.log('TechStackModule received:', { techStack, modules: modules?.length, bonusModules: bonusModules?.length });
+  console.log('TechStackModule props:', { techStack, modules, bonusModules });
 
-  const parseTechStack = (stackData: any) => {
-    const categories = {
-      Frontend: { icon: Palette, color: 'text-blue-400', items: [] as string[] },
-      Backend: { icon: Server, color: 'text-green-400', items: [] as string[] },
-      Database: { icon: Database, color: 'text-purple-400', items: [] as string[] },
-      Hosting: { icon: Globe, color: 'text-orange-400', items: [] as string[] },
-      'AI Services': { icon: Bot, color: 'text-pink-400', items: [] as string[] },
-      Development: { icon: Code, color: 'text-cyan-400', items: [] as string[] }
-    };
-
-    if (typeof stackData === 'object' && stackData !== null) {
-      if (stackData.frontend) categories.Frontend.items = stackData.frontend;
-      if (stackData.backend) categories.Backend.items = stackData.backend;
-      if (stackData.database) categories.Database.items = stackData.database;
-      if (stackData.hosting) categories.Hosting.items = stackData.hosting;
-      if (stackData.ai_services) categories['AI Services'].items = stackData.ai_services;
-      if (stackData.development) categories.Development.items = stackData.development;
-      if (stackData.payments) categories.Backend.items = [...(categories.Backend.items || []), ...stackData.payments];
-      if (stackData.analytics) categories.Backend.items = [...(categories.Backend.items || []), ...stackData.analytics];
+  const getIconForCategory = (category: string) => {
+    switch (category.toLowerCase()) {
+      case 'frontend': return <Code className="w-4 h-4" />;
+      case 'backend': return <Layers className="w-4 h-4" />;
+      case 'database': return <Database className="w-4 h-4" />;
+      case 'hosting': return <Cloud className="w-4 h-4" />;
+      case 'ai_services': return <Zap className="w-4 h-4" />;
+      default: return <Code className="w-4 h-4" />;
     }
-
-    return categories;
   };
 
-  const techCategories = parseTechStack(techStack);
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'Critical': return 'bg-red-500/20 text-red-300 border-red-500/30';
+      case 'Important': return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      case 'Nice-to-have': return 'bg-green-500/20 text-green-300 border-green-500/30';
+      default: return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+    }
+  };
+
+  const getComplexityColor = (complexity: string) => {
+    switch (complexity) {
+      case 'High': return 'bg-red-500/20 text-red-300';
+      case 'Medium': return 'bg-yellow-500/20 text-yellow-300';
+      case 'Low': return 'bg-green-500/20 text-green-300';
+      default: return 'bg-gray-500/20 text-gray-300';
+    }
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Zap className="w-6 h-6 text-neon-blue" />
-        <h3 className="text-2xl font-bold font-sora bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
-          Technology Stack & Core Modules
-        </h3>
-      </div>
-
-      {/* Tech Stack Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Object.entries(techCategories).map(([category, data], index) => {
-          const IconComponent = data.icon;
-          if (!data.items || data.items.length === 0) return null;
-          
-          return (
-            <Card 
-              key={category} 
-              className="glass-dark border-0 animate-fade-in hover:scale-[1.02] transition-all duration-300"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <IconComponent className={`w-4 h-4 ${data.color}`} />
-                  {category}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="flex flex-wrap gap-2">
-                  {data.items.slice(0, 6).map((item, itemIndex) => (
-                    <Badge 
-                      key={itemIndex}
-                      variant="secondary"
-                      className="text-xs bg-white/10 hover:bg-white/20 transition-colors"
-                    >
-                      {item}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Core Modules */}
-      {modules && modules.length > 0 && (
-        <div className="space-y-4">
-          <h4 className="text-xl font-semibold font-sora flex items-center gap-2">
-            <Code className="w-5 h-5 text-neon-green" />
-            Core Modules ({modules.length})
-          </h4>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {modules.map((module, index) => (
-              <Card 
-                key={index}
-                className="glass-dark border-0 animate-fade-in"
-                style={{ animationDelay: `${(index + 6) * 100}ms` }}
-              >
-                <CardHeader>
-                  <CardTitle className="flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      <Shield className="w-5 h-5 text-neon-coral" />
-                      <span className="text-lg font-bold">{module.name}</span>
-                    </div>
-                    {module.ai_used && (
-                      <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-                        🤖 AI-Powered
+    <Card className="glass-dark border-0 animate-fade-in">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-3">
+          <Code className="w-6 h-6 text-neon-blue" />
+          <div>
+            <div className="text-2xl font-bold font-sora">Tech Stack & Modules</div>
+            <div className="text-sm text-muted-foreground">Foundation and core components</div>
+          </div>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-8">
+        {/* Tech Stack Overview */}
+        {Object.keys(techStack).length > 0 && (
+          <div className="space-y-4">
+            <h4 className="text-xl font-semibold font-sora flex items-center gap-2">
+              <Layers className="w-5 h-5 text-neon-purple" />
+              Technology Stack
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {Object.entries(techStack).map(([category, technologies]) => (
+                <div key={category} className="p-4 rounded-lg bg-white/5 border border-white/10">
+                  <div className="flex items-center gap-2 mb-3">
+                    {getIconForCategory(category)}
+                    <h5 className="font-semibold capitalize text-white">
+                      {category.replace('_', ' ')}
+                    </h5>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {Array.isArray(technologies) ? technologies.map((tech: string, index: number) => (
+                      <Badge key={index} variant="secondary" className="text-xs">
+                        {tech}
+                      </Badge>
+                    )) : (
+                      <Badge variant="secondary" className="text-xs">
+                        {String(technologies)}
                       </Badge>
                     )}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {module.detailed_description || module.description}
-                  </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-                  {module.technical_details && (
-                    <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                      <h5 className="text-sm font-medium text-blue-300 mb-2">Technical Details</h5>
-                      <p className="text-xs text-muted-foreground">{module.technical_details}</p>
+        {/* Core Modules */}
+        {modules && modules.length > 0 && (
+          <div className="space-y-6">
+            <h4 className="text-xl font-semibold font-sora flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-neon-green" />
+              Core Development Modules
+            </h4>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {modules.map((module, index) => (
+                <div key={index} className="p-6 rounded-lg bg-gradient-to-br from-white/5 to-white/10 border border-white/20 hover:border-neon-blue/50 transition-all duration-300">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h5 className="font-semibold text-lg text-white">{module.name}</h5>
+                        {module.ai_used && (
+                          <Badge variant="outline" className="text-xs bg-purple-500/20 text-purple-300 border-purple-500/30">
+                            🤖 AI-Powered
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      {/* Priority and Complexity */}
+                      <div className="flex gap-2 mb-3">
+                        {module.priority && (
+                          <Badge className={`text-xs ${getPriorityColor(module.priority)}`}>
+                            {module.priority}
+                          </Badge>
+                        )}
+                        {module.complexity && (
+                          <Badge className={`text-xs ${getComplexityColor(module.complexity)}`}>
+                            {module.complexity}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                  )}
-
-                  {module.key_features && module.key_features.length > 0 && (
-                    <div>
-                      <h5 className="text-sm font-medium text-neon-green mb-2">Key Features</h5>
+                    
+                    {/* Estimated Hours */}
+                    {module.estimated_hours && (
+                      <div className="text-right">
+                        <div className="flex items-center gap-1 text-sm text-blue-300">
+                          <Clock className="w-3 h-3" />
+                          {module.estimated_hours}h
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Est. ${Math.round(module.estimated_hours * 25)}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                    {module.description}
+                  </p>
+                  
+                  {/* Dependencies */}
+                  {module.dependencies && module.dependencies.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="text-xs font-medium text-orange-300">Dependencies:</div>
                       <div className="flex flex-wrap gap-1">
-                        {module.key_features.map((feature, fIndex) => (
-                          <Badge key={fIndex} variant="outline" className="text-xs bg-green-500/20 text-green-300">
-                            {feature}
+                        {module.dependencies.map((dep, depIndex) => (
+                          <Badge key={depIndex} variant="outline" className="text-xs bg-orange-500/10 text-orange-200 border-orange-500/20">
+                            {dep}
                           </Badge>
                         ))}
                       </div>
                     </div>
                   )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {module.complexity && (
-                      <Badge variant="secondary" className="text-xs">
-                        {module.complexity} Complexity
-                      </Badge>
-                    )}
-                    {module.estimated_hours && (
-                      <Badge variant="outline" className="text-xs">
-                        {module.estimated_hours}
-                      </Badge>
+        {/* Bonus Modules */}
+        {bonusModules && bonusModules.length > 0 && (
+          <div className="space-y-4">
+            <h4 className="text-xl font-semibold font-sora flex items-center gap-2">
+              <Users className="w-5 h-5 text-neon-yellow" />
+              Future Enhancement Modules
+            </h4>
+            <div className="text-sm text-muted-foreground mb-4">
+              Optional features to add after MVP launch (Phase 2+)
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {bonusModules.map((bonus, index) => (
+                <div key={index} className="p-4 rounded-lg bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20">
+                  <div className="flex items-start justify-between mb-2">
+                    <h5 className="font-semibold text-white">{bonus.name}</h5>
+                    {bonus.cost_estimate && (
+                      <div className="flex items-center gap-1 text-sm text-green-300">
+                        <DollarSign className="w-3 h-3" />
+                        {bonus.cost_estimate}
+                      </div>
                     )}
                   </div>
-
-                  {module.dependencies && module.dependencies.length > 0 && (
-                    <div className="text-xs text-muted-foreground">
-                      <span className="font-medium">Dependencies:</span> {module.dependencies.join(', ')}
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {bonus.description}
+                  </p>
+                  {bonus.estimated_hours && (
+                    <div className="flex items-center gap-1 text-xs text-blue-300">
+                      <Clock className="w-3 h-3" />
+                      {bonus.estimated_hours} hours additional development
                     </div>
                   )}
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Bonus Modules */}
-      {bonusModules && bonusModules.length > 0 && (
-        <div className="space-y-4">
-          <h4 className="text-xl font-semibold font-sora flex items-center gap-2">
-            <Zap className="w-5 h-5 text-neon-yellow" />
-            Bonus Modules ({bonusModules.length})
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {bonusModules.map((module, index) => (
-              <Card 
-                key={index}
-                className="glass-dark border-0 animate-fade-in border-l-4 border-l-neon-yellow"
-                style={{ animationDelay: `${(index + 10) * 100}ms` }}
-              >
-                <CardContent className="p-4">
-                  <h5 className="font-semibold text-neon-yellow mb-2">{module.name}</h5>
-                  <p className="text-sm text-muted-foreground">{module.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+        {/* Development Phases */}
+        <div className="p-6 rounded-lg bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20">
+          <h4 className="text-lg font-semibold text-green-300 mb-3">💡 Bootstrap Strategy</h4>
+          <div className="space-y-3 text-sm">
+            <div className="flex items-start gap-3">
+              <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-xs font-bold text-green-300">1</div>
+              <div>
+                <div className="font-medium text-white">MVP Phase ($300-500)</div>
+                <div className="text-muted-foreground">Focus on core modules only. Use free tiers for hosting and tools.</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-xs font-bold text-blue-300">2</div>
+              <div>
+                <div className="font-medium text-white">Growth Phase ($1K-3K)</div>
+                <div className="text-muted-foreground">Add bonus modules, improve UI/UX, scale infrastructure.</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-xs font-bold text-purple-300">3</div>
+              <div>
+                <div className="font-medium text-white">Scale Phase ($5K+)</div>
+                <div className="text-muted-foreground">Advanced features, team expansion, enterprise readiness.</div>
+              </div>
+            </div>
           </div>
         </div>
-      )}
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

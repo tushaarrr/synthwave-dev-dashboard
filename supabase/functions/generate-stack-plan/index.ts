@@ -37,177 +37,237 @@ serve(async (req) => {
     const finalDescription = projectDescription || defaultIdea.projectDescription;
     const finalRequirements = specificRequirements || defaultIdea.specificRequirements;
 
-    const prompt = `You are a senior technical architect and product manager. Generate a comprehensive MVP development blueprint.
+    const prompt = `You are a senior technical architect and startup advisor. Generate a comprehensive BUT REALISTIC MVP development blueprint for someone starting with $300-500 budget.
 
 Input:
 - Project Name: ${finalProjectName}
 - Description: ${finalDescription}
 - Requirements: ${finalRequirements}
 
-Return ONLY valid JSON with this EXACT structure. Be realistic about MVP scope - focus on 4-6 core modules, 6-8 week timeline, and $8,000-15,000 budget:
+Return ONLY valid JSON with this EXACT structure. Be REALISTIC about bootstrap budget - focus on FREE/CHEAP tools, 4-6 core modules, 6-10 week timeline, and $300-800 total budget:
 
 {
-  "product_scope": "Write 2-3 sentences defining the MVP scope. Focus on ONE core problem.",
+  "product_scope": "Write 2-3 sentences defining the MVP scope. Focus on ONE core problem that can be solved with minimal budget.",
   "tech_stack": {
     "frontend": ["React 18", "TypeScript", "Tailwind CSS", "Vite"],
-    "backend": ["Node.js", "Express", "PostgreSQL"],
-    "hosting": ["Vercel", "Supabase"],
-    "ai_services": ["OpenAI GPT-4o-mini"]
+    "backend": ["Node.js", "Express", "Supabase (Free Tier)"],
+    "hosting": ["Vercel (Free)", "Supabase (Free)"],
+    "ai_services": ["OpenAI (Pay-per-use)"],
+    "tools": ["GitHub (Free)", "VS Code (Free)", "Figma (Free)"]
   },
   "modules": [
     {
-      "name": "User Authentication",
-      "description": "Secure user registration and login system",
-      "dependencies": ["Database", "Email Service"],
-      "ai_used": false
+      "name": "User Authentication & Profiles",
+      "description": "Simple email/password auth with basic user profiles using Supabase Auth",
+      "dependencies": ["Supabase Database"],
+      "ai_used": false,
+      "estimated_hours": 12,
+      "complexity": "Low",
+      "priority": "Critical"
     },
     {
-      "name": "Dashboard & Navigation",
-      "description": "Main user interface and navigation system",
+      "name": "Core Dashboard & Navigation",
+      "description": "Main user interface with responsive navigation and basic dashboard layout",
       "dependencies": ["Authentication"],
-      "ai_used": false
+      "ai_used": false,
+      "estimated_hours": 16,
+      "complexity": "Low",
+      "priority": "Critical"
     },
     {
-      "name": "Data Management",
-      "description": "Core data processing and storage functionality",
+      "name": "Primary Feature Module",
+      "description": "The main value-adding feature that solves the core user problem",
+      "dependencies": ["Authentication", "Dashboard"],
+      "ai_used": false,
+      "estimated_hours": 24,
+      "complexity": "Medium",
+      "priority": "Critical"
+    },
+    {
+      "name": "Data Management System",
+      "description": "CRUD operations for core data with simple validation and storage",
       "dependencies": ["Authentication", "Database"],
-      "ai_used": false
+      "ai_used": false,
+      "estimated_hours": 20,
+      "complexity": "Medium",
+      "priority": "Critical"
     },
     {
-      "name": "AI-Powered Features",
-      "description": "AI analysis and content generation capabilities",
-      "dependencies": ["Data Management", "AI API"],
-      "ai_used": true
+      "name": "Basic AI Integration",
+      "description": "Simple AI feature using OpenAI API with basic error handling",
+      "dependencies": ["Data Management", "OpenAI API"],
+      "ai_used": true,
+      "estimated_hours": 18,
+      "complexity": "Medium",
+      "priority": "Important"
     },
     {
-      "name": "Reports & Analytics",
-      "description": "Generate and view detailed reports and insights",
-      "dependencies": ["AI Features", "Data Management"],
-      "ai_used": true
+      "name": "User Settings & Preferences",
+      "description": "Basic user preferences and account management features",
+      "dependencies": ["Authentication"],
+      "ai_used": false,
+      "estimated_hours": 10,
+      "complexity": "Low",
+      "priority": "Important"
     }
   ],
   "bonus_modules": [
     {
       "name": "Team Collaboration",
-      "description": "Multi-user workspaces and sharing features"
+      "description": "Multi-user workspaces and basic sharing (Phase 2)",
+      "estimated_hours": 40,
+      "cost_estimate": "$1,000"
     },
     {
-      "name": "API Access",
-      "description": "REST API for third-party integrations"
+      "name": "Advanced Analytics",
+      "description": "Charts, reports, and data insights (Phase 2)",
+      "estimated_hours": 32,
+      "cost_estimate": "$800"
+    },
+    {
+      "name": "Mobile App",
+      "description": "React Native mobile version (Phase 3)",
+      "estimated_hours": 80,
+      "cost_estimate": "$2,000"
     }
   ],
   "architecture": {
-    "pattern": "Modular Monolith",
-    "reason": "Perfect for MVP - faster development, easier debugging, can scale to microservices later",
+    "pattern": "Simple Monolith",
+    "reason": "Fastest and cheapest for MVP - no complex infrastructure needed, easy to debug and deploy",
     "api_style": "REST",
-    "api_reason": "Simple, well-understood, great tooling support",
-    "database_type": "PostgreSQL",
-    "database_reason": "ACID compliance, JSON support, excellent for complex queries",
-    "deployment_strategy": "Container-based with CI/CD"
+    "api_reason": "Simple, well-documented, works perfectly with Supabase",
+    "database_type": "Supabase PostgreSQL",
+    "database_reason": "Free tier includes auth, database, and real-time features - perfect for bootstrap",
+    "deployment_strategy": "Vercel free tier for frontend, Supabase for backend"
   },
   "testing_strategy": {
-    "types": ["Unit Testing", "Integration Testing", "E2E Testing"],
+    "types": ["Manual Testing", "Basic Unit Tests"],
     "tools": {
-      "unit": "Jest + React Testing Library",
-      "integration": "Supertest",
-      "e2e": "Playwright"
+      "manual": "Browser testing and user feedback",
+      "unit": "Jest (basic setup)",
+      "monitoring": "Sentry (free tier)"
     },
     "coverage_targets": {
-      "unit": "80%",
-      "integration": "70%",
-      "critical_paths": "100%"
+      "manual": "100% of user flows",
+      "unit": "50% (focus on critical functions)",
+      "integration": "Core features only"
     },
-    "ai_testing": "Test AI API integration, response validation, fallback scenarios, and cost monitoring",
-    "testing_environments": ["Development", "Staging", "Production"],
-    "automated_testing": "GitHub Actions CI/CD with automated test runs",
-    "manual_testing": "User acceptance testing and cross-browser compatibility"
+    "ai_testing": "Test AI API responses and error handling with small sample data",
+    "testing_environments": ["Development", "Production"],
+    "automated_testing": "GitHub Actions (free tier) for basic CI",
+    "manual_testing": "Personal testing + 5-10 beta users for feedback"
   },
   "timeline": [
     {
       "week": 1,
       "title": "Foundation Setup",
-      "tasks": ["Project setup", "Authentication system", "Database design", "Basic UI components"],
+      "tasks": ["Project setup", "Supabase configuration", "Basic auth", "Initial UI framework"],
       "progress": 0,
-      "deliverables": ["Working auth", "Database schema", "UI framework"]
+      "deliverables": ["Working auth system", "Basic app structure", "Database schema"]
     },
     {
       "week": 2,
-      "title": "Core Features",
-      "tasks": ["Dashboard development", "Data management", "API endpoints", "User flows"],
+      "title": "Core Authentication & Dashboard",
+      "tasks": ["User registration/login", "Dashboard layout", "Navigation", "User profiles"],
       "progress": 0,
-      "deliverables": ["Functional dashboard", "Data CRUD operations", "Core workflows"]
+      "deliverables": ["Complete auth flow", "Main dashboard", "User management"]
     },
     {
       "week": 3,
-      "title": "AI Integration",
-      "tasks": ["AI API integration", "Content generation", "Analysis features", "Response handling"],
+      "title": "Primary Feature Development",
+      "tasks": ["Main feature implementation", "Core user workflows", "Basic validation"],
       "progress": 0,
-      "deliverables": ["Working AI features", "Content generation", "Analysis tools"]
+      "deliverables": ["Working primary feature", "User can accomplish main task"]
     },
     {
       "week": 4,
-      "title": "Reports & Analytics",
-      "tasks": ["Report generation", "Data visualization", "Export features", "Performance optimization"],
+      "title": "Data Management",
+      "tasks": ["CRUD operations", "Data validation", "Error handling", "Basic search"],
       "progress": 0,
-      "deliverables": ["Report system", "Charts/graphs", "Export functionality"]
+      "deliverables": ["Full data management", "Reliable data operations"]
     },
     {
       "week": 5,
-      "title": "Testing & Polish",
-      "tasks": ["Comprehensive testing", "Bug fixes", "UI/UX improvements", "Performance tuning"],
+      "title": "AI Integration",
+      "tasks": ["OpenAI API integration", "AI feature implementation", "Response handling"],
       "progress": 0,
-      "deliverables": ["Tested application", "Bug-free core features", "Polished UI"]
+      "deliverables": ["Working AI features", "Error handling for AI calls"]
     },
     {
       "week": 6,
-      "title": "Launch Preparation",
-      "tasks": ["Production deployment", "Documentation", "User onboarding", "Monitoring setup"],
+      "title": "User Experience Polish",
+      "tasks": ["UI improvements", "Mobile responsiveness", "Loading states", "Error messages"],
       "progress": 0,
-      "deliverables": ["Production app", "User docs", "Monitoring dashboard"]
+      "deliverables": ["Polished UI", "Mobile-friendly design"]
+    },
+    {
+      "week": 7,
+      "title": "Testing & Bug Fixes",
+      "tasks": ["Manual testing", "Bug fixes", "Performance optimization", "User feedback"],
+      "progress": 0,
+      "deliverables": ["Stable application", "Major bugs fixed"]
+    },
+    {
+      "week": 8,
+      "title": "Launch Preparation",
+      "tasks": ["Final testing", "Documentation", "Deployment", "Monitoring setup"],
+      "progress": 0,
+      "deliverables": ["Production-ready MVP", "Launch checklist completed"]
     }
   ],
   "team_plan": {
     "roles": [
       {
-        "role": "Full-Stack Developer (Lead)",
-        "responsibilities": "Architecture, backend development, AI integration, deployment"
-      },
-      {
-        "role": "Frontend Developer",
-        "responsibilities": "UI/UX implementation, responsive design, user experience"
-      },
-      {
-        "role": "Product Manager/Designer",
-        "responsibilities": "Requirements, design, testing, project coordination"
+        "role": "Solo Developer/Founder",
+        "responsibilities": "Full-stack development, design, testing, deployment, and product management",
+        "experience_level": "Intermediate",
+        "time_commitment": "20-30 hours/week",
+        "estimated_cost": "$0 (sweat equity)",
+        "key_skills": ["React", "JavaScript", "Basic design", "Problem-solving"]
       }
     ],
-    "team_size": "3 people",
-    "duration": "6 weeks"
+    "team_size": "1 person (solo founder)",
+    "duration": "8 weeks part-time",
+    "working_methodology": "Agile approach with weekly milestones and daily progress tracking",
+    "communication_tools": ["GitHub Issues", "Personal journal", "User feedback forms"]
   },
   "budget_estimate": {
     "development": {
-      "team_cost": "$12,000 - $18,000",
-      "duration": "6 weeks",
-      "total": "$15,000"
+      "team_cost": "$0 (solo founder sweat equity)",
+      "duration": "8 weeks part-time",
+      "total": "$0"
     },
     "infrastructure": {
-      "hosting": "$50/month",
-      "ai_services": "$100/month",
-      "third_party": "$50/month",
-      "total_monthly": "$200/month"
+      "hosting": "$0/month (Vercel free tier)",
+      "database": "$0/month (Supabase free tier)",
+      "ai_services": "$20-50/month (OpenAI API usage)",
+      "domain": "$12/year (optional)",
+      "monitoring": "$0/month (free tiers)",
+      "total_monthly": "$20-50/month"
     },
-    "total_project": "$15,600 (including 3 months operations)"
+    "one_time_costs": {
+      "domain_registration": "$12",
+      "design_tools": "$0 (free tiers)",
+      "development_tools": "$0 (free/open source)",
+      "initial_ai_credits": "$50",
+      "total": "$62"
+    },
+    "total_mvp": "$300-500 (including 6 months of operations)",
+    "post_mvp_monthly": "$20-50/month",
+    "scaling_costs": "Expect $100-200/month when you reach 1000+ users"
   },
   "suggestions": [
-    "Start with core MVP features before adding nice-to-haves",
-    "Implement proper error handling and user feedback",
-    "Focus on mobile-responsive design from day one",
-    "Set up analytics and monitoring early for user insights",
-    "Plan for scalability but don't over-engineer the MVP"
+    "Start with free tiers for everything - upgrade only when necessary",
+    "Focus on ONE core feature that solves a real problem",
+    "Get user feedback early and often (after week 4)",
+    "Keep the UI simple - prioritize functionality over fancy design",
+    "Document your API and code from day one for easier scaling",
+    "Plan for monetization from week 6 - even simple pricing helps validate demand",
+    "Consider a simple landing page before full development to test interest"
   ]
 }
 
-Make this realistic for an MVP. Focus on essential features only.`;
+This is for a BOOTSTRAP startup with $300-500 budget. Be extremely realistic about costs and complexity.`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -253,8 +313,8 @@ Make this realistic for an MVP. Focus on essential features only.`;
           tech_stack: parsedResult.tech_stack || {
             frontend: ["React", "TypeScript", "Tailwind CSS"],
             backend: ["Node.js", "Express"],
-            database: ["PostgreSQL"],
-            hosting: ["Vercel", "Supabase"]
+            database: ["Supabase (Free Tier)"],
+            hosting: ["Vercel (Free)", "Supabase (Free)"]
           },
           modules: parsedResult.modules || [],
           bonus_modules: parsedResult.bonus_modules || [],
@@ -274,169 +334,229 @@ Make this realistic for an MVP. Focus on essential features only.`;
       console.error('Failed to parse JSON response, using fallback');
     }
 
-    // Enhanced fallback with complete realistic data
+    // Enhanced realistic bootstrap fallback
     const fallbackResult = {
       product_scope: finalDescription,
       tech_stack: {
         frontend: ["React 18", "TypeScript", "Tailwind CSS", "Vite"],
-        backend: ["Node.js", "Express", "PostgreSQL"],
-        hosting: ["Vercel", "Supabase"],
-        ai_services: ["OpenAI GPT-4o-mini"]
+        backend: ["Node.js", "Express", "Supabase (Free Tier)"],
+        hosting: ["Vercel (Free)", "Supabase (Free)"],
+        ai_services: ["OpenAI (Pay-per-use)"],
+        tools: ["GitHub (Free)", "VS Code (Free)", "Figma (Free)"]
       },
       modules: [
         {
           name: "User Authentication & Profiles",
-          description: "Secure user registration, login, and profile management",
-          dependencies: ["Database", "Email Service"],
-          ai_used: false
+          description: "Simple email/password auth with basic user profiles using Supabase Auth",
+          dependencies: ["Supabase Database"],
+          ai_used: false,
+          estimated_hours: 12,
+          complexity: "Low",
+          priority: "Critical"
         },
         {
-          name: "Dashboard & Navigation",
-          description: "Main application interface and navigation system",
+          name: "Core Dashboard & Navigation", 
+          description: "Main user interface with responsive navigation and basic dashboard layout",
           dependencies: ["Authentication"],
-          ai_used: false
+          ai_used: false,
+          estimated_hours: 16,
+          complexity: "Low",
+          priority: "Critical"
+        },
+        {
+          name: "Primary Feature Module",
+          description: "The main value-adding feature that solves the core user problem",
+          dependencies: ["Authentication", "Dashboard"],
+          ai_used: false,
+          estimated_hours: 24,
+          complexity: "Medium",
+          priority: "Critical"
         },
         {
           name: "Data Management System",
-          description: "Core data processing, storage, and validation",
+          description: "CRUD operations for core data with simple validation and storage",
           dependencies: ["Authentication", "Database"],
-          ai_used: false
+          ai_used: false,
+          estimated_hours: 20,
+          complexity: "Medium",
+          priority: "Critical"
         },
         {
-          name: "AI-Powered Analysis",
-          description: "AI-driven insights and content generation",
-          dependencies: ["Data Management", "AI API"],
-          ai_used: true
+          name: "Basic AI Integration",
+          description: "Simple AI feature using OpenAI API with basic error handling",
+          dependencies: ["Data Management", "OpenAI API"],
+          ai_used: true,
+          estimated_hours: 18,
+          complexity: "Medium",
+          priority: "Important"
         },
         {
-          name: "Reports & Visualization",
-          description: "Generate reports and data visualizations",
-          dependencies: ["AI Analysis", "Data Management"],
-          ai_used: true
+          name: "User Settings & Preferences",
+          description: "Basic user preferences and account management features",
+          dependencies: ["Authentication"],
+          ai_used: false,
+          estimated_hours: 10,
+          complexity: "Low",
+          priority: "Important"
         }
       ],
       bonus_modules: [
         {
           name: "Team Collaboration",
-          description: "Multi-user workspaces and sharing capabilities"
+          description: "Multi-user workspaces and basic sharing (Phase 2)",
+          estimated_hours: 40,
+          cost_estimate: "$1,000"
         },
         {
-          name: "API & Integrations",
-          description: "REST API and third-party tool integrations"
+          name: "Advanced Analytics",
+          description: "Charts, reports, and data insights (Phase 2)",
+          estimated_hours: 32,
+          cost_estimate: "$800"
+        },
+        {
+          name: "Mobile App",
+          description: "React Native mobile version (Phase 3)",
+          estimated_hours: 80,
+          cost_estimate: "$2,000"
         }
       ],
       architecture: {
-        pattern: "Modular Monolith",
-        reason: "Ideal for MVP development - faster iteration, easier debugging, clear module separation",
+        pattern: "Simple Monolith",
+        reason: "Fastest and cheapest for MVP - no complex infrastructure needed, easy to debug and deploy",
         api_style: "REST",
-        api_reason: "Simple, well-understood, excellent tooling support",
-        database_type: "PostgreSQL",
-        database_reason: "ACID compliance, JSON support, powerful querying capabilities",
-        deployment_strategy: "Container-based deployment with automated CI/CD"
+        api_reason: "Simple, well-documented, works perfectly with Supabase",
+        database_type: "Supabase PostgreSQL",
+        database_reason: "Free tier includes auth, database, and real-time features - perfect for bootstrap",
+        deployment_strategy: "Vercel free tier for frontend, Supabase for backend"
       },
       testing_strategy: {
-        types: ["Unit Testing", "Integration Testing", "End-to-End Testing"],
+        types: ["Manual Testing", "Basic Unit Tests"],
         tools: {
-          unit: "Jest + React Testing Library",
-          integration: "Supertest + Jest",
-          e2e: "Playwright"
+          manual: "Browser testing and user feedback",
+          unit: "Jest (basic setup)",
+          monitoring: "Sentry (free tier)"
         },
         coverage_targets: {
-          unit: "80%",
-          integration: "70%",
-          critical_paths: "100%"
+          manual: "100% of user flows",
+          unit: "50% (focus on critical functions)",
+          integration: "Core features only"
         },
-        ai_testing: "Test AI API integration, response validation, fallback scenarios, and usage monitoring",
-        testing_environments: ["Development", "Staging", "Production"],
-        automated_testing: "GitHub Actions CI/CD with test automation on every PR",
-        manual_testing: "User acceptance testing and cross-browser compatibility"
+        ai_testing: "Test AI API responses and error handling with small sample data",
+        testing_environments: ["Development", "Production"],
+        automated_testing: "GitHub Actions (free tier) for basic CI",
+        manual_testing: "Personal testing + 5-10 beta users for feedback"
       },
       timeline: [
         {
           week: 1,
-          title: "Foundation & Setup",
-          tasks: ["Project initialization", "Authentication system", "Database schema", "Basic UI components"],
+          title: "Foundation Setup",
+          tasks: ["Project setup", "Supabase configuration", "Basic auth", "Initial UI framework"],
           progress: 0,
-          deliverables: ["Working authentication", "Database structure", "UI framework"]
+          deliverables: ["Working auth system", "Basic app structure", "Database schema"]
         },
         {
           week: 2,
-          title: "Core Features",
-          tasks: ["Dashboard development", "Data management", "API endpoints", "User workflows"],
+          title: "Core Authentication & Dashboard",
+          tasks: ["User registration/login", "Dashboard layout", "Navigation", "User profiles"],
           progress: 0,
-          deliverables: ["Functional dashboard", "Data CRUD operations", "Core user flows"]
+          deliverables: ["Complete auth flow", "Main dashboard", "User management"]
         },
         {
           week: 3,
-          title: "AI Integration",
-          tasks: ["AI API integration", "Content generation", "Analysis features", "Error handling"],
+          title: "Primary Feature Development",
+          tasks: ["Main feature implementation", "Core user workflows", "Basic validation"],
           progress: 0,
-          deliverables: ["Working AI features", "Content generation", "Analysis tools"]
+          deliverables: ["Working primary feature", "User can accomplish main task"]
         },
         {
           week: 4,
-          title: "Reports & Analytics",
-          tasks: ["Report generation", "Data visualization", "Export features", "Performance optimization"],
+          title: "Data Management",
+          tasks: ["CRUD operations", "Data validation", "Error handling", "Basic search"],
           progress: 0,
-          deliverables: ["Report system", "Charts and graphs", "Export functionality"]
+          deliverables: ["Full data management", "Reliable data operations"]
         },
         {
           week: 5,
-          title: "Testing & Polish",
-          tasks: ["Comprehensive testing", "Bug fixes", "UI improvements", "Performance tuning"],
+          title: "AI Integration",
+          tasks: ["OpenAI API integration", "AI feature implementation", "Response handling"],
           progress: 0,
-          deliverables: ["Tested application", "Bug-free features", "Polished interface"]
+          deliverables: ["Working AI features", "Error handling for AI calls"]
         },
         {
           week: 6,
-          title: "Launch Preparation",
-          tasks: ["Production deployment", "Documentation", "User onboarding", "Monitoring setup"],
+          title: "User Experience Polish",
+          tasks: ["UI improvements", "Mobile responsiveness", "Loading states", "Error messages"],
           progress: 0,
-          deliverables: ["Live application", "User documentation", "Monitoring dashboard"]
+          deliverables: ["Polished UI", "Mobile-friendly design"]
+        },
+        {
+          week: 7,
+          title: "Testing & Bug Fixes",
+          tasks: ["Manual testing", "Bug fixes", "Performance optimization", "User feedback"],
+          progress: 0,
+          deliverables: ["Stable application", "Major bugs fixed"]
+        },
+        {
+          week: 8,
+          title: "Launch Preparation",
+          tasks: ["Final testing", "Documentation", "Deployment", "Monitoring setup"],
+          progress: 0,
+          deliverables: ["Production-ready MVP", "Launch checklist completed"]
         }
       ],
       team_plan: {
         roles: [
           {
-            role: "Full-Stack Developer (Lead)",
-            responsibilities: "System architecture, backend development, AI integration, deployment setup"
-          },
-          {
-            role: "Frontend Developer",
-            responsibilities: "UI/UX implementation, responsive design, user experience optimization"
-          },
-          {
-            role: "Product Manager/Designer",
-            responsibilities: "Requirements management, design, testing coordination, project management"
+            role: "Solo Developer/Founder",
+            responsibilities: "Full-stack development, design, testing, deployment, and product management",
+            experience_level: "Intermediate",
+            time_commitment: "20-30 hours/week",
+            estimated_cost: "$0 (sweat equity)",
+            key_skills: ["React", "JavaScript", "Basic design", "Problem-solving"]
           }
         ],
-        team_size: "3 people",
-        duration: "6 weeks"
+        team_size: "1 person (solo founder)",
+        duration: "8 weeks part-time",
+        working_methodology: "Agile approach with weekly milestones and daily progress tracking",
+        communication_tools: ["GitHub Issues", "Personal journal", "User feedback forms"]
       },
       budget_estimate: {
         development: {
-          team_cost: "$12,000 - $18,000",
-          duration: "6 weeks",
-          total: "$15,000"
+          team_cost: "$0 (solo founder sweat equity)",
+          duration: "8 weeks part-time",
+          total: "$0"
         },
         infrastructure: {
-          hosting: "$50/month",
-          ai_services: "$100/month",
-          third_party: "$50/month",
-          total_monthly: "$200/month"
+          hosting: "$0/month (Vercel free tier)",
+          database: "$0/month (Supabase free tier)",
+          ai_services: "$20-50/month (OpenAI API usage)",
+          domain: "$12/year (optional)",
+          monitoring: "$0/month (free tiers)",
+          total_monthly: "$20-50/month"
         },
-        total_project: "$15,600 (including first 3 months operational costs)"
+        one_time_costs: {
+          domain_registration: "$12",
+          design_tools: "$0 (free tiers)",
+          development_tools: "$0 (free/open source)",
+          initial_ai_credits: "$50",
+          total: "$62"
+        },
+        total_mvp: "$300-500 (including 6 months of operations)",
+        post_mvp_monthly: "$20-50/month",
+        scaling_costs: "Expect $100-200/month when you reach 1000+ users"
       },
       suggestions: [
-        "Focus on MVP core features before adding enhancements",
-        "Implement comprehensive error handling and user feedback",
-        "Design mobile-first for better user experience",
-        "Set up analytics early to track user behavior",
-        "Plan for scalability but avoid over-engineering the MVP"
+        "Start with free tiers for everything - upgrade only when necessary",
+        "Focus on ONE core feature that solves a real problem",
+        "Get user feedback early and often (after week 4)",
+        "Keep the UI simple - prioritize functionality over fancy design",
+        "Document your API and code from day one for easier scaling",
+        "Plan for monetization from week 6 - even simple pricing helps validate demand",
+        "Consider a simple landing page before full development to test interest"
       ]
     };
 
-    console.log('Using enhanced fallback data structure');
+    console.log('Using realistic bootstrap fallback data structure');
     return new Response(JSON.stringify(fallbackResult), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
