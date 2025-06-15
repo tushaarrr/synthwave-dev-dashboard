@@ -137,57 +137,46 @@ const TestCaseGen = () => {
       // Simulate AI test generation (replace with actual AI integration)
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      const mockTests: GeneratedTest = {
-        framework: framework,
-        coverage: "92%",
-        totalTests: 8,
-        testCases: [
-          {
-            id: "1",
-            title: "Valid discount calculation",
-            input: "calculateDiscount(100, 10)",
-            expectedOutput: "90",
-            reasoning: "10% discount on $100 should return $90",
-            framework: framework,
-            code: framework === "jest" 
-              ? "test('calculates 10% discount correctly', () => {\n  expect(calculateDiscount(100, 10)).toBe(90);\n});"
-              : "def test_calculates_discount_correctly():\n    assert calculate_discount(100, 10) == 90"
-          },
-          {
-            id: "2",
-            title: "Zero discount",
-            input: "calculateDiscount(100, 0)",
-            expectedOutput: "100",
-            reasoning: "0% discount should return original price",
-            framework: framework,
-            code: framework === "jest"
-              ? "test('handles 0% discount', () => {\n  expect(calculateDiscount(100, 0)).toBe(100);\n});"
-              : "def test_handles_zero_discount():\n    assert calculate_discount(100, 0) == 100"
-          },
-          {
-            id: "3",
-            title: "Invalid negative price",
-            input: "calculateDiscount(-10, 20)",
-            expectedOutput: "Error: Invalid input",
-            reasoning: "Negative prices should throw an error",
-            framework: framework,
-            code: framework === "jest"
-              ? "test('throws error for negative price', () => {\n  expect(() => calculateDiscount(-10, 20)).toThrow('Invalid input');\n});"
-              : "def test_throws_error_for_negative_price():\n    with pytest.raises(ValueError, match='Invalid input'):\n        calculate_discount(-10, 20)"
-          },
-          {
-            id: "4",
-            title: "Invalid percentage over 100",
-            input: "calculateDiscount(100, 150)",
-            expectedOutput: "Error: Invalid input",
-            reasoning: "Percentage over 100 should throw an error",
-            framework: framework,
-            code: framework === "jest"
-              ? "test('throws error for percentage over 100', () => {\n  expect(() => calculateDiscount(100, 150)).toThrow('Invalid input');\n});"
-              : "def test_throws_error_for_high_percentage():\n    with pytest.raises(ValueError, match='Invalid input'):\n        calculate_discount(100, 150)"
-          }
-        ]
-      };
+      let mockTests: GeneratedTest;
+
+      if (inputMode === "project") {
+        // Get the selected project details
+        const selectedProjectData = projects.find(p => p.id === selectedProject);
+        
+        if (!selectedProjectData) {
+          throw new Error("Selected project not found");
+        }
+
+        // Generate project-specific test cases based on tech stack and description
+        const projectTestCases = generateProjectBasedTests(selectedProjectData, framework);
+        
+        mockTests = {
+          framework: framework,
+          coverage: "88%",
+          totalTests: projectTestCases.length,
+          testCases: projectTestCases
+        };
+
+        toast({
+          title: "Success",
+          description: `Generated ${projectTestCases.length} test cases for ${selectedProjectData.project_name}`,
+        });
+      } else {
+        // Generate code-specific test cases
+        const codeTestCases = generateCodeBasedTests(rawCode, framework);
+        
+        mockTests = {
+          framework: framework,
+          coverage: "92%",
+          totalTests: codeTestCases.length,
+          testCases: codeTestCases
+        };
+
+        toast({
+          title: "Success",
+          description: `Generated ${codeTestCases.length} test cases with ${mockTests.coverage} coverage`,
+        });
+      }
 
       setGeneratedTests(mockTests);
 
@@ -206,11 +195,6 @@ const TestCaseGen = () => {
 
       if (error) throw error;
 
-      toast({
-        title: "Success",
-        description: `Generated ${mockTests.totalTests} test cases with ${mockTests.coverage} coverage`,
-      });
-
     } catch (error) {
       console.error('Error generating test cases:', error);
       toast({
@@ -221,6 +205,147 @@ const TestCaseGen = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const generateProjectBasedTests = (project: Project, framework: string): TestCase[] => {
+    const techStack = project.tech_stack.toLowerCase();
+    const projectName = project.project_name;
+    
+    const testCases: TestCase[] = [];
+    
+    // Generate tests based on tech stack
+    if (techStack.includes('react') || techStack.includes('javascript') || techStack.includes('typescript')) {
+      testCases.push({
+        id: "1",
+        title: `${projectName} - Component Rendering Test`,
+        input: "render(<MainComponent />)",
+        expectedOutput: "Component renders without errors",
+        reasoning: "Ensures the main component renders correctly",
+        framework: framework,
+        code: framework === "jest" 
+          ? `test('${projectName} renders main component', () => {\n  render(<MainComponent />);\n  expect(screen.getByTestId('main-component')).toBeInTheDocument();\n});`
+          : `def test_main_component_renders():\n    # Component rendering test for ${projectName}\n    assert True`
+      });
+
+      testCases.push({
+        id: "2",
+        title: `${projectName} - User Interaction Test`,
+        input: "fireEvent.click(button)",
+        expectedOutput: "Button click handlers work correctly",
+        reasoning: "Tests user interaction functionality",
+        framework: framework,
+        code: framework === "jest"
+          ? `test('${projectName} handles user interactions', () => {\n  const button = screen.getByRole('button');\n  fireEvent.click(button);\n  expect(mockHandler).toHaveBeenCalled();\n});`
+          : `def test_user_interactions():\n    # User interaction test for ${projectName}\n    assert True`
+      });
+    }
+
+    if (techStack.includes('api') || techStack.includes('backend') || techStack.includes('node')) {
+      testCases.push({
+        id: "3",
+        title: `${projectName} - API Endpoint Test`,
+        input: "GET /api/users",
+        expectedOutput: "200 status with user data",
+        reasoning: "Tests API endpoints return correct responses",
+        framework: framework,
+        code: framework === "jest"
+          ? `test('${projectName} API returns users', async () => {\n  const response = await request(app).get('/api/users');\n  expect(response.status).toBe(200);\n  expect(response.body).toHaveProperty('users');\n});`
+          : `def test_api_returns_users():\n    # API test for ${projectName}\n    response = client.get('/api/users')\n    assert response.status_code == 200`
+      });
+    }
+
+    if (techStack.includes('database') || techStack.includes('sql') || techStack.includes('postgres')) {
+      testCases.push({
+        id: "4",
+        title: `${projectName} - Database Connection Test`,
+        input: "database.connect()",
+        expectedOutput: "Connection established successfully",
+        reasoning: "Ensures database connectivity works",
+        framework: framework,
+        code: framework === "jest"
+          ? `test('${projectName} connects to database', async () => {\n  const connection = await database.connect();\n  expect(connection.state).toBe('connected');\n  await connection.close();\n});`
+          : `def test_database_connection():\n    # Database connection test for ${projectName}\n    connection = database.connect()\n    assert connection.is_connected()`
+      });
+    }
+
+    if (techStack.includes('auth') || techStack.includes('authentication')) {
+      testCases.push({
+        id: "5",
+        title: `${projectName} - Authentication Test`,
+        input: "authenticateUser(credentials)",
+        expectedOutput: "User authenticated with valid token",
+        reasoning: "Tests user authentication flow",
+        framework: framework,
+        code: framework === "jest"
+          ? `test('${projectName} authenticates user', async () => {\n  const result = await authenticateUser(validCredentials);\n  expect(result).toHaveProperty('token');\n  expect(result.authenticated).toBe(true);\n});`
+          : `def test_user_authentication():\n    # Authentication test for ${projectName}\n    result = authenticate_user(valid_credentials)\n    assert result['authenticated'] == True`
+      });
+    }
+
+    // Add error handling test for any project
+    testCases.push({
+      id: "6",
+      title: `${projectName} - Error Handling Test`,
+      input: "invalidOperation()",
+      expectedOutput: "Error handled gracefully",
+      reasoning: "Ensures proper error handling throughout the application",
+      framework: framework,
+      code: framework === "jest"
+        ? `test('${projectName} handles errors gracefully', () => {\n  expect(() => invalidOperation()).toThrow();\n  // Or test error boundaries in React\n});`
+        : `def test_error_handling():\n    # Error handling test for ${projectName}\n    with pytest.raises(Exception):\n        invalid_operation()`
+    });
+
+    return testCases;
+  };
+
+  const generateCodeBasedTests = (code: string, framework: string): TestCase[] => {
+    // This is the existing logic for code-based test generation
+    return [
+      {
+        id: "1",
+        title: "Valid discount calculation",
+        input: "calculateDiscount(100, 10)",
+        expectedOutput: "90",
+        reasoning: "10% discount on $100 should return $90",
+        framework: framework,
+        code: framework === "jest" 
+          ? "test('calculates 10% discount correctly', () => {\n  expect(calculateDiscount(100, 10)).toBe(90);\n});"
+          : "def test_calculates_discount_correctly():\n    assert calculate_discount(100, 10) == 90"
+      },
+      {
+        id: "2",
+        title: "Zero discount",
+        input: "calculateDiscount(100, 0)",
+        expectedOutput: "100",
+        reasoning: "0% discount should return original price",
+        framework: framework,
+        code: framework === "jest"
+          ? "test('handles 0% discount', () => {\n  expect(calculateDiscount(100, 0)).toBe(100);\n});"
+          : "def test_handles_zero_discount():\n    assert calculate_discount(100, 0) == 100"
+      },
+      {
+        id: "3",
+        title: "Invalid negative price",
+        input: "calculateDiscount(-10, 20)",
+        expectedOutput: "Error: Invalid input",
+        reasoning: "Negative prices should throw an error",
+        framework: framework,
+        code: framework === "jest"
+          ? "test('throws error for negative price', () => {\n  expect(() => calculateDiscount(-10, 20)).toThrow('Invalid input');\n});"
+          : "def test_throws_error_for_negative_price():\n    with pytest.raises(ValueError, match='Invalid input'):\n        calculate_discount(-10, 20)"
+      },
+      {
+        id: "4",
+        title: "Invalid percentage over 100",
+        input: "calculateDiscount(100, 150)",
+        expectedOutput: "Error: Invalid input",
+        reasoning: "Percentage over 100 should throw an error",
+        framework: framework,
+        code: framework === "jest"
+          ? "test('throws error for percentage over 100', () => {\n  expect(() => calculateDiscount(100, 150)).toThrow('Invalid input');\n});"
+          : "def test_throws_error_for_high_percentage():\n    with pytest.raises(ValueError, match='Invalid input'):\n        calculate_discount(100, 150)"
+      }
+    ];
   };
 
   const toggleTestExpansion = (testId: string) => {
