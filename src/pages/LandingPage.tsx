@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -141,7 +142,7 @@ const LandingPage = () => {
         {/* Floating Orb */}
         <FloatingOrb />
 
-        {/* Animated Background */}
+        {/* Enhanced Animated Background with Much Better Visibility */}
         <motion.div 
           className="fixed inset-0 z-0"
           style={{ y: backgroundY }}
@@ -149,13 +150,44 @@ const LandingPage = () => {
           {/* Primary dark background */}
           <div className="absolute inset-0 bg-zinc-900"></div>
           
-          {/* Animated grid */}
+          {/* Much more visible floating orbs with stronger glow */}
           <motion.div 
-            className="absolute inset-0 opacity-5"
+            className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-200/40 rounded-full blur-3xl"
+            animate={{ 
+              scale: [1, 1.4, 1],
+              opacity: [0.4, 0.7, 0.4],
+              x: [0, 80, 0],
+              y: [0, 60, 0]
+            }}
+            transition={{ duration: 8, repeat: Infinity }}
+          />
+          <motion.div 
+            className="absolute bottom-1/4 right-1/4 w-[28rem] h-[28rem] bg-orange-300/35 rounded-full blur-3xl"
+            animate={{ 
+              scale: [1.2, 1, 1.2],
+              opacity: [0.35, 0.6, 0.35],
+              x: [0, -60, 0],
+              y: [0, -80, 0]
+            }}
+            transition={{ duration: 10, repeat: Infinity }}
+          />
+          <motion.div 
+            className="absolute top-1/2 left-1/2 w-80 h-80 bg-orange-100/25 rounded-full blur-2xl"
+            animate={{ 
+              scale: [1, 1.6, 1],
+              opacity: [0.25, 0.5, 0.25],
+              rotate: [0, 180, 360]
+            }}
+            transition={{ duration: 12, repeat: Infinity }}
+          />
+          
+          {/* Highly visible animated grid */}
+          <motion.div 
+            className="absolute inset-0 opacity-25"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(253, 186, 116, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(253, 186, 116, 0.1) 1px, transparent 1px)
+                linear-gradient(rgba(253, 186, 116, 0.6) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(253, 186, 116, 0.6) 1px, transparent 1px)
               `,
               backgroundSize: '60px 60px',
             }}
@@ -169,23 +201,103 @@ const LandingPage = () => {
             }}
           />
           
-          {/* Floating orbs */}
+          {/* Multiple visible ring animations with strong borders */}
           <motion.div 
-            className="absolute top-1/4 left-1/4 w-64 h-64 bg-orange-200/10 rounded-full blur-3xl"
+            className="absolute top-20 right-20 w-48 h-48 border-2 border-orange-200/60 rounded-full"
             animate={{ 
-              scale: [1, 1.2, 1],
-              opacity: [0.1, 0.3, 0.1]
+              rotate: [0, 360],
+              scale: [1, 1.3, 1]
             }}
-            transition={{ duration: 4, repeat: Infinity }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-200/5 rounded-full blur-3xl"
+            className="absolute bottom-32 left-32 w-72 h-72 border-3 border-orange-300/50 rounded-full"
             animate={{ 
-              scale: [1.2, 1, 1.2],
-              opacity: [0.05, 0.2, 0.05]
+              rotate: [360, 0],
+              scale: [1.1, 1, 1.1]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div 
+            className="absolute top-1/3 right-1/3 w-32 h-32 border-2 border-orange-100/70 rounded-full"
+            animate={{ 
+              rotate: [0, -360],
+              scale: [0.8, 1.2, 0.8]
+            }}
+            transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div 
+            className="absolute bottom-1/3 left-1/3 w-56 h-56 border-2 border-orange-200/45 rounded-full"
+            animate={{ 
+              rotate: [180, 540],
+              scale: [1, 0.8, 1]
+            }}
+            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          />
+          
+          {/* Additional pulsing rings for more visibility */}
+          <motion.div 
+            className="absolute top-10 left-10 w-24 h-24 border border-orange-300/80 rounded-full"
+            animate={{ 
+              scale: [1, 1.5, 1],
+              opacity: [0.8, 0.3, 0.8]
             }}
             transition={{ duration: 6, repeat: Infinity }}
           />
+          <motion.div 
+            className="absolute bottom-10 right-10 w-36 h-36 border border-orange-100/60 rounded-full"
+            animate={{ 
+              scale: [1.2, 0.8, 1.2],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{ duration: 8, repeat: Infinity }}
+          />
+          
+          {/* Star-like floating elements */}
+          <motion.div 
+            className="absolute top-1/4 right-1/4 w-4 h-4"
+            animate={{ 
+              rotate: [0, 180, 360],
+              scale: [1, 1.5, 1],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{ duration: 4, repeat: Infinity }}
+          >
+            <Star className="w-4 h-4 text-orange-200/80 fill-orange-200/40" />
+          </motion.div>
+          <motion.div 
+            className="absolute bottom-1/4 left-1/4 w-6 h-6"
+            animate={{ 
+              rotate: [360, 180, 0],
+              scale: [0.8, 1.3, 0.8],
+              opacity: [0.6, 0.9, 0.6]
+            }}
+            transition={{ duration: 6, repeat: Infinity }}
+          >
+            <Star className="w-6 h-6 text-orange-300/70 fill-orange-300/30" />
+          </motion.div>
+          <motion.div 
+            className="absolute top-2/3 right-1/6 w-3 h-3"
+            animate={{ 
+              rotate: [0, -360],
+              scale: [1.2, 0.9, 1.2],
+              opacity: [0.8, 0.5, 0.8]
+            }}
+            transition={{ duration: 5, repeat: Infinity }}
+          >
+            <Star className="w-3 h-3 text-orange-100/60 fill-orange-100/20" />
+          </motion.div>
+          <motion.div 
+            className="absolute top-1/6 left-2/3 w-5 h-5"
+            animate={{ 
+              rotate: [180, 540],
+              scale: [0.9, 1.4, 0.9],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{ duration: 7, repeat: Infinity }}
+          >
+            <Star className="w-5 h-5 text-orange-200/75 fill-orange-200/35" />
+          </motion.div>
         </motion.div>
 
         {/* Navigation */}
