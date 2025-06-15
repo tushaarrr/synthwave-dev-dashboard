@@ -33,35 +33,35 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
       id: 'stackwizard', 
       name: 'StackWizard+', 
       icon: Zap, 
-      gradient: 'from-violet-500 to-purple-600',
+      gradient: 'from-orange-500 to-orange-600',
       description: 'Tech stack & roadmap generation'
     },
     { 
       id: 'promptrefiner', 
       name: 'PromptRefiner', 
       icon: FileText, 
-      gradient: 'from-blue-500 to-cyan-600',
+      gradient: 'from-orange-400 to-orange-500',
       description: 'AI prompt optimization'
     },
     { 
       id: 'codelens', 
       name: 'CodeLens', 
       icon: Code, 
-      gradient: 'from-emerald-500 to-teal-600',
+      gradient: 'from-orange-500 to-orange-600',
       description: 'Code analysis & insights'
     },
     { 
       id: 'sqldoctor', 
       name: 'SQLDoctor', 
       icon: Database, 
-      gradient: 'from-orange-500 to-red-500',
+      gradient: 'from-orange-400 to-orange-600',
       description: 'SQL optimization & debugging'
     },
     { 
       id: 'testcasegen', 
       name: 'TestCaseGen', 
       icon: Download, 
-      gradient: 'from-pink-500 to-rose-600',
+      gradient: 'from-orange-500 to-orange-600',
       description: 'Automated test generation'
     },
   ];
@@ -71,28 +71,28 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
       path: '/projects', 
       name: 'Projects', 
       icon: FolderOpen, 
-      gradient: 'from-emerald-500 to-green-600',
+      gradient: 'from-orange-400 to-orange-500',
       description: 'Manage your projects'
     },
     { 
       path: '/prompt-history', 
       name: 'Prompt History', 
       icon: History, 
-      gradient: 'from-blue-500 to-indigo-600',
+      gradient: 'from-orange-500 to-orange-600',
       description: 'View prompt refinements'
     },
     { 
       path: '/code-history', 
       name: 'Code History', 
       icon: CodeXml, 
-      gradient: 'from-emerald-500 to-teal-600',
+      gradient: 'from-orange-400 to-orange-600',
       description: 'Track code analysis'
     },
     { 
       path: '/sql-history', 
       name: 'SQL History', 
       icon: Database, 
-      gradient: 'from-orange-500 to-amber-600',
+      gradient: 'from-orange-500 to-orange-600',
       description: 'SQL analysis history'
     },
   ];
@@ -105,28 +105,28 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
   const isOnDashboard = location.pathname === '/dashboard';
 
   return (
-    <div className={`relative backdrop-blur-xl bg-black/20 border-r border-white/10 transition-all duration-500 flex flex-col h-full ${
+    <div className={`relative backdrop-blur-xl bg-white/80 border-r border-orange-200/20 transition-all duration-500 flex flex-col h-full shadow-lg ${
       collapsed ? 'w-20' : 'w-80'
     }`}>
       {/* Glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-b from-violet-500/5 via-transparent to-blue-500/5 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-orange-500/5 via-transparent to-orange-500/5 pointer-events-none"></div>
       
       {/* Header */}
-      <div className="relative p-6 border-b border-white/10">
+      <div className="relative p-6 border-b border-orange-200/20">
         <div className="flex items-center justify-between">
           {!collapsed && (
             <div className="flex items-center gap-4">
               <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-r from-violet-500 to-blue-500 rounded-2xl flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Zap className="w-6 h-6 text-white" />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-blue-500 rounded-2xl blur opacity-50 animate-pulse"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl blur opacity-50 animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-xl font-bold font-sora bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
-                  DevSynth AI
+                <h1 className="text-xl font-bold font-sora bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
+                  OneAI
                 </h1>
-                <p className="text-xs text-gray-400 font-medium">Developer Suite</p>
+                <p className="text-xs text-gray-500 font-medium">Developer Suite</p>
               </div>
             </div>
           )}
@@ -134,12 +134,12 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
           {onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
-              className="relative p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-110 group"
+              className="relative p-2 rounded-xl bg-white/60 border border-orange-200/30 hover:bg-white/80 transition-all duration-300 hover:scale-110 group"
             >
               {collapsed ? (
-                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
+                <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-gray-700 transition-colors" />
               ) : (
-                <ChevronLeft className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
+                <ChevronLeft className="w-4 h-4 text-gray-500 group-hover:text-gray-700 transition-colors" />
               )}
             </button>
           )}
@@ -151,7 +151,7 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
         {/* AI Modules */}
         <div>
           {!collapsed && (
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
               <Activity className="w-3 h-3" />
               AI Modules
             </h3>
@@ -163,8 +163,8 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                 onClick={() => handleModuleClick(module.id)}
                 className={`group relative w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 hover:scale-105 ${
                   activeModule === module.id && isOnDashboard
-                    ? 'bg-gradient-to-r from-white/10 to-white/5 border border-white/20 shadow-2xl' 
-                    : 'hover:bg-white/5 border border-transparent hover:border-white/10'
+                    ? 'bg-orange-100/80 border border-orange-200/40 shadow-lg' 
+                    : 'hover:bg-white/60 border border-transparent hover:border-orange-200/30'
                 }`}
                 title={collapsed ? module.name : undefined}
               >
@@ -174,12 +174,12 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                 )}
                 
                 <div className="relative z-10 flex items-center gap-4 w-full">
-                  <div className={`relative p-3 rounded-xl bg-gradient-to-br ${module.gradient}/20 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`relative p-3 rounded-xl bg-gradient-to-br ${module.gradient}/20 group-hover:scale-110 transition-transform duration-300 shadow-md`}>
                     <module.icon 
                       className={`w-5 h-5 transition-colors ${
                         activeModule === module.id && isOnDashboard 
-                          ? 'text-white' 
-                          : 'text-gray-400 group-hover:text-white'
+                          ? 'text-orange-600' 
+                          : 'text-gray-500 group-hover:text-orange-600'
                       }`} 
                     />
                     {activeModule === module.id && isOnDashboard && (
@@ -191,8 +191,8 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                     <div className="flex-1 text-left">
                       <div className={`font-semibold transition-colors ${
                         activeModule === module.id && isOnDashboard 
-                          ? 'text-white' 
-                          : 'text-gray-300 group-hover:text-white'
+                          ? 'text-gray-800' 
+                          : 'text-gray-600 group-hover:text-gray-800'
                       }`}>
                         {module.name}
                       </div>
@@ -203,7 +203,7 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                   )}
                   
                   {!collapsed && activeModule === module.id && isOnDashboard && (
-                    <div className="w-2 h-2 bg-gradient-to-r from-violet-400 to-blue-400 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-gradient-to-r from-orange-400 to-orange-500 rounded-full animate-pulse"></div>
                   )}
                 </div>
               </button>
@@ -214,7 +214,7 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
         {/* Workspace */}
         <div>
           {!collapsed && (
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
               <FolderOpen className="w-3 h-3" />
               Workspace
             </h3>
@@ -226,8 +226,8 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                 onClick={() => navigate(route.path)}
                 className={`group relative w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 hover:scale-105 ${
                   location.pathname === route.path
-                    ? 'bg-gradient-to-r from-white/10 to-white/5 border border-white/20 shadow-2xl' 
-                    : 'hover:bg-white/5 border border-transparent hover:border-white/10'
+                    ? 'bg-orange-100/80 border border-orange-200/40 shadow-lg' 
+                    : 'hover:bg-white/60 border border-transparent hover:border-orange-200/30'
                 }`}
                 title={collapsed ? route.name : undefined}
               >
@@ -237,12 +237,12 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                 )}
                 
                 <div className="relative z-10 flex items-center gap-4 w-full">
-                  <div className={`relative p-3 rounded-xl bg-gradient-to-br ${route.gradient}/20 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`relative p-3 rounded-xl bg-gradient-to-br ${route.gradient}/20 group-hover:scale-110 transition-transform duration-300 shadow-md`}>
                     <route.icon 
                       className={`w-5 h-5 transition-colors ${
                         location.pathname === route.path 
-                          ? 'text-white' 
-                          : 'text-gray-400 group-hover:text-white'
+                          ? 'text-orange-600' 
+                          : 'text-gray-500 group-hover:text-orange-600'
                       }`} 
                     />
                     {location.pathname === route.path && (
@@ -254,8 +254,8 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                     <div className="flex-1 text-left">
                       <div className={`font-semibold transition-colors ${
                         location.pathname === route.path 
-                          ? 'text-white' 
-                          : 'text-gray-300 group-hover:text-white'
+                          ? 'text-gray-800' 
+                          : 'text-gray-600 group-hover:text-gray-800'
                       }`}>
                         {route.name}
                       </div>
@@ -266,7 +266,7 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                   )}
                   
                   {!collapsed && location.pathname === route.path && (
-                    <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-green-400 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-gradient-to-r from-orange-400 to-orange-500 rounded-full animate-pulse"></div>
                   )}
                 </div>
               </button>
@@ -277,19 +277,19 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
 
       {/* Status Indicator */}
       {!collapsed && (
-        <div className="p-6 border-t border-white/10">
-          <div className="relative p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-green-500/10 to-teal-500/10 border border-emerald-500/20 backdrop-blur-sm">
+        <div className="p-6 border-t border-orange-200/20">
+          <div className="relative p-4 rounded-2xl bg-gradient-to-r from-green-500/10 via-green-500/10 to-green-500/10 border border-green-500/20 backdrop-blur-sm shadow-md">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
-                <div className="absolute inset-0 w-3 h-3 bg-emerald-400 rounded-full blur animate-pulse"></div>
+                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                <div className="absolute inset-0 w-3 h-3 bg-green-400 rounded-full blur animate-pulse"></div>
               </div>
               <div className="flex-1">
-                <div className="text-sm font-semibold text-emerald-400">System Online</div>
-                <div className="text-xs text-gray-400">All modules operational</div>
+                <div className="text-sm font-semibold text-green-600">System Online</div>
+                <div className="text-xs text-gray-500">All modules operational</div>
               </div>
             </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-green-500/5 rounded-2xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-green-500/5 rounded-2xl"></div>
           </div>
         </div>
       )}

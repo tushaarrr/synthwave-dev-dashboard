@@ -79,7 +79,7 @@ const FeaturesPage = () => {
   return (
     <PageTransition>
       <div className="min-h-screen relative overflow-hidden bg-white">
-        {/* Animated Background */}
+        {/* Animated Background - matching landing page */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-orange-50"></div>
           <div className="absolute top-20 left-10 w-96 h-96 bg-orange-100/20 rounded-full blur-3xl animate-float"></div>
@@ -88,7 +88,7 @@ const FeaturesPage = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="relative z-10 p-6 backdrop-blur-xl bg-white/80 border-b border-gray-200">
+        <nav className="relative z-10 p-6 backdrop-blur-xl bg-white/80 border-b border-orange-200/20">
           <div className="container mx-auto flex items-center justify-between">
             <button
               onClick={() => navigate('/')}
@@ -98,12 +98,15 @@ const FeaturesPage = () => {
               Back to Home
             </button>
             <div className="flex items-center gap-4">
-              <span className="text-2xl font-bold font-sora text-gray-800">
-                OneAI
-              </span>
+              <div className="flex items-center gap-3">
+                <Zap className="w-6 h-6 text-orange-500" />
+                <span className="text-2xl font-bold font-sora text-gray-800">
+                  OneAI
+                </span>
+              </div>
               <button
                 onClick={() => navigate('/login')}
-                className="px-4 py-2 bg-orange-300 text-white rounded-xl text-sm font-semibold hover:bg-orange-200 transition-colors"
+                className="px-6 py-3 bg-orange-500 text-white rounded-xl text-sm font-semibold hover:bg-orange-600 transition-colors shadow-lg hover:shadow-xl"
               >
                 Try Now
               </button>
@@ -142,7 +145,7 @@ const FeaturesPage = () => {
                   {/* Feature Content */}
                   <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
                     <div className="flex items-center gap-4 mb-8">
-                      <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center border border-orange-200">
+                      <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center border border-orange-200 shadow-lg">
                         <feature.icon className="w-8 h-8 text-orange-500" />
                       </div>
                       <div>
@@ -160,7 +163,7 @@ const FeaturesPage = () => {
                           whileInView={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.15 }}
                         >
-                          <div className="w-6 h-6 bg-orange-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <div className="w-6 h-6 bg-orange-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
                             <CheckCircle className="w-4 h-4 text-white" />
                           </div>
                           <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{benefit}</span>
@@ -170,7 +173,7 @@ const FeaturesPage = () => {
 
                     <button
                       onClick={() => navigate('/login')}
-                      className="group px-6 py-3 bg-orange-400 text-white rounded-xl font-semibold text-sm hover:bg-orange-500 transition-colors"
+                      className="group px-8 py-4 bg-orange-500 text-white rounded-xl font-semibold text-sm hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl"
                     >
                       <span className="relative z-10 flex items-center gap-2">
                         Try {feature.title}
@@ -182,7 +185,7 @@ const FeaturesPage = () => {
                   {/* Feature Demo */}
                   <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
                     <motion.div
-                      className="bg-white rounded-2xl p-6 border border-gray-200 hover:border-orange-300 transition-all duration-500 shadow-sm hover:shadow-md"
+                      className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-orange-200/20 hover:border-orange-300/40 transition-all duration-500 shadow-lg hover:shadow-xl"
                       whileHover={{ scale: 1.02, y: -5 }}
                       transition={{ duration: 0.3 }}
                     >
@@ -193,7 +196,7 @@ const FeaturesPage = () => {
                             <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                           </div>
-                          <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                          <span className="text-sm text-gray-500 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
                             {feature.title.toLowerCase()}.ai
                           </span>
                         </div>
@@ -201,7 +204,7 @@ const FeaturesPage = () => {
                         {feature.demoFeatures.map((demo, i) => (
                           <motion.div
                             key={i}
-                            className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100 hover:border-orange-200 transition-all duration-300"
+                            className="flex items-center gap-3 p-3 rounded-xl bg-orange-50 border border-orange-100 hover:border-orange-200 transition-all duration-300 hover:shadow-md"
                             initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ delay: i * 0.2 }}
@@ -226,7 +229,7 @@ const FeaturesPage = () => {
           {/* CTA Section */}
           <FadeInUp delay={1.0}>
             <div className="text-center mt-24">
-              <div className="bg-white rounded-3xl p-12 border border-orange-200 relative overflow-hidden shadow-lg">
+              <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-12 border border-orange-200/20 relative overflow-hidden shadow-xl">
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-50/50 via-white to-orange-50/50"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-center gap-4 mb-8">
@@ -238,11 +241,11 @@ const FeaturesPage = () => {
                   </div>
                   <p className="text-lg text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
                     Join <span className="text-orange-500 font-bold">thousands of developers</span> who are already building faster with 
-                    <span className="text-orange-600 font-bold"> DevSynth AI</span>
+                    <span className="text-orange-600 font-bold"> OneAI</span>
                   </p>
                   <button
                     onClick={() => navigate('/login')}
-                    className="px-8 py-4 bg-orange-400 text-white rounded-xl text-lg font-bold hover:bg-orange-500 transition-colors group"
+                    className="px-10 py-5 bg-orange-500 text-white rounded-xl text-lg font-bold hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl group"
                   >
                     <span className="flex items-center gap-3">
                       Start Building Now
