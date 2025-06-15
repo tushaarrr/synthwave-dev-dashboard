@@ -128,10 +128,16 @@ const ProjectsPage = () => {
         }
       };
 
-      // Parse project data
+      // Parse all project data
       const techStack = safeParseJson(project.tech_stack, {});
       const timeline = safeParseJson(project.timeline, []);
       const suggestions = safeParseJson(project.suggestions, []);
+      const modules = project.modules || [];
+      const bonusModules = project.bonus_modules || [];
+      const architecture = project.architecture || {};
+      const testingStrategy = project.testing_strategy || {};
+      const teamPlan = project.team_plan || {};
+      const budgetEstimate = project.budget_estimate || {};
 
       let yPos = 30;
       const pageHeight = 280;
@@ -146,24 +152,27 @@ const ProjectsPage = () => {
         }
       };
 
-      // Title
-      pdf.setFontSize(20);
+      // Title Page
+      pdf.setFontSize(24);
       pdf.setFont('helvetica', 'bold');
       pdf.text(project.project_name || 'Untitled Project', margin, yPos);
-      yPos += 20;
-
-      // Date
-      pdf.setFontSize(12);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(`Generated: ${new Date(project.created_at).toLocaleDateString()}`, margin, yPos);
       yPos += 15;
 
-      // Project Description
-      checkPageBreak(30);
       pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Project Description', margin, yPos);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('Complete SaaS Development Blueprint', margin, yPos);
       yPos += 10;
+
+      pdf.setFontSize(12);
+      pdf.text(`Generated: ${new Date(project.created_at).toLocaleDateString()}`, margin, yPos);
+      yPos += 25;
+
+      // Project Description & Scope
+      checkPageBreak(40);
+      pdf.setFontSize(18);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Project Overview', margin, yPos);
+      yPos += 12;
 
       pdf.setFontSize(11);
       pdf.setFont('helvetica', 'normal');
@@ -172,62 +181,381 @@ const ProjectsPage = () => {
       yPos += descLines.length * lineHeight + 15;
 
       // Technology Stack
-      checkPageBreak(40);
-      pdf.setFontSize(16);
+      checkPageBreak(50);
+      pdf.setFontSize(18);
       pdf.setFont('helvetica', 'bold');
       pdf.text('Technology Stack', margin, yPos);
-      yPos += 12;
+      yPos += 15;
 
       if (techStack && typeof techStack === 'object' && Object.keys(techStack).length > 0) {
         Object.entries(techStack).forEach(([category, technologies]) => {
-          checkPageBreak(20);
+          checkPageBreak(25);
           
-          pdf.setFontSize(12);
+          pdf.setFontSize(14);
           pdf.setFont('helvetica', 'bold');
           const categoryTitle = category.charAt(0).toUpperCase() + category.slice(1).replace(/_/g, ' ');
           pdf.text(`${categoryTitle}:`, margin + 5, yPos);
-          yPos += 8;
+          yPos += 10;
 
-          pdf.setFontSize(10);
+          pdf.setFontSize(11);
           pdf.setFont('helvetica', 'normal');
           
           if (Array.isArray(technologies)) {
             const techText = `• ${technologies.join(', ')}`;
             const techLines = pdf.splitTextToSize(techText, 160);
             pdf.text(techLines, margin + 10, yPos);
-            yPos += techLines.length * lineHeight + 5;
+            yPos += techLines.length * lineHeight + 8;
           } else if (typeof technologies === 'string') {
             const techLines = pdf.splitTextToSize(`• ${technologies}`, 160);
             pdf.text(techLines, margin + 10, yPos);
-            yPos += techLines.length * lineHeight + 5;
+            yPos += techLines.length * lineHeight + 8;
           }
         });
-      } else {
-        pdf.setFontSize(10);
-        pdf.text('No technology stack specified', margin + 5, yPos);
-        yPos += 15;
       }
 
       yPos += 10;
 
-      // Development Timeline
-      checkPageBreak(40);
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Development Timeline', margin, yPos);
-      yPos += 12;
+      // Core Modules
+      if (modules && modules.length > 0) {
+        checkPageBreak(50);
+        pdf.setFontSize(18);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Core Modules & Features', margin, yPos);
+        yPos += 15;
 
-      if (Array.isArray(timeline) && timeline.length > 0) {
-        timeline.forEach((phase: any, index: number) => {
-          checkPageBreak(30);
+        modules.forEach((module: any, index: number) => {
+          checkPageBreak(35);
           
+          pdf.setFontSize(14);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(`${index + 1}. ${module.name || 'Unnamed Module'}`, margin + 5, yPos);
+          yPos += 10;
+
+          pdf.setFontSize(11);
+          pdf.setFont('helvetica', 'normal');
+          if (module.description) {
+            const descLines = pdf.splitTextToSize(module.description, 165);
+            pdf.text(descLines, margin + 10, yPos);
+            yPos += descLines.length * lineHeight + 5;
+          }
+
+          if (module.dependencies && module.dependencies.length > 0) {
+            pdf.setFont('helvetica', 'italic');
+            pdf.text(`Dependencies: ${module.dependencies.join(', ')}`, margin + 10, yPos);
+            yPos += 8;
+          }
+
+          if (module.ai_used) {
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('🤖 AI-Powered Feature', margin + 10, yPos);
+            yPos += 8;
+          }
+
+          if (module.estimated_hours) {
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(`Estimated Hours: ${module.estimated_hours}`, margin + 10, yPos);
+            yPos += 8;
+          }
+
+          if (module.complexity) {
+            pdf.text(`Complexity: ${module.complexity}`, margin + 10, yPos);
+            yPos += 8;
+          }
+
+          yPos += 5;
+        });
+      }
+
+      // Architecture & Design Patterns
+      if (architecture && Object.keys(architecture).length > 0) {
+        checkPageBreak(50);
+        pdf.setFontSize(18);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Architecture & Design', margin, yPos);
+        yPos += 15;
+
+        if (architecture.pattern) {
+          pdf.setFontSize(14);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(`Architecture Pattern: ${architecture.pattern}`, margin + 5, yPos);
+          yPos += 10;
+          
+          if (architecture.reason) {
+            pdf.setFontSize(11);
+            pdf.setFont('helvetica', 'normal');
+            const reasonLines = pdf.splitTextToSize(architecture.reason, 165);
+            pdf.text(reasonLines, margin + 10, yPos);
+            yPos += reasonLines.length * lineHeight + 10;
+          }
+        }
+
+        if (architecture.api_style) {
+          pdf.setFontSize(14);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(`API Style: ${architecture.api_style}`, margin + 5, yPos);
+          yPos += 10;
+          
+          if (architecture.api_reason) {
+            pdf.setFontSize(11);
+            pdf.setFont('helvetica', 'normal');
+            const apiLines = pdf.splitTextToSize(architecture.api_reason, 165);
+            pdf.text(apiLines, margin + 10, yPos);
+            yPos += apiLines.length * lineHeight + 10;
+          }
+        }
+
+        if (architecture.database_type) {
+          pdf.setFontSize(14);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(`Database: ${architecture.database_type}`, margin + 5, yPos);
+          yPos += 10;
+          
+          if (architecture.database_reason) {
+            pdf.setFontSize(11);
+            pdf.setFont('helvetica', 'normal');
+            const dbLines = pdf.splitTextToSize(architecture.database_reason, 165);
+            pdf.text(dbLines, margin + 10, yPos);
+            yPos += dbLines.length * lineHeight + 10;
+          }
+        }
+      }
+
+      // Testing Strategy
+      if (testingStrategy && Object.keys(testingStrategy).length > 0) {
+        checkPageBreak(50);
+        pdf.setFontSize(18);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Testing Strategy', margin, yPos);
+        yPos += 15;
+
+        // MVP Phase Testing
+        if (testingStrategy.mvp_phase) {
+          pdf.setFontSize(14);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text('MVP Phase Testing', margin + 5, yPos);
+          yPos += 10;
+
+          const mvp = testingStrategy.mvp_phase;
+          if (mvp.types && Array.isArray(mvp.types)) {
+            pdf.setFontSize(11);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(`Types: ${mvp.types.join(', ')}`, margin + 10, yPos);
+            yPos += 8;
+          }
+
+          if (mvp.focus) {
+            pdf.text(`Focus: ${mvp.focus}`, margin + 10, yPos);
+            yPos += 8;
+          }
+
+          if (mvp.budget) {
+            pdf.text(`Budget: ${mvp.budget}`, margin + 10, yPos);
+            yPos += 8;
+          }
+          yPos += 5;
+        }
+
+        // Growth Phase Testing
+        if (testingStrategy.growth_phase) {
+          checkPageBreak(25);
+          pdf.setFontSize(14);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text('Growth Phase Testing', margin + 5, yPos);
+          yPos += 10;
+
+          const growth = testingStrategy.growth_phase;
+          if (growth.types && Array.isArray(growth.types)) {
+            pdf.setFontSize(11);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(`Types: ${growth.types.join(', ')}`, margin + 10, yPos);
+            yPos += 8;
+          }
+
+          if (growth.focus) {
+            pdf.text(`Focus: ${growth.focus}`, margin + 10, yPos);
+            yPos += 8;
+          }
+
+          if (growth.budget) {
+            pdf.text(`Budget: ${growth.budget}`, margin + 10, yPos);
+            yPos += 8;
+          }
+          yPos += 5;
+        }
+      }
+
+      // Team Plan
+      if (teamPlan && Object.keys(teamPlan).length > 0) {
+        checkPageBreak(50);
+        pdf.setFontSize(18);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Team Structure & Plan', margin, yPos);
+        yPos += 15;
+
+        if (teamPlan.team_size) {
           pdf.setFontSize(12);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(`Team Size: ${teamPlan.team_size}`, margin + 5, yPos);
+          yPos += 10;
+        }
+
+        if (teamPlan.duration) {
+          pdf.text(`Duration: ${teamPlan.duration}`, margin + 5, yPos);
+          yPos += 10;
+        }
+
+        if (teamPlan.working_methodology) {
+          pdf.text(`Methodology: ${teamPlan.working_methodology}`, margin + 5, yPos);
+          yPos += 10;
+        }
+
+        if (teamPlan.roles && Array.isArray(teamPlan.roles)) {
+          yPos += 5;
+          pdf.setFontSize(14);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text('Team Roles:', margin + 5, yPos);
+          yPos += 10;
+
+          teamPlan.roles.forEach((role: any, index: number) => {
+            checkPageBreak(25);
+            
+            pdf.setFontSize(12);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text(`${index + 1}. ${role.role || 'Unnamed Role'}`, margin + 10, yPos);
+            yPos += 8;
+
+            pdf.setFontSize(11);
+            pdf.setFont('helvetica', 'normal');
+            
+            if (role.responsibilities) {
+              const respLines = pdf.splitTextToSize(`Responsibilities: ${role.responsibilities}`, 155);
+              pdf.text(respLines, margin + 15, yPos);
+              yPos += respLines.length * lineHeight + 3;
+            }
+
+            if (role.experience_level) {
+              pdf.text(`Experience Level: ${role.experience_level}`, margin + 15, yPos);
+              yPos += 6;
+            }
+
+            if (role.estimated_cost) {
+              pdf.text(`Cost: ${role.estimated_cost}`, margin + 15, yPos);
+              yPos += 6;
+            }
+
+            yPos += 5;
+          });
+        }
+      }
+
+      // Budget Estimate
+      if (budgetEstimate && Object.keys(budgetEstimate).length > 0) {
+        checkPageBreak(50);
+        pdf.setFontSize(18);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Budget Estimation', margin, yPos);
+        yPos += 15;
+
+        // Development Costs
+        if (budgetEstimate.development) {
+          pdf.setFontSize(14);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text('Development Costs', margin + 5, yPos);
+          yPos += 10;
+
+          pdf.setFontSize(11);
+          pdf.setFont('helvetica', 'normal');
+          
+          if (budgetEstimate.development.team_cost) {
+            pdf.text(`Team Cost: ${budgetEstimate.development.team_cost}`, margin + 10, yPos);
+            yPos += 8;
+          }
+          
+          if (budgetEstimate.development.duration) {
+            pdf.text(`Duration: ${budgetEstimate.development.duration}`, margin + 10, yPos);
+            yPos += 8;
+          }
+          
+          if (budgetEstimate.development.total) {
+            pdf.text(`Total Development: ${budgetEstimate.development.total}`, margin + 10, yPos);
+            yPos += 8;
+          }
+          yPos += 5;
+        }
+
+        // Infrastructure Costs
+        if (budgetEstimate.infrastructure) {
+          checkPageBreak(25);
+          pdf.setFontSize(14);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text('Infrastructure Costs (Monthly)', margin + 5, yPos);
+          yPos += 10;
+
+          pdf.setFontSize(11);
+          pdf.setFont('helvetica', 'normal');
+          
+          const infra = budgetEstimate.infrastructure;
+          if (infra.hosting) {
+            pdf.text(`Hosting: ${infra.hosting}`, margin + 10, yPos);
+            yPos += 6;
+          }
+          if (infra.database) {
+            pdf.text(`Database: ${infra.database}`, margin + 10, yPos);
+            yPos += 6;
+          }
+          if (infra.ai_services) {
+            pdf.text(`AI Services: ${infra.ai_services}`, margin + 10, yPos);
+            yPos += 6;
+          }
+          if (infra.total_monthly) {
+            pdf.setFont('helvetica', 'bold');
+            pdf.text(`Total Monthly: ${infra.total_monthly}`, margin + 10, yPos);
+            yPos += 8;
+          }
+          yPos += 5;
+        }
+
+        // Summary
+        if (budgetEstimate.total_mvp || budgetEstimate.scaling_costs) {
+          checkPageBreak(20);
+          pdf.setFontSize(14);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text('Budget Summary', margin + 5, yPos);
+          yPos += 10;
+
+          pdf.setFontSize(11);
+          pdf.setFont('helvetica', 'normal');
+          
+          if (budgetEstimate.total_mvp) {
+            pdf.text(`Total MVP Cost: ${budgetEstimate.total_mvp}`, margin + 10, yPos);
+            yPos += 8;
+          }
+          
+          if (budgetEstimate.scaling_costs) {
+            pdf.text(`Scaling Costs: ${budgetEstimate.scaling_costs}`, margin + 10, yPos);
+            yPos += 8;
+          }
+        }
+      }
+
+      // Development Timeline
+      if (Array.isArray(timeline) && timeline.length > 0) {
+        checkPageBreak(50);
+        pdf.setFontSize(18);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Development Timeline', margin, yPos);
+        yPos += 15;
+
+        timeline.forEach((phase: any, index: number) => {
+          checkPageBreak(35);
+          
+          pdf.setFontSize(14);
           pdf.setFont('helvetica', 'bold');
           const phaseTitle = phase.title || phase.week ? `Week ${phase.week}: ${phase.title || `Phase ${index + 1}`}` : `Phase ${index + 1}`;
           pdf.text(phaseTitle, margin + 5, yPos);
-          yPos += 8;
+          yPos += 10;
 
-          pdf.setFontSize(10);
+          pdf.setFontSize(11);
           pdf.setFont('helvetica', 'normal');
 
           // Tasks
@@ -259,26 +587,58 @@ const ProjectsPage = () => {
 
           yPos += 8;
         });
-      } else {
-        pdf.setFontSize(10);
-        pdf.text('No timeline specified', margin + 5, yPos);
-        yPos += 15;
       }
 
-      yPos += 10;
+      // Bonus Modules (if any)
+      if (bonusModules && bonusModules.length > 0) {
+        checkPageBreak(40);
+        pdf.setFontSize(18);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Bonus Features & Enhancements', margin, yPos);
+        yPos += 15;
 
-      // Recommendations/Suggestions
-      checkPageBreak(40);
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Recommendations & Best Practices', margin, yPos);
-      yPos += 12;
+        bonusModules.forEach((module: any, index: number) => {
+          checkPageBreak(20);
+          
+          pdf.setFontSize(12);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(`${index + 1}. ${module.name || 'Unnamed Feature'}`, margin + 5, yPos);
+          yPos += 8;
 
+          if (module.description) {
+            pdf.setFontSize(11);
+            pdf.setFont('helvetica', 'normal');
+            const descLines = pdf.splitTextToSize(module.description, 165);
+            pdf.text(descLines, margin + 10, yPos);
+            yPos += descLines.length * lineHeight + 5;
+          }
+
+          if (module.estimated_hours) {
+            pdf.text(`Estimated Hours: ${module.estimated_hours}`, margin + 10, yPos);
+            yPos += 6;
+          }
+
+          if (module.cost_estimate) {
+            pdf.text(`Cost Estimate: ${module.cost_estimate}`, margin + 10, yPos);
+            yPos += 6;
+          }
+
+          yPos += 5;
+        });
+      }
+
+      // Recommendations & Best Practices
       if (Array.isArray(suggestions) && suggestions.length > 0) {
+        checkPageBreak(40);
+        pdf.setFontSize(18);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('Recommendations & Best Practices', margin, yPos);
+        yPos += 15;
+
         suggestions.forEach((suggestion: any, index: number) => {
           checkPageBreak(15);
           
-          pdf.setFontSize(10);
+          pdf.setFontSize(11);
           pdf.setFont('helvetica', 'normal');
           
           const suggestionText = typeof suggestion === 'object' 
@@ -289,25 +649,22 @@ const ProjectsPage = () => {
           pdf.text(suggestionLines, margin + 5, yPos);
           yPos += suggestionLines.length * lineHeight + 5;
         });
-      } else {
-        pdf.setFontSize(10);
-        pdf.text('No specific recommendations provided', margin + 5, yPos);
       }
 
-      // Footer
+      // Footer on all pages
       const totalPages = (pdf as any).internal.pages.length - 1;
       for (let i = 1; i <= totalPages; i++) {
         pdf.setPage(i);
         pdf.setFontSize(8);
         pdf.setFont('helvetica', 'italic');
-        pdf.text(`Generated by DevSynth AI | Page ${i} of ${totalPages}`, margin, 290);
+        pdf.text(`Generated by DevSynth AI StackWizard+ | Page ${i} of ${totalPages}`, margin, 290);
       }
 
-      pdf.save(`${project.project_name || 'project'}-development-plan.pdf`);
+      pdf.save(`${project.project_name || 'project'}-complete-blueprint.pdf`);
       
       toast({
         title: "Success!",
-        description: "Project exported as PDF",
+        description: "Complete project blueprint exported as PDF",
       });
     } catch (error) {
       console.error('PDF export error:', error);
