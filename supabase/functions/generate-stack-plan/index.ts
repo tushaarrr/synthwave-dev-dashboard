@@ -51,6 +51,7 @@ Return a clean and structured output in the following sections:
         'Authorization': `Bearer ${anthropicApiKey}`,
         'Content-Type': 'application/json',
         'anthropic-version': '2023-06-01',
+        'x-api-key': anthropicApiKey,
       },
       body: JSON.stringify({
         model: 'claude-3-5-sonnet-20241022',
