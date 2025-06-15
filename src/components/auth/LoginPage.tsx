@@ -42,8 +42,8 @@ const LoginPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-orange-200 border-t-orange-400 rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-orange-200 border-t-orange-300 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -94,6 +94,81 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen bg-zinc-900 flex relative overflow-hidden">
+      {/* Enhanced Background Animations */}
+      <div className="fixed inset-0 z-0">
+        {/* Primary dark background */}
+        <div className="absolute inset-0 bg-zinc-900"></div>
+        
+        {/* More visible floating orbs */}
+        <motion.div 
+          className="absolute top-1/4 left-1/4 w-80 h-80 bg-orange-200/20 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.4, 0.2],
+            x: [0, 50, 0],
+            y: [0, 30, 0]
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-300/15 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1.2, 1, 1.2],
+            opacity: [0.15, 0.3, 0.15],
+            x: [0, -30, 0],
+            y: [0, -50, 0]
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute top-1/2 left-1/2 w-64 h-64 bg-orange-100/10 rounded-full blur-2xl"
+          animate={{ 
+            scale: [1, 1.4, 1],
+            opacity: [0.1, 0.25, 0.1],
+            rotate: [0, 180, 360]
+          }}
+          transition={{ duration: 12, repeat: Infinity }}
+        />
+        
+        {/* Animated grid with better visibility */}
+        <motion.div 
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(253, 186, 116, 0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(253, 186, 116, 0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+          }}
+          animate={{
+            backgroundPosition: ['0px 0px', '60px 60px'],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+        
+        {/* Additional ring animations */}
+        <motion.div 
+          className="absolute top-20 right-20 w-40 h-40 border border-orange-200/20 rounded-full"
+          animate={{ 
+            rotate: [0, 360],
+            scale: [1, 1.2, 1]
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div 
+          className="absolute bottom-32 left-32 w-60 h-60 border-2 border-orange-300/15 rounded-full"
+          animate={{ 
+            rotate: [360, 0],
+            scale: [1.1, 1, 1.1]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
+
       {/* Left Panel - Login Form */}
       <div className="flex-1 flex items-center justify-center p-8 relative z-10">
         <motion.div 
@@ -110,8 +185,8 @@ const LoginPage = () => {
               animate={{ scale: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <div className="w-12 h-12 bg-orange-300 rounded-xl flex items-center justify-center">
-                <Code2 className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-orange-200 rounded-xl flex items-center justify-center">
+                <Code2 className="w-6 h-6 text-zinc-900" />
               </div>
               <h1 className="text-2xl font-bold font-sora text-white">
                 OneAI
@@ -191,7 +266,7 @@ const LoginPage = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full bg-zinc-700 border border-zinc-600 rounded-xl py-3 px-4 pl-12 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-all duration-200 font-inter"
+                  className="w-full bg-zinc-700 border border-zinc-600 rounded-xl py-3 px-4 pl-12 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-200 transition-all duration-200 font-inter"
                   placeholder="Enter your email"
                 />
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -204,14 +279,14 @@ const LoginPage = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full bg-zinc-700 border border-zinc-600 rounded-xl py-3 px-4 pl-12 pr-12 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 transition-all duration-200 font-inter"
+                  className="w-full bg-zinc-700 border border-zinc-600 rounded-xl py-3 px-4 pl-12 pr-12 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-200 transition-all duration-200 font-inter"
                   placeholder="Enter your password"
                 />
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-300 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-200 transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -225,11 +300,11 @@ const LoginPage = () => {
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      className="w-4 h-4 text-orange-300 bg-zinc-700 border-zinc-600 rounded focus:ring-orange-300"
+                      className="w-4 h-4 text-orange-200 bg-zinc-700 border-zinc-600 rounded focus:ring-orange-200"
                     />
                     <span className="text-gray-300 font-inter">Remember me</span>
                   </label>
-                  <button type="button" className="text-orange-300 hover:text-orange-200 transition-colors font-inter">
+                  <button type="button" className="text-orange-200 hover:text-orange-100 transition-colors font-inter">
                     Forgot password?
                   </button>
                 </div>
@@ -239,7 +314,7 @@ const LoginPage = () => {
               <motion.button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 bg-orange-300 hover:bg-orange-200 rounded-xl font-semibold text-zinc-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-inter"
+                className="w-full py-3 bg-orange-200 hover:bg-orange-100 rounded-xl font-semibold text-zinc-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-inter"
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
               >
@@ -269,7 +344,7 @@ const LoginPage = () => {
                   setIsLogin(!isLogin);
                   setError('');
                 }}
-                className="text-orange-300 hover:text-orange-200 transition-colors font-medium text-sm font-inter"
+                className="text-orange-200 hover:text-orange-100 transition-colors font-medium text-sm font-inter"
               >
                 {isLogin ? 'Create account' : 'Sign in'}
               </button>
@@ -296,7 +371,7 @@ const LoginPage = () => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.6 }}
             >
-              <span className="text-orange-300">
+              <span className="text-orange-200">
                 {heroTexts[currentTextIndex]}
               </span>
             </motion.h2>
@@ -316,7 +391,7 @@ const LoginPage = () => {
               <div className="w-3 h-3 bg-red-500 rounded-full"></div>
               <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <Terminal className="w-4 h-4 text-orange-300 ml-auto" />
+              <Terminal className="w-4 h-4 text-orange-200 ml-auto" />
             </div>
             
             <div className="space-y-2 font-mono text-sm">
@@ -329,11 +404,11 @@ const LoginPage = () => {
                   transition={{ delay: 1 + index * 0.3 }}
                 >
                   {log.status === 'loading' ? (
-                    <div className="w-2 h-2 bg-orange-300 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-orange-200 rounded-full animate-pulse"></div>
                   ) : (
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   )}
-                  <span className={log.status === 'loading' ? 'text-orange-300' : 'text-green-400'}>
+                  <span className={log.status === 'loading' ? 'text-orange-200' : 'text-green-400'}>
                     {log.text}
                   </span>
                 </motion.div>
@@ -353,7 +428,7 @@ const LoginPage = () => {
               whileHover={{ scale: 1.1, y: -2 }}
             >
               <div className="w-12 h-12 bg-zinc-900 rounded-xl flex items-center justify-center border border-zinc-700">
-                <Database className="w-5 h-5 text-orange-300" />
+                <Database className="w-5 h-5 text-orange-200" />
               </div>
               <span className="text-xs text-gray-400 font-inter">SQL Doctor</span>
             </motion.div>
@@ -363,7 +438,7 @@ const LoginPage = () => {
               whileHover={{ scale: 1.1, y: -2 }}
             >
               <div className="w-12 h-12 bg-zinc-900 rounded-xl flex items-center justify-center border border-zinc-700">
-                <Sparkles className="w-5 h-5 text-orange-300" />
+                <Sparkles className="w-5 h-5 text-orange-200" />
               </div>
               <span className="text-xs text-gray-400 font-inter">AI Prompts</span>
             </motion.div>
@@ -373,7 +448,7 @@ const LoginPage = () => {
               whileHover={{ scale: 1.1, y: -2 }}
             >
               <div className="w-12 h-12 bg-zinc-900 rounded-xl flex items-center justify-center border border-zinc-700">
-                <Zap className="w-5 h-5 text-orange-300" />
+                <Zap className="w-5 h-5 text-orange-200" />
               </div>
               <span className="text-xs text-gray-400 font-inter">Stack Wizard</span>
             </motion.div>
