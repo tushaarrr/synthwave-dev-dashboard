@@ -15,6 +15,7 @@ interface Project {
   id: string;
   project_name: string;
   tech_stack: string;
+  description: string;
   created_at: string;
 }
 
@@ -66,7 +67,7 @@ const TestCaseGen = () => {
     try {
       const { data, error } = await supabase
         .from('plans')
-        .select('id, project_name, tech_stack, created_at')
+        .select('id, project_name, tech_stack, description, created_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
@@ -172,7 +173,9 @@ const TestCaseGen = () => {
 
       setGeneratedTests(mockTests);
 
-      // Save to database
+      // Save to database - convert GeneratedTest to JSON-compatible format
+      const testsForDb = JSON.parse(JSON.stringify(mockTests));
+      
       const { error } = await supabase
         .from('test_cases')
         .insert({
@@ -180,7 +183,7 @@ const TestCaseGen = () => {
           project_id: inputMode === "project" ? selectedProject : null,
           raw_code: inputMode === "code" ? rawCode : null,
           framework: framework,
-          generated_tests: mockTests
+          generated_tests: testsForDb
         });
 
       if (error) throw error;
@@ -243,6 +246,11 @@ const TestCaseGen = () => {
       title: "Exported",
       description: "Test cases exported as JSON",
     });
+  };
+
+  const getSelectedProjectName = () => {
+    const project = projects.find(p => p.id === selectedProject);
+    return project ? project.project_name : "Choose a saved project";
   };
 
   return (
@@ -312,7 +320,7 @@ const TestCaseGen = () => {
                 <SelectTrigger className="w-full glass rounded-xl px-4 py-3 bg-black/20">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-black/90 border-white/20 backdrop-blur-sm">
                   <SelectItem value="jest">Jest (JavaScript)</SelectItem>
                   <SelectItem value="pytest">Pytest (Python)</SelectItem>
                   <SelectItem value="mocha">Mocha (JavaScript)</SelectItem>
@@ -334,16 +342,23 @@ const TestCaseGen = () => {
                 ) : (
                   <Select value={selectedProject} onValueChange={setSelectedProject}>
                     <SelectTrigger className="w-full glass rounded-xl px-4 py-3 bg-black/20">
-                      <SelectValue placeholder="Choose a saved project" />
+                      <SelectValue placeholder="Choose a saved project">
+                        {getSelectedProjectName()}
+                      </SelectValue>
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-black/90 border-white/20 backdrop-blur-sm max-h-60 overflow-y-auto">
                       {projects.map((project) => (
-                        <SelectItem key={project.id} value={project.id}>
-                          <div className="flex flex-col">
-                            <span>{project.project_name}</span>
+                        <SelectItem key={project.id} value={project.id} className="cursor-pointer">
+                          <div className="flex flex-col py-2">
+                            <span className="font-medium text-white">{project.project_name}</span>
                             <span className="text-xs text-muted-foreground">
                               {project.tech_stack} • {new Date(project.created_at).toLocaleDateString()}
                             </span>
+                            {project.description && (
+                              <span className="text-xs text-muted-foreground mt-1 truncate max-w-[300px]">
+                                {project.description}
+                              </span>
+                            )}
                           </div>
                         </SelectItem>
                       ))}
