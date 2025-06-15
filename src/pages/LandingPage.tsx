@@ -203,7 +203,7 @@ const LandingPage = () => {
               >
                 <div className="relative">
                   <motion.div 
-                    className="w-10 h-10 bg-orange-400 rounded-xl flex items-center justify-center"
+                    className="w-10 h-10 bg-orange-300 rounded-xl flex items-center justify-center"
                     animate={{ 
                       boxShadow: [
                         "0 0 20px rgba(251, 146, 60, 0.3)",
@@ -219,7 +219,7 @@ const LandingPage = () => {
                 <motion.span 
                   className="text-xl font-bold font-sora text-gray-800"
                 >
-                  DevSynth AI
+                  OneAI
                 </motion.span>
               </motion.div>
               
@@ -241,7 +241,7 @@ const LandingPage = () => {
                   >
                     {item.name}
                     <motion.div
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-orange-400"
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-orange-300"
                       initial={{ scaleX: 0 }}
                       whileHover={{ scaleX: 1 }}
                       transition={{ duration: 0.3 }}
@@ -252,7 +252,7 @@ const LandingPage = () => {
 
               <motion.button
                 onClick={() => navigate('/login')}
-                className="relative group px-6 py-2.5 bg-orange-400 text-white rounded-xl font-semibold border border-orange-400 hover:bg-orange-500 transition-colors"
+                className="relative group px-6 py-2.5 bg-orange-300 text-white rounded-xl font-semibold border border-orange-300 hover:bg-orange-200 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 initial={{ opacity: 0, x: 50 }}
@@ -308,7 +308,7 @@ const LandingPage = () => {
                 <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
                   <motion.button
                     onClick={() => navigate('/login')}
-                    className="group relative px-10 py-4 bg-orange-400 text-white rounded-2xl text-lg font-semibold border border-orange-400 hover:bg-orange-500 transition-colors"
+                    className="group relative px-10 py-4 bg-orange-300 text-white rounded-2xl text-lg font-semibold border border-orange-300 hover:bg-orange-200 transition-colors"
                     whileHover={{ 
                       scale: 1.05,
                       boxShadow: "0 20px 40px rgba(251, 146, 60, 0.2)"
@@ -330,41 +330,6 @@ const LandingPage = () => {
                     View on GitHub
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </motion.button>
-                </div>
-              </FadeInUp>
-
-              {/* 3D Visualization Area */}
-              <FadeInUp delay={1.0}>
-                <div className="relative mx-auto max-w-4xl">
-                  <div className="relative h-96 rounded-3xl overflow-hidden bg-white border border-gray-200 shadow-lg">
-                    <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-orange-50"></div>
-                    
-                    {/* Animated geometric shapes */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="grid grid-cols-5 gap-4 p-8">
-                        {[...Array(15)].map((_, i) => (
-                          <motion.div
-                            key={i}
-                            className={`w-16 h-16 rounded-2xl ${
-                              i % 3 === 0 ? 'bg-orange-100 border border-orange-200' :
-                              i % 3 === 1 ? 'bg-gray-100 border border-gray-200' :
-                              'bg-orange-50 border border-orange-100'
-                            }`}
-                            animate={{ 
-                              y: [0, -20, 0],
-                              rotateY: [0, 180, 360]
-                            }}
-                            transition={{ 
-                              duration: 3 + (i % 3),
-                              repeat: Infinity,
-                              delay: i * 0.2
-                            }}
-                            whileHover={{ scale: 1.1 }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </FadeInUp>
             </div>
@@ -499,10 +464,10 @@ const LandingPage = () => {
               <SlideIn direction="left">
                 <div>
                   <h2 className="text-5xl font-bold font-sora mb-8 text-gray-900">
-                    What is DevSynth AI?
+                    What is OneAI?
                   </h2>
                   <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                    DevSynth AI is the ultimate productivity suite for modern developers. 
+                    OneAI is the ultimate productivity suite for modern developers. 
                     Our platform combines cutting-edge artificial intelligence with intuitive design 
                     to help you write better code, optimize databases, and accelerate your development workflow.
                   </p>
@@ -622,13 +587,13 @@ const LandingPage = () => {
                   Ready to Transform Your Workflow?
                 </h2>
                 <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
-                  Join thousands of developers who are already building faster, smarter, and more efficiently with DevSynth AI.
+                  Join thousands of developers who are already building faster, smarter, and more efficiently with OneAI.
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
                   <motion.button
                     onClick={() => navigate('/login')}
-                    className="group relative px-12 py-4 bg-orange-400 text-white rounded-2xl text-lg font-semibold border border-orange-400 hover:bg-orange-500 transition-colors"
+                    className="group relative px-12 py-4 bg-orange-300 text-white rounded-2xl text-lg font-semibold border border-orange-300 hover:bg-orange-200 transition-colors"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -664,7 +629,7 @@ const LandingPage = () => {
                   >
                     <div className="relative">
                       <motion.div 
-                        className="w-10 h-10 bg-orange-400 rounded-xl flex items-center justify-center"
+                        className="w-10 h-10 bg-orange-300 rounded-xl flex items-center justify-center"
                         animate={{ 
                           boxShadow: [
                             "0 0 20px rgba(251, 146, 60, 0.2)",
@@ -678,7 +643,7 @@ const LandingPage = () => {
                       </motion.div>
                     </div>
                     <span className="text-xl font-bold font-sora text-gray-800">
-                      DevSynth AI
+                      OneAI
                     </span>
                   </motion.div>
                   <p className="text-gray-600 leading-relaxed">
@@ -756,7 +721,7 @@ const LandingPage = () => {
             
             <FadeInUp delay={0.5}>
               <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p className="text-gray-600">&copy; 2024 DevSynth AI. All rights reserved.</p>
+                <p className="text-gray-600">&copy; 2024 OneAI. All rights reserved.</p>
                 <div className="flex space-x-6 mt-4 md:mt-0">
                   <button 
                     onClick={() => navigate('/privacy')}
