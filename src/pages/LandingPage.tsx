@@ -142,7 +142,7 @@ const LandingPage = () => {
         {/* Floating Orb */}
         <FloatingOrb />
 
-        {/* Enhanced Animated Background with Much Better Visibility */}
+        {/* MUCH MORE VISIBLE Animated Background */}
         <motion.div 
           className="fixed inset-0 z-0"
           style={{ y: backgroundY }}
@@ -150,49 +150,49 @@ const LandingPage = () => {
           {/* Primary dark background */}
           <div className="absolute inset-0 bg-zinc-900"></div>
           
-          {/* Much more visible floating orbs with stronger glow */}
+          {/* HIGHLY VISIBLE floating orbs with MUCH stronger glow and opacity */}
           <motion.div 
-            className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-200/40 rounded-full blur-3xl"
+            className="absolute top-1/4 left-1/4 w-[32rem] h-[32rem] bg-orange-200/80 rounded-full blur-3xl"
             animate={{ 
-              scale: [1, 1.4, 1],
-              opacity: [0.4, 0.7, 0.4],
-              x: [0, 80, 0],
-              y: [0, 60, 0]
+              scale: [1, 1.6, 1],
+              opacity: [0.8, 1, 0.8],
+              x: [0, 120, 0],
+              y: [0, 80, 0]
             }}
             transition={{ duration: 8, repeat: Infinity }}
           />
           <motion.div 
-            className="absolute bottom-1/4 right-1/4 w-[28rem] h-[28rem] bg-orange-300/35 rounded-full blur-3xl"
+            className="absolute bottom-1/4 right-1/4 w-[36rem] h-[36rem] bg-orange-300/70 rounded-full blur-3xl"
             animate={{ 
               scale: [1.2, 1, 1.2],
-              opacity: [0.35, 0.6, 0.35],
-              x: [0, -60, 0],
-              y: [0, -80, 0]
+              opacity: [0.7, 1, 0.7],
+              x: [0, -80, 0],
+              y: [0, -100, 0]
             }}
             transition={{ duration: 10, repeat: Infinity }}
           />
           <motion.div 
-            className="absolute top-1/2 left-1/2 w-80 h-80 bg-orange-100/25 rounded-full blur-2xl"
+            className="absolute top-1/2 left-1/2 w-[28rem] h-[28rem] bg-orange-100/60 rounded-full blur-2xl"
             animate={{ 
-              scale: [1, 1.6, 1],
-              opacity: [0.25, 0.5, 0.25],
+              scale: [1, 1.8, 1],
+              opacity: [0.6, 0.9, 0.6],
               rotate: [0, 180, 360]
             }}
             transition={{ duration: 12, repeat: Infinity }}
           />
           
-          {/* Highly visible animated grid */}
+          {/* MUCH MORE VISIBLE animated grid with stronger colors */}
           <motion.div 
-            className="absolute inset-0 opacity-25"
+            className="absolute inset-0 opacity-50"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(253, 186, 116, 0.6) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(253, 186, 116, 0.6) 1px, transparent 1px)
+                linear-gradient(rgba(253, 186, 116, 1) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(253, 186, 116, 1) 2px, transparent 2px)
               `,
-              backgroundSize: '60px 60px',
+              backgroundSize: '80px 80px',
             }}
             animate={{
-              backgroundPosition: ['0px 0px', '60px 60px'],
+              backgroundPosition: ['0px 0px', '80px 80px'],
             }}
             transition={{
               duration: 20,
@@ -201,17 +201,17 @@ const LandingPage = () => {
             }}
           />
           
-          {/* Multiple visible ring animations with strong borders */}
+          {/* HIGHLY VISIBLE ring animations with THICK borders and bright colors */}
           <motion.div 
-            className="absolute top-20 right-20 w-48 h-48 border-2 border-orange-200/60 rounded-full"
+            className="absolute top-20 right-20 w-64 h-64 border-4 border-orange-200 rounded-full"
             animate={{ 
               rotate: [0, 360],
-              scale: [1, 1.3, 1]
+              scale: [1, 1.5, 1]
             }}
             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute bottom-32 left-32 w-72 h-72 border-3 border-orange-300/50 rounded-full"
+            className="absolute bottom-32 left-32 w-80 h-80 border-4 border-orange-300 rounded-full"
             animate={{ 
               rotate: [360, 0],
               scale: [1.1, 1, 1.1]
@@ -219,15 +219,15 @@ const LandingPage = () => {
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute top-1/3 right-1/3 w-32 h-32 border-2 border-orange-100/70 rounded-full"
+            className="absolute top-1/3 right-1/3 w-40 h-40 border-3 border-orange-100 rounded-full"
             animate={{ 
               rotate: [0, -360],
-              scale: [0.8, 1.2, 0.8]
+              scale: [0.8, 1.4, 0.8]
             }}
             transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute bottom-1/3 left-1/3 w-56 h-56 border-2 border-orange-200/45 rounded-full"
+            className="absolute bottom-1/3 left-1/3 w-72 h-72 border-3 border-orange-200 rounded-full"
             animate={{ 
               rotate: [180, 540],
               scale: [1, 0.8, 1]
@@ -235,68 +235,103 @@ const LandingPage = () => {
             transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
           />
           
-          {/* Additional pulsing rings for more visibility */}
+          {/* VERY VISIBLE pulsing rings */}
           <motion.div 
-            className="absolute top-10 left-10 w-24 h-24 border border-orange-300/80 rounded-full"
+            className="absolute top-10 left-10 w-32 h-32 border-2 border-orange-300 rounded-full"
             animate={{ 
-              scale: [1, 1.5, 1],
-              opacity: [0.8, 0.3, 0.8]
+              scale: [1, 2, 1],
+              opacity: [1, 0.4, 1]
             }}
             transition={{ duration: 6, repeat: Infinity }}
           />
           <motion.div 
-            className="absolute bottom-10 right-10 w-36 h-36 border border-orange-100/60 rounded-full"
+            className="absolute bottom-10 right-10 w-48 h-48 border-2 border-orange-100 rounded-full"
             animate={{ 
-              scale: [1.2, 0.8, 1.2],
-              opacity: [0.6, 1, 0.6]
+              scale: [1.2, 0.6, 1.2],
+              opacity: [0.8, 1, 0.8]
             }}
             transition={{ duration: 8, repeat: Infinity }}
           />
           
-          {/* Star-like floating elements */}
+          {/* MUCH MORE VISIBLE star-like floating elements with BRIGHT colors */}
           <motion.div 
-            className="absolute top-1/4 right-1/4 w-4 h-4"
+            className="absolute top-1/4 right-1/4 w-8 h-8"
             animate={{ 
               rotate: [0, 180, 360],
-              scale: [1, 1.5, 1],
-              opacity: [0.7, 1, 0.7]
+              scale: [1, 2, 1],
+              opacity: [1, 0.7, 1]
             }}
             transition={{ duration: 4, repeat: Infinity }}
           >
-            <Star className="w-4 h-4 text-orange-200/80 fill-orange-200/40" />
+            <Star className="w-8 h-8 text-orange-200 fill-orange-200/80" />
           </motion.div>
           <motion.div 
-            className="absolute bottom-1/4 left-1/4 w-6 h-6"
+            className="absolute bottom-1/4 left-1/4 w-10 h-10"
             animate={{ 
               rotate: [360, 180, 0],
-              scale: [0.8, 1.3, 0.8],
-              opacity: [0.6, 0.9, 0.6]
+              scale: [0.8, 2, 0.8],
+              opacity: [0.8, 1, 0.8]
             }}
             transition={{ duration: 6, repeat: Infinity }}
           >
-            <Star className="w-6 h-6 text-orange-300/70 fill-orange-300/30" />
+            <Star className="w-10 h-10 text-orange-300 fill-orange-300/80" />
           </motion.div>
           <motion.div 
-            className="absolute top-2/3 right-1/6 w-3 h-3"
+            className="absolute top-2/3 right-1/6 w-6 h-6"
             animate={{ 
               rotate: [0, -360],
-              scale: [1.2, 0.9, 1.2],
-              opacity: [0.8, 0.5, 0.8]
+              scale: [1.2, 1.8, 1.2],
+              opacity: [1, 0.6, 1]
             }}
             transition={{ duration: 5, repeat: Infinity }}
           >
-            <Star className="w-3 h-3 text-orange-100/60 fill-orange-100/20" />
+            <Star className="w-6 h-6 text-orange-100 fill-orange-100/70" />
           </motion.div>
           <motion.div 
-            className="absolute top-1/6 left-2/3 w-5 h-5"
+            className="absolute top-1/6 left-2/3 w-8 h-8"
             animate={{ 
               rotate: [180, 540],
-              scale: [0.9, 1.4, 0.9],
-              opacity: [0.7, 1, 0.7]
+              scale: [0.9, 2.2, 0.9],
+              opacity: [0.9, 1, 0.9]
             }}
             transition={{ duration: 7, repeat: Infinity }}
           >
-            <Star className="w-5 h-5 text-orange-200/75 fill-orange-200/35" />
+            <Star className="w-8 h-8 text-orange-200 fill-orange-200/90" />
+          </motion.div>
+          
+          {/* Additional BRIGHT floating stars scattered everywhere */}
+          <motion.div 
+            className="absolute top-1/5 left-1/5 w-5 h-5"
+            animate={{ 
+              rotate: [0, 360],
+              scale: [1, 1.8, 1],
+              opacity: [0.8, 1, 0.8]
+            }}
+            transition={{ duration: 8, repeat: Infinity }}
+          >
+            <Star className="w-5 h-5 text-orange-300 fill-orange-300/70" />
+          </motion.div>
+          <motion.div 
+            className="absolute bottom-1/5 right-1/5 w-7 h-7"
+            animate={{ 
+              rotate: [360, 0],
+              scale: [1.1, 2.1, 1.1],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{ duration: 9, repeat: Infinity }}
+          >
+            <Star className="w-7 h-7 text-orange-100 fill-orange-100/80" />
+          </motion.div>
+          <motion.div 
+            className="absolute top-3/4 left-3/4 w-6 h-6"
+            animate={{ 
+              rotate: [0, -180],
+              scale: [0.9, 2, 0.9],
+              opacity: [0.9, 0.6, 0.9]
+            }}
+            transition={{ duration: 10, repeat: Infinity }}
+          >
+            <Star className="w-6 h-6 text-orange-200 fill-orange-200/85" />
           </motion.div>
         </motion.div>
 
