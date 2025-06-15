@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -7,11 +8,16 @@ interface Module {
   description: string;
   dependencies: string[];
   ai_used: boolean;
+  estimated_hours?: number;
+  complexity?: 'Low' | 'Medium' | 'High';
+  priority?: 'Critical' | 'Important' | 'Nice-to-have';
 }
 
 interface BonusModule {
   name: string;
   description: string;
+  estimated_hours?: number;
+  cost_estimate?: string;
 }
 
 interface Architecture {
@@ -24,25 +30,46 @@ interface Architecture {
   deployment_strategy: string;
 }
 
-interface TestingStrategy {
+interface TestingPhase {
   types: string[];
   tools: Record<string, string>;
   coverage_targets: Record<string, string>;
+  focus?: string;
+  budget?: string;
+  timeline?: string;
+}
+
+interface TestingStrategy {
+  mvp_phase?: TestingPhase;
+  growth_phase?: TestingPhase;
+  scale_phase?: TestingPhase;
   ai_testing?: string;
-  testing_environments: string[];
-  automated_testing: string;
-  manual_testing: string;
+  testing_environments?: string[];
+  automated_testing?: string;
+  manual_testing?: string;
+  // Fallback for simpler structure
+  types?: string[];
+  tools?: Record<string, string>;
+  coverage_targets?: Record<string, string>;
 }
 
 interface TeamRole {
   role: string;
   responsibilities: string;
+  experience_level?: string;
+  time_commitment?: string;
+  estimated_cost?: string;
+  key_skills?: string[];
+  weekly_focus?: string;
 }
 
 interface TeamPlan {
   roles: TeamRole[];
   team_size: string;
   duration: string;
+  working_methodology?: string;
+  communication_tools?: string[];
+  collaboration_strategy?: string;
 }
 
 interface BudgetEstimate {
@@ -52,12 +79,25 @@ interface BudgetEstimate {
     total: string;
   };
   infrastructure: {
-    hosting: string;
-    ai_services: string;
-    third_party: string;
+    hosting?: string;
+    database?: string;
+    ai_services?: string;
+    domain?: string;
+    monitoring?: string;
     total_monthly: string;
   };
-  total_project: string;
+  one_time_costs?: {
+    domain_registration?: string;
+    design_tools?: string;
+    development_tools?: string;
+    initial_ai_credits?: string;
+    legal_setup?: string;
+    total?: string;
+  };
+  total_mvp?: string;
+  post_mvp_monthly?: string;
+  scaling_costs?: string;
+  total_project?: string; // Legacy field
 }
 
 interface TimelineWeek {
@@ -65,6 +105,8 @@ interface TimelineWeek {
   title: string;
   tasks: string[];
   progress: number;
+  deliverables?: string[];
+  team_focus?: string;
 }
 
 interface ProjectPlan {
@@ -146,14 +188,47 @@ export const useStackWizard = () => {
             deployment_strategy: 'Container-based deployment'
           },
           testing_strategy: data.testing_strategy || {
-            types: ['Unit Testing', 'Integration Testing'],
-            tools: {
-              unit: 'Jest',
-              integration: 'Supertest'
+            mvp_phase: {
+              types: ['Manual Testing', 'Unit Tests'],
+              tools: {
+                manual: 'Browser testing',
+                unit: 'Jest'
+              },
+              coverage_targets: {
+                manual: '100% of core features',
+                unit: '70% code coverage'
+              },
+              focus: 'Core functionality validation',
+              budget: '$0 (team testing)',
+              timeline: 'Weeks 9-10'
             },
-            coverage_targets: {
-              unit: '80%',
-              integration: '70%'
+            growth_phase: {
+              types: ['Automated Testing', 'Performance Testing'],
+              tools: {
+                automation: 'GitHub Actions',
+                performance: 'Lighthouse CI'
+              },
+              coverage_targets: {
+                automated: '80% code coverage',
+                performance: '90+ Lighthouse scores'
+              },
+              focus: 'Stability and scalability',
+              budget: '$50-100/month',
+              timeline: 'Weeks 13-16'
+            },
+            scale_phase: {
+              types: ['End-to-End Testing', 'A/B Testing'],
+              tools: {
+                e2e: 'Playwright',
+                ab_testing: 'PostHog'
+              },
+              coverage_targets: {
+                e2e: '100% critical flows',
+                ab_testing: 'All major features'
+              },
+              focus: 'Enterprise readiness',
+              budget: '$200-500/month',
+              timeline: 'Weeks 17+'
             },
             ai_testing: 'Test AI integrations and fallback scenarios',
             testing_environments: ['Development', 'Staging', 'Production'],
@@ -165,30 +240,45 @@ export const useStackWizard = () => {
             roles: [
               {
                 role: 'Full-Stack Developer',
-                responsibilities: 'Full application development'
+                responsibilities: 'Full application development',
+                experience_level: 'Mid-level',
+                time_commitment: '30-35 hours/week',
+                estimated_cost: '$0 (co-founder equity)'
               }
             ],
-            team_size: '2-3 people',
-            duration: '4-6 weeks'
+            team_size: '2 people',
+            duration: '12 weeks',
+            working_methodology: 'Agile with 2-week sprints',
+            communication_tools: ['Slack', 'GitHub', 'Figma']
           },
           budget_estimate: data.budget_estimate || {
             development: {
-              team_cost: '$10,000 - $15,000',
-              duration: '4-6 weeks',
-              total: '$12,500'
+              team_cost: '$0 (co-founder equity)',
+              duration: '12 weeks',
+              total: '$0'
             },
             infrastructure: {
-              hosting: '$50/month',
-              ai_services: '$100/month',
-              third_party: '$50/month',
-              total_monthly: '$200/month'
+              hosting: '$0/month (free tier)',
+              database: '$0/month (free tier)',
+              ai_services: '$30-80/month',
+              total_monthly: '$30-80/month'
             },
-            total_project: '$13,100'
+            one_time_costs: {
+              domain_registration: '$15',
+              initial_ai_credits: '$100',
+              legal_setup: '$200',
+              total: '$315'
+            },
+            total_mvp: '$500-800',
+            post_mvp_monthly: '$30-100/month',
+            scaling_costs: '$200-500/month at 1000+ users'
           },
           suggestions: Array.isArray(data.suggestions) ? data.suggestions : [
             'Focus on MVP features first',
             'Implement proper error handling',
-            'Plan for mobile responsiveness'
+            'Plan for mobile responsiveness',
+            'Get user feedback early',
+            'Use free tiers to minimize costs'
           ]
         };
       } else {
@@ -202,6 +292,11 @@ export const useStackWizard = () => {
       console.log('Team plan exists:', !!planData.team_plan);
       console.log('Architecture exists:', !!planData.architecture);
       console.log('Testing strategy exists:', !!planData.testing_strategy);
+      console.log('Testing phases:', {
+        mvp: !!planData.testing_strategy?.mvp_phase,
+        growth: !!planData.testing_strategy?.growth_phase,
+        scale: !!planData.testing_strategy?.scale_phase
+      });
       console.log('=============================');
 
       setResult(planData);
