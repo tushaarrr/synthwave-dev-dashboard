@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -94,10 +93,10 @@
     @apply bg-black text-white;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     background: 
-      radial-gradient(ellipse 80% 80% at 50% -20%, rgba(56, 249, 215, 0.3), transparent),
-      radial-gradient(ellipse 80% 80% at 20% 50%, rgba(95, 95, 255, 0.15), transparent),
-      radial-gradient(ellipse 80% 80% at 80% 50%, rgba(56, 249, 215, 0.15), transparent),
-      radial-gradient(ellipse 80% 80% at 40% 80%, rgba(95, 95, 255, 0.1), transparent),
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 249, 215, 0.15), transparent),
+      radial-gradient(ellipse 60% 60% at 20% 50%, rgba(255, 112, 67, 0.08), transparent),
+      radial-gradient(ellipse 60% 60% at 80% 50%, rgba(56, 249, 215, 0.08), transparent),
+      radial-gradient(ellipse 80% 80% at 40% 80%, rgba(95, 95, 255, 0.06), transparent),
       #000000;
   }
 }
@@ -131,7 +130,7 @@
   .glass-ultra {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(30px);
-    border: 1px solid rgba(95, 95, 255, 0.1);
+    border: 1px solid rgba(255, 112, 67, 0.1);
   }
 
   .glass-panel {
@@ -140,7 +139,7 @@
     border: 1px solid rgba(56, 249, 215, 0.15);
     box-shadow: 
       0 8px 32px 0 rgba(56, 249, 215, 0.37),
-      inset 0 1px 0 rgba(95, 95, 255, 0.1);
+      inset 0 1px 0 rgba(255, 112, 67, 0.1);
   }
 
   /* Advanced Animations */
@@ -216,7 +215,7 @@
     content: '';
     position: absolute;
     inset: -2px;
-    background: linear-gradient(45deg, #38f9d7, #5f5fff, #38f9d7);
+    background: linear-gradient(45deg, #38f9d7, #ff7043, #38f9d7);
     border-radius: inherit;
     z-index: -1;
     filter: blur(10px);
@@ -241,7 +240,7 @@
     content: '';
     position: absolute;
     inset: -2px;
-    background: linear-gradient(135deg, #38f9d7, #5f5fff, #38f9d7);
+    background: linear-gradient(135deg, #38f9d7, #ff7043, #38f9d7);
     border-radius: inherit;
     z-index: -1;
     filter: blur(8px);
@@ -360,7 +359,7 @@
 
   /* Enhanced Gradient Text Effects */
   .gradient-text {
-    background: linear-gradient(135deg, #38f9d7, #5f5fff, #38f9d7);
+    background: linear-gradient(135deg, #38f9d7, #ff7043, #38f9d7);
     background-size: 400% 400%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -369,7 +368,7 @@
   }
 
   .gradient-text-premium {
-    background: linear-gradient(135deg, #38f9d7, #5f5fff, #38f9d7, #5f5fff, #38f9d7);
+    background: linear-gradient(135deg, #38f9d7, #ff7043, #38f9d7, #ff7043, #38f9d7);
     background-size: 300% 300%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -397,14 +396,14 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #38f9d7, #5f5fff);
+    background: linear-gradient(135deg, #38f9d7, #ff7043);
     border-radius: 10px;
     box-shadow: inset 0 0 10px rgba(56, 249, 215, 0.5);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #5f5fff, #38f9d7);
-    box-shadow: inset 0 0 15px rgba(95, 95, 255, 0.7);
+    background: linear-gradient(135deg, #ff7043, #38f9d7);
+    box-shadow: inset 0 0 15px rgba(255, 112, 67, 0.7);
   }
 
   /* Enhanced Panel Effects */
@@ -414,7 +413,7 @@
     border: 1px solid rgba(56, 249, 215, 0.15);
     box-shadow: 
       0 8px 32px 0 rgba(56, 249, 215, 0.37),
-      inset 0 1px 0 rgba(95, 95, 255, 0.1),
+      inset 0 1px 0 rgba(255, 112, 67, 0.1),
       0 0 20px rgba(56, 249, 215, 0.1);
   }
 
@@ -427,7 +426,7 @@
     position: absolute;
     inset: -1px;
     padding: 1px;
-    background: linear-gradient(135deg, #38f9d7, #5f5fff, #38f9d7);
+    background: linear-gradient(135deg, #38f9d7, #ff7043, #38f9d7);
     border-radius: inherit;
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: subtract;
@@ -498,7 +497,7 @@
     position: absolute;
     inset: 0;
     padding: 2px;
-    background: linear-gradient(135deg, #38f9d7, #5f5fff, #38f9d7, #5f5fff);
+    background: linear-gradient(135deg, #38f9d7, #ff7043, #38f9d7, #ff7043);
     background-size: 300% 300%;
     border-radius: inherit;
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -509,7 +508,7 @@
   .neon-border-static {
     position: relative;
     border: 2px solid transparent;
-    background: linear-gradient(135deg, #38f9d7, #5f5fff) border-box;
+    background: linear-gradient(135deg, #38f9d7, #ff7043) border-box;
     mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
     mask-composite: subtract;
   }
@@ -651,7 +650,7 @@
     content: '';
     position: absolute;
     inset: -2px;
-    background: linear-gradient(135deg, #38f9d7, #5f5fff, #38f9d7);
+    background: linear-gradient(135deg, #38f9d7, #ff7043, #38f9d7);
     border-radius: inherit;
     z-index: -1;
     filter: blur(15px);

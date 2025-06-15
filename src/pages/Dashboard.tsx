@@ -46,12 +46,12 @@ const Dashboard = () => {
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="relative">
           <motion.div 
-            className="w-20 h-20 border-4 border-violet-500/30 border-t-violet-400 rounded-full"
+            className="w-20 h-20 border-4 border-neon-coral/30 border-t-neon-coral rounded-full"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-blue-400 rounded-full"
+            className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-neon-aqua rounded-full"
             animate={{ rotate: -360 }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
           />
@@ -88,13 +88,13 @@ const Dashboard = () => {
 
         {/* Animated Background */}
         <div className="fixed inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-950/20 via-black to-blue-950/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-neon-coral/10 via-black to-neon-aqua/10"></div>
           <motion.div 
             className="absolute inset-0 opacity-[0.02]"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)
+                linear-gradient(rgba(56, 249, 215, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56, 249, 215, 0.3) 1px, transparent 1px)
               `,
               backgroundSize: '50px 50px'
             }}
@@ -145,12 +145,12 @@ const Dashboard = () => {
                     >
                       <div className="relative">
                         <motion.div 
-                          className="w-16 h-16 border-4 border-violet-500/30 border-t-violet-400 rounded-full"
+                          className="w-16 h-16 border-4 border-neon-coral/30 border-t-neon-coral rounded-full"
                           animate={{ rotate: 360 }}
                           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                         />
                         <motion.div 
-                          className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-blue-400 rounded-full"
+                          className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-neon-aqua rounded-full"
                           animate={{ rotate: -360 }}
                           transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
                         />
@@ -171,12 +171,12 @@ const Dashboard = () => {
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ duration: 0.5, delay: 0.2 }}
                           whileHover={{
-                            boxShadow: "0 25px 50px rgba(139, 92, 246, 0.1)"
+                            boxShadow: "0 25px 50px rgba(56, 249, 215, 0.1)"
                           }}
                         >
                           {/* Glow Effect */}
                           <motion.div
-                            className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-blue-500/5 rounded-3xl"
+                            className="absolute inset-0 bg-gradient-to-br from-neon-coral/5 via-transparent to-neon-aqua/5 rounded-3xl"
                             animate={{
                               opacity: [0.5, 0.8, 0.5],
                             }}

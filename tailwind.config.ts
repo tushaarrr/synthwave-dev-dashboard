@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -72,7 +71,9 @@ export default {
 					purple: '#5f5fff',
 					pink: '#ff006e',
 					green: '#00f5a0',
-					orange: '#ff8500'
+					orange: '#ff8500',
+					coral: '#ff7043',
+					amber: '#ffc107'
 				}
 			},
 			borderRadius: {
@@ -127,8 +128,8 @@ export default {
 						textShadow: '0 0 10px rgba(56, 249, 215, 0.5)'
 					},
 					'50%': { 
-						boxShadow: '0 0 40px rgba(95, 95, 255, 0.6)',
-						textShadow: '0 0 20px rgba(95, 95, 255, 0.7)'
+						boxShadow: '0 0 40px rgba(255, 112, 67, 0.6)',
+						textShadow: '0 0 20px rgba(255, 112, 67, 0.7)'
 					}
 				},
 				'neon-pulse': {
@@ -137,7 +138,7 @@ export default {
 						opacity: '1'
 					},
 					'50%': { 
-						filter: 'drop-shadow(0 0 25px #5f5fff)',
+						filter: 'drop-shadow(0 0 25px #ff7043)',
 						opacity: '0.8'
 					}
 				}

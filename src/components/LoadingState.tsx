@@ -34,7 +34,7 @@ const LoadingState = ({ module }: LoadingStateProps) => {
       
       <div className="flex space-x-2">
         <div className="w-2 h-2 bg-neon-aqua rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-        <div className="w-2 h-2 bg-neon-purple rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div className="w-2 h-2 bg-neon-coral rounded-full animate-bounce [animation-delay:-0.15s]"></div>
         <div className="w-2 h-2 bg-neon-pink rounded-full animate-bounce"></div>
       </div>
     </div>
