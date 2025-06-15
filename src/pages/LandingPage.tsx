@@ -50,15 +50,15 @@ const LandingPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
         <div className="relative">
           <motion.div 
-            className="w-20 h-20 border-4 border-orange-200 border-t-orange-400 rounded-full"
+            className="w-20 h-20 border-4 border-orange-200 border-t-orange-300 rounded-full"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-orange-300 rounded-full"
+            className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-orange-200 rounded-full"
             animate={{ rotate: -360 }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
           />
@@ -77,41 +77,41 @@ const LandingPage = () => {
       icon: Zap,
       title: "StackWizard+",
       description: "Generate complete tech stacks and project roadmaps with AI-powered recommendations",
-      accent: "orange-400"
+      accent: "orange-300"
     },
     {
       icon: FileText,
       title: "PromptRefiner",
       description: "Optimize your AI prompts for better results with intelligent suggestions",
-      accent: "orange-400"
+      accent: "orange-300"
     },
     {
       icon: Database,
       title: "SQLDoctor",
       description: "Analyze, optimize, and debug SQL queries with performance insights",
-      accent: "orange-400"
+      accent: "orange-300"
     },
     {
       icon: Code2,
       title: "CodeLens",
       description: "Deep code analysis with security, performance, and quality recommendations",
-      accent: "orange-400"
+      accent: "orange-300"
     },
     {
       icon: Download,
       title: "TestCaseGen",
       description: "Generate comprehensive test cases for your applications automatically",
-      accent: "orange-400"
+      accent: "orange-300"
     }
   ];
 
   const techStack = [
-    { name: "React", logo: "⚛️", color: "text-orange-500" },
-    { name: "TypeScript", logo: "📘", color: "text-orange-500" },
-    { name: "Supabase", logo: "🟢", color: "text-orange-400" },
-    { name: "Tailwind", logo: "🎨", color: "text-orange-400" },
-    { name: "OpenAI", logo: "🤖", color: "text-orange-500" },
-    { name: "Vercel", logo: "▲", color: "text-gray-700" }
+    { name: "React", logo: "⚛️", color: "text-orange-300" },
+    { name: "TypeScript", logo: "📘", color: "text-orange-300" },
+    { name: "Supabase", logo: "🟢", color: "text-orange-200" },
+    { name: "Tailwind", logo: "🎨", color: "text-orange-200" },
+    { name: "OpenAI", logo: "🤖", color: "text-orange-300" },
+    { name: "Vercel", logo: "▲", color: "text-gray-300" }
   ];
 
   const benefits = [
@@ -134,7 +134,7 @@ const LandingPage = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden relative">
+      <div className="min-h-screen bg-zinc-900 text-white overflow-x-hidden relative">
         {/* 3D Background */}
         <FloatingGeometry />
         
@@ -146,16 +146,16 @@ const LandingPage = () => {
           className="fixed inset-0 z-0"
           style={{ y: backgroundY }}
         >
-          {/* Primary gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-orange-50"></div>
+          {/* Primary dark background */}
+          <div className="absolute inset-0 bg-zinc-900"></div>
           
           {/* Animated grid */}
           <motion.div 
-            className="absolute inset-0 opacity-10"
+            className="absolute inset-0 opacity-5"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(251, 146, 60, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(251, 146, 60, 0.1) 1px, transparent 1px)
+                linear-gradient(rgba(253, 186, 116, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(253, 186, 116, 0.1) 1px, transparent 1px)
               `,
               backgroundSize: '60px 60px',
             }}
@@ -171,18 +171,18 @@ const LandingPage = () => {
           
           {/* Floating orbs */}
           <motion.div 
-            className="absolute top-1/4 left-1/4 w-64 h-64 bg-orange-100/30 rounded-full blur-3xl"
+            className="absolute top-1/4 left-1/4 w-64 h-64 bg-orange-200/10 rounded-full blur-3xl"
             animate={{ 
               scale: [1, 1.2, 1],
-              opacity: [0.3, 0.6, 0.3]
+              opacity: [0.1, 0.3, 0.1]
             }}
             transition={{ duration: 4, repeat: Infinity }}
           />
           <motion.div 
-            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-100/20 rounded-full blur-3xl"
+            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-200/5 rounded-full blur-3xl"
             animate={{ 
               scale: [1.2, 1, 1.2],
-              opacity: [0.4, 0.8, 0.4]
+              opacity: [0.05, 0.2, 0.05]
             }}
             transition={{ duration: 6, repeat: Infinity }}
           />
@@ -190,7 +190,7 @@ const LandingPage = () => {
 
         {/* Navigation */}
         <motion.nav 
-          className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/80 border-b border-gray-200"
+          className="fixed top-0 w-full z-50 backdrop-blur-xl bg-zinc-900/80 border-b border-zinc-800"
           initial={{ y: -100 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.8, type: "spring" }}
@@ -206,18 +206,18 @@ const LandingPage = () => {
                     className="w-10 h-10 bg-orange-300 rounded-xl flex items-center justify-center"
                     animate={{ 
                       boxShadow: [
-                        "0 0 20px rgba(251, 146, 60, 0.3)",
-                        "0 0 30px rgba(251, 146, 60, 0.5)",
-                        "0 0 20px rgba(251, 146, 60, 0.3)"
+                        "0 0 20px rgba(253, 186, 116, 0.2)",
+                        "0 0 30px rgba(253, 186, 116, 0.3)",
+                        "0 0 20px rgba(253, 186, 116, 0.2)"
                       ]
                     }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <Sparkles className="w-5 h-5 text-white" />
+                    <Sparkles className="w-5 h-5 text-zinc-900" />
                   </motion.div>
                 </div>
                 <motion.span 
-                  className="text-xl font-bold font-sora text-gray-800"
+                  className="text-xl font-bold font-sora text-white"
                 >
                   OneAI
                 </motion.span>
@@ -233,7 +233,7 @@ const LandingPage = () => {
                   <motion.button
                     key={item.name}
                     onClick={() => navigate(item.path)}
-                    className="text-gray-600 hover:text-gray-900 transition-all duration-300 relative"
+                    className="text-gray-300 hover:text-white transition-all duration-300 relative"
                     whileHover={{ scale: 1.05 }}
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -252,7 +252,7 @@ const LandingPage = () => {
 
               <motion.button
                 onClick={() => navigate('/login')}
-                className="relative group px-6 py-2.5 bg-orange-300 text-white rounded-xl font-semibold border border-orange-300 hover:bg-orange-200 transition-colors"
+                className="relative group px-6 py-2.5 bg-orange-300 text-zinc-900 rounded-xl font-semibold border border-orange-300 hover:bg-orange-200 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 initial={{ opacity: 0, x: 50 }}
@@ -277,18 +277,18 @@ const LandingPage = () => {
             <div className="max-w-5xl mx-auto">
               {/* Badge */}
               <FadeInUp delay={0.2}>
-                <div className="inline-flex items-center gap-2 bg-orange-100 border border-orange-200 rounded-full px-4 py-2 mb-8">
-                  <Star className="w-4 h-4 text-orange-500" />
-                  <span className="text-sm text-orange-600">AI-Powered Developer Suite</span>
+                <div className="inline-flex items-center gap-2 bg-zinc-800 border border-zinc-700 rounded-full px-4 py-2 mb-8">
+                  <Star className="w-4 h-4 text-orange-300" />
+                  <span className="text-sm text-orange-200">AI-Powered Developer Suite</span>
                 </div>
               </FadeInUp>
 
               {/* Main Headline */}
               <FadeInUp delay={0.4}>
                 <h1 className="text-6xl md:text-8xl font-bold font-sora mb-8 leading-tight">
-                  <span className="block text-gray-900">Code Smarter</span>
+                  <span className="block text-white">Code Smarter</span>
                   <motion.span 
-                    className="block text-orange-500"
+                    className="block text-orange-300"
                   >
                     Build Faster
                   </motion.span>
@@ -297,7 +297,7 @@ const LandingPage = () => {
               
               {/* Subheadline */}
               <FadeInUp delay={0.6}>
-                <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
                   Transform your development workflow with intelligent code analysis, 
                   SQL optimization, and AI-driven productivity tools that feel like magic.
                 </p>
@@ -308,10 +308,10 @@ const LandingPage = () => {
                 <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
                   <motion.button
                     onClick={() => navigate('/login')}
-                    className="group relative px-10 py-4 bg-orange-300 text-white rounded-2xl text-lg font-semibold border border-orange-300 hover:bg-orange-200 transition-colors"
+                    className="group relative px-10 py-4 bg-orange-300 text-zinc-900 rounded-2xl text-lg font-semibold border border-orange-300 hover:bg-orange-200 transition-colors"
                     whileHover={{ 
                       scale: 1.05,
-                      boxShadow: "0 20px 40px rgba(251, 146, 60, 0.2)"
+                      boxShadow: "0 20px 40px rgba(253, 186, 116, 0.2)"
                     }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -322,7 +322,7 @@ const LandingPage = () => {
                   </motion.button>
                   
                   <motion.button 
-                    className="group px-10 py-4 border border-gray-300 text-gray-700 rounded-2xl text-lg font-semibold bg-white hover:bg-gray-50 flex items-center gap-3 transition-colors"
+                    className="group px-10 py-4 border border-zinc-700 text-gray-300 rounded-2xl text-lg font-semibold bg-zinc-800 hover:bg-zinc-700 flex items-center gap-3 transition-colors"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -337,14 +337,14 @@ const LandingPage = () => {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-32 relative bg-gray-50">
+        <section id="features" className="py-32 relative bg-zinc-800">
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="text-center mb-20">
-                <h2 className="text-5xl font-bold font-sora mb-6 text-gray-900">
+                <h2 className="text-5xl font-bold font-sora mb-6 text-white">
                   Powerful Features
                 </h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                <p className="text-xl text-gray-300 max-w-3xl mx-auto">
                   Everything you need to supercharge your development workflow, powered by cutting-edge AI
                 </p>
               </div>
@@ -353,19 +353,19 @@ const LandingPage = () => {
             <div className="grid lg:grid-cols-3 gap-8">
               {benefits.map((benefit, index) => (
                 <SlideIn key={index} delay={index * 0.2} direction="up">
-                  <FloatingCard className="group relative p-8 rounded-3xl bg-white border border-gray-200 hover:border-orange-300 transition-all duration-500 shadow-sm hover:shadow-md">
+                  <FloatingCard className="group relative p-8 rounded-3xl bg-zinc-900 border border-zinc-700 hover:border-orange-300/50 transition-all duration-500 shadow-sm hover:shadow-md">
                     <div className="relative z-10">
                       <motion.div 
-                        className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-6"
+                        className="w-16 h-16 bg-zinc-800 border border-zinc-700 rounded-2xl flex items-center justify-center mb-6"
                         whileHover={{ 
                           scale: 1.1,
                           rotate: 5
                         }}
                       >
-                        <benefit.icon className="w-8 h-8 text-orange-500" />
+                        <benefit.icon className="w-8 h-8 text-orange-300" />
                       </motion.div>
-                      <h3 className="text-2xl font-bold mb-4 text-gray-900">{benefit.title}</h3>
-                      <p className="text-gray-600 leading-relaxed">{benefit.description}</p>
+                      <h3 className="text-2xl font-bold mb-4 text-white">{benefit.title}</h3>
+                      <p className="text-gray-300 leading-relaxed">{benefit.description}</p>
                     </div>
                   </FloatingCard>
                 </SlideIn>
@@ -379,10 +379,10 @@ const LandingPage = () => {
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="text-center mb-20">
-                <h2 className="text-5xl font-bold font-sora mb-6 text-gray-900">
+                <h2 className="text-5xl font-bold font-sora mb-6 text-white">
                   AI Modules
                 </h2>
-                <p className="text-xl text-gray-600">
+                <p className="text-xl text-gray-300">
                   Each module is designed to work seamlessly together for maximum productivity
                 </p>
               </div>
@@ -391,19 +391,19 @@ const LandingPage = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
                 <SlideIn key={index} delay={index * 0.15} direction={index % 2 === 0 ? 'left' : 'right'}>
-                  <FloatingCard className="group relative p-8 rounded-3xl bg-white border border-gray-200 hover:border-orange-300 transition-all duration-500 shadow-sm hover:shadow-md">
+                  <FloatingCard className="group relative p-8 rounded-3xl bg-zinc-800 border border-zinc-700 hover:border-orange-300/50 transition-all duration-500 shadow-sm hover:shadow-md">
                     <div className="relative z-10">
                       <motion.div 
-                        className="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center mb-6"
+                        className="w-14 h-14 bg-zinc-900 border border-zinc-700 rounded-2xl flex items-center justify-center mb-6"
                         whileHover={{ 
                           scale: 1.1,
                           rotate: -5
                         }}
                       >
-                        <feature.icon className="w-7 h-7 text-orange-500" />
+                        <feature.icon className="w-7 h-7 text-orange-300" />
                       </motion.div>
-                      <h3 className="text-xl font-bold mb-4 text-gray-900">{feature.title}</h3>
-                      <p className="text-gray-600 text-sm leading-relaxed">{feature.description}</p>
+                      <h3 className="text-xl font-bold mb-4 text-white">{feature.title}</h3>
+                      <p className="text-gray-300 text-sm leading-relaxed">{feature.description}</p>
                     </div>
                   </FloatingCard>
                 </SlideIn>
@@ -413,14 +413,14 @@ const LandingPage = () => {
         </section>
 
         {/* Tech Stack */}
-        <section id="techstack" className="py-32 relative bg-gray-50">
+        <section id="techstack" className="py-32 relative bg-zinc-800">
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="text-center mb-20">
-                <h2 className="text-5xl font-bold font-sora mb-6 text-gray-900">
+                <h2 className="text-5xl font-bold font-sora mb-6 text-white">
                   Modern Tech Stack
                 </h2>
-                <p className="text-xl text-gray-600">
+                <p className="text-xl text-gray-300">
                   Built with the latest technologies for optimal performance and developer experience
                 </p>
               </div>
@@ -430,7 +430,7 @@ const LandingPage = () => {
               {techStack.map((tech, index) => (
                 <ScaleIn key={index} delay={index * 0.1}>
                   <motion.div
-                    className="group relative p-8 rounded-3xl bg-white border border-gray-200 hover:border-orange-300 text-center transition-all duration-500 shadow-sm hover:shadow-md"
+                    className="group relative p-8 rounded-3xl bg-zinc-900 border border-zinc-700 hover:border-orange-300 text-center transition-all duration-500 shadow-sm hover:shadow-md"
                     whileHover={{ 
                       scale: 1.1,
                       y: -10
@@ -573,27 +573,27 @@ const LandingPage = () => {
         </section>
 
         {/* Call to Action */}
-        <section className="py-32 relative bg-gray-50">
+        <section className="py-32 relative bg-zinc-800">
           <div className="container mx-auto px-6 text-center">
             <FadeInUp>
               <motion.div 
-                className="relative max-w-4xl mx-auto p-16 rounded-3xl bg-white border border-orange-200 shadow-lg"
+                className="relative max-w-4xl mx-auto p-16 rounded-3xl bg-zinc-900 border border-zinc-700 shadow-lg"
                 whileHover={{ 
                   scale: 1.02,
-                  boxShadow: "0 25px 50px rgba(251, 146, 60, 0.1)"
+                  boxShadow: "0 25px 50px rgba(0, 0, 0, 0.3)"
                 }}
               >
-                <h2 className="text-5xl font-bold font-sora mb-8 text-gray-900">
+                <h2 className="text-5xl font-bold font-sora mb-8 text-white">
                   Ready to Transform Your Workflow?
                 </h2>
-                <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+                <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
                   Join thousands of developers who are already building faster, smarter, and more efficiently with OneAI.
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
                   <motion.button
                     onClick={() => navigate('/login')}
-                    className="group relative px-12 py-4 bg-orange-300 text-white rounded-2xl text-lg font-semibold border border-orange-300 hover:bg-orange-200 transition-colors"
+                    className="group relative px-12 py-4 bg-orange-300 text-zinc-900 rounded-2xl text-lg font-semibold border border-orange-300 hover:bg-orange-200 transition-colors"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -605,7 +605,7 @@ const LandingPage = () => {
                   </motion.button>
 
                   <motion.div 
-                    className="flex items-center gap-2 text-gray-500"
+                    className="flex items-center gap-2 text-gray-400"
                     whileHover={{ scale: 1.05 }}
                   >
                     <Users className="w-5 h-5" />
@@ -618,7 +618,7 @@ const LandingPage = () => {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-gray-200 py-16 relative bg-white">
+        <footer className="border-t border-zinc-800 py-16 relative bg-zinc-900">
           <div className="container mx-auto px-6">
             <div className="grid md:grid-cols-4 gap-12 mb-12">
               <FadeInUp>
@@ -632,17 +632,17 @@ const LandingPage = () => {
                         className="w-10 h-10 bg-orange-300 rounded-xl flex items-center justify-center"
                         animate={{ 
                           boxShadow: [
-                            "0 0 20px rgba(251, 146, 60, 0.2)",
-                            "0 0 30px rgba(251, 146, 60, 0.4)",
-                            "0 0 20px rgba(251, 146, 60, 0.2)"
+                            "0 0 20px rgba(253, 186, 116, 0.2)",
+                            "0 0 30px rgba(253, 186, 116, 0.3)",
+                            "0 0 20px rgba(253, 186, 116, 0.2)"
                           ]
                         }}
                         transition={{ duration: 2, repeat: Infinity }}
                       >
-                        <Sparkles className="w-5 h-5 text-white" />
+                        <Sparkles className="w-5 h-5 text-zinc-900" />
                       </motion.div>
                     </div>
-                    <span className="text-xl font-bold font-sora text-gray-800">
+                    <span className="text-xl font-bold font-sora text-white">
                       OneAI
                     </span>
                   </motion.div>
@@ -720,7 +720,7 @@ const LandingPage = () => {
             </div>
             
             <FadeInUp delay={0.5}>
-              <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center">
+              <div className="border-t border-zinc-800 pt-8 flex flex-col md:flex-row justify-between items-center">
                 <p className="text-gray-600">&copy; 2024 OneAI. All rights reserved.</p>
                 <div className="flex space-x-6 mt-4 md:mt-0">
                   <button 
