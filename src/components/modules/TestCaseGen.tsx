@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +17,9 @@ interface Project {
   tech_stack: string;
   description: string;
   created_at: string;
+  modules?: any[];
+  architecture?: any;
+  testing_strategy?: any;
 }
 
 interface TestCase {
@@ -68,7 +72,7 @@ const TestCaseGen = () => {
       
       const { data, error } = await supabase
         .from('plans')
-        .select('id, project_name, tech_stack, description, created_at')
+        .select('id, project_name, tech_stack, description, created_at, modules, architecture, testing_strategy')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
@@ -79,7 +83,6 @@ const TestCaseGen = () => {
         throw error;
       }
       
-      // Handle case where data might be null
       const projectsData = data || [];
       console.log('Setting projects:', projectsData);
       setProjects(projectsData);
@@ -134,20 +137,17 @@ const TestCaseGen = () => {
     setIsLoading(true);
     
     try {
-      // Simulate AI test generation (replace with actual AI integration)
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       let mockTests: GeneratedTest;
 
       if (inputMode === "project") {
-        // Get the selected project details
         const selectedProjectData = projects.find(p => p.id === selectedProject);
         
         if (!selectedProjectData) {
           throw new Error("Selected project not found");
         }
 
-        // Generate project-specific test cases based on tech stack and description
         const projectTestCases = generateProjectBasedTests(selectedProjectData, framework);
         
         mockTests = {
@@ -162,7 +162,6 @@ const TestCaseGen = () => {
           description: `Generated ${projectTestCases.length} test cases for ${selectedProjectData.project_name}`,
         });
       } else {
-        // Generate code-specific test cases
         const codeTestCases = generateCodeBasedTests(rawCode, framework);
         
         mockTests = {
@@ -180,7 +179,6 @@ const TestCaseGen = () => {
 
       setGeneratedTests(mockTests);
 
-      // Save to database - convert GeneratedTest to JSON-compatible format
       const testsForDb = JSON.parse(JSON.stringify(mockTests));
       
       const { error } = await supabase
@@ -208,98 +206,127 @@ const TestCaseGen = () => {
   };
 
   const generateProjectBasedTests = (project: Project, framework: string): TestCase[] => {
-    const techStack = project.tech_stack.toLowerCase();
-    const projectName = project.project_name;
-    
     const testCases: TestCase[] = [];
     
-    // Generate tests based on tech stack
-    if (techStack.includes('react') || techStack.includes('javascript') || techStack.includes('typescript')) {
+    // Parse tech stack
+    let techStackData;
+    try {
+      techStackData = typeof project.tech_stack === 'string' 
+        ? JSON.parse(project.tech_stack) 
+        : project.tech_stack;
+    } catch {
+      techStackData = {};
+    }
+    
+    const techStackString = JSON.stringify(techStackData).toLowerCase();
+    const projectName = project.project_name;
+    const modules = project.modules || [];
+    
+    // Generate tests based on tech stack and modules
+    if (techStackString.includes('react') || techStackString.includes('javascript') || techStackString.includes('typescript')) {
       testCases.push({
         id: "1",
-        title: `${projectName} - Component Rendering Test`,
-        input: "render(<MainComponent />)",
-        expectedOutput: "Component renders without errors",
-        reasoning: "Ensures the main component renders correctly",
+        title: `${projectName} - Component Integration Test`,
+        input: "render(<App />)",
+        expectedOutput: "Application renders without errors",
+        reasoning: "Ensures the main application component renders correctly with all dependencies",
         framework: framework,
         code: framework === "jest" 
-          ? `test('${projectName} renders main component', () => {\n  render(<MainComponent />);\n  expect(screen.getByTestId('main-component')).toBeInTheDocument();\n});`
-          : `def test_main_component_renders():\n    # Component rendering test for ${projectName}\n    assert True`
+          ? `describe('${projectName} App Integration', () => {\n  test('renders main application', () => {\n    render(<App />);\n    expect(screen.getByTestId('app-container')).toBeInTheDocument();\n  });\n});`
+          : `class Test${projectName}App(unittest.TestCase):\n    def test_app_renders(self):\n        # Integration test for ${projectName}\n        self.assertTrue(True)`
       });
 
+      if (modules.length > 0) {
+        modules.slice(0, 2).forEach((module, index) => {
+          testCases.push({
+            id: `module-${index + 2}`,
+            title: `${projectName} - ${module.name} Module Test`,
+            input: `${module.name}.execute()`,
+            expectedOutput: "Module functions correctly",
+            reasoning: `Tests the ${module.name} module functionality based on: ${module.description}`,
+            framework: framework,
+            code: framework === "jest"
+              ? `describe('${module.name} Module', () => {\n  test('${module.name.toLowerCase()} functions correctly', () => {\n    // Test ${module.description}\n    expect(${module.name}).toBeDefined();\n  });\n});`
+              : `def test_${module.name.toLowerCase().replace(/\s+/g, '_')}_module():\n    # Test ${module.description}\n    assert True`
+          });
+        });
+      }
+    }
+
+    if (techStackString.includes('api') || techStackString.includes('backend') || techStackString.includes('node') || techStackString.includes('express')) {
       testCases.push({
-        id: "2",
-        title: `${projectName} - User Interaction Test`,
-        input: "fireEvent.click(button)",
-        expectedOutput: "Button click handlers work correctly",
-        reasoning: "Tests user interaction functionality",
+        id: "api-1",
+        title: `${projectName} - API Endpoints Test`,
+        input: "GET /api/health",
+        expectedOutput: "200 status with health data",
+        reasoning: "Tests API connectivity and basic endpoint functionality",
         framework: framework,
         code: framework === "jest"
-          ? `test('${projectName} handles user interactions', () => {\n  const button = screen.getByRole('button');\n  fireEvent.click(button);\n  expect(mockHandler).toHaveBeenCalled();\n});`
-          : `def test_user_interactions():\n    # User interaction test for ${projectName}\n    assert True`
+          ? `describe('${projectName} API', () => {\n  test('health endpoint returns 200', async () => {\n    const response = await request(app).get('/api/health');\n    expect(response.status).toBe(200);\n  });\n});`
+          : `def test_api_health_endpoint():\n    # API health test for ${projectName}\n    response = client.get('/api/health')\n    assert response.status_code == 200`
       });
     }
 
-    if (techStack.includes('api') || techStack.includes('backend') || techStack.includes('node')) {
+    if (techStackString.includes('database') || techStackString.includes('sql') || techStackString.includes('postgres') || techStackString.includes('mongodb')) {
       testCases.push({
-        id: "3",
-        title: `${projectName} - API Endpoint Test`,
-        input: "GET /api/users",
-        expectedOutput: "200 status with user data",
-        reasoning: "Tests API endpoints return correct responses",
-        framework: framework,
-        code: framework === "jest"
-          ? `test('${projectName} API returns users', async () => {\n  const response = await request(app).get('/api/users');\n  expect(response.status).toBe(200);\n  expect(response.body).toHaveProperty('users');\n});`
-          : `def test_api_returns_users():\n    # API test for ${projectName}\n    response = client.get('/api/users')\n    assert response.status_code == 200`
-      });
-    }
-
-    if (techStack.includes('database') || techStack.includes('sql') || techStack.includes('postgres')) {
-      testCases.push({
-        id: "4",
+        id: "db-1",
         title: `${projectName} - Database Connection Test`,
         input: "database.connect()",
         expectedOutput: "Connection established successfully",
-        reasoning: "Ensures database connectivity works",
+        reasoning: "Ensures database connectivity and basic operations work",
         framework: framework,
         code: framework === "jest"
-          ? `test('${projectName} connects to database', async () => {\n  const connection = await database.connect();\n  expect(connection.state).toBe('connected');\n  await connection.close();\n});`
+          ? `describe('${projectName} Database', () => {\n  test('establishes database connection', async () => {\n    const connection = await database.connect();\n    expect(connection.state).toBe('connected');\n    await connection.close();\n  });\n});`
           : `def test_database_connection():\n    # Database connection test for ${projectName}\n    connection = database.connect()\n    assert connection.is_connected()`
       });
     }
 
-    if (techStack.includes('auth') || techStack.includes('authentication')) {
+    if (techStackString.includes('auth') || techStackString.includes('authentication') || techStackString.includes('supabase')) {
       testCases.push({
-        id: "5",
-        title: `${projectName} - Authentication Test`,
-        input: "authenticateUser(credentials)",
-        expectedOutput: "User authenticated with valid token",
-        reasoning: "Tests user authentication flow",
+        id: "auth-1",
+        title: `${projectName} - Authentication Flow Test`,
+        input: "authenticateUser(validCredentials)",
+        expectedOutput: "User authenticated successfully",
+        reasoning: "Tests user authentication and session management",
         framework: framework,
         code: framework === "jest"
-          ? `test('${projectName} authenticates user', async () => {\n  const result = await authenticateUser(validCredentials);\n  expect(result).toHaveProperty('token');\n  expect(result.authenticated).toBe(true);\n});`
+          ? `describe('${projectName} Authentication', () => {\n  test('authenticates user with valid credentials', async () => {\n    const result = await authenticateUser(validCredentials);\n    expect(result.authenticated).toBe(true);\n    expect(result.token).toBeDefined();\n  });\n});`
           : `def test_user_authentication():\n    # Authentication test for ${projectName}\n    result = authenticate_user(valid_credentials)\n    assert result['authenticated'] == True`
       });
     }
 
-    // Add error handling test for any project
+    // Add architecture-specific tests if available
+    if (project.architecture && project.architecture.pattern) {
+      testCases.push({
+        id: "arch-1",
+        title: `${projectName} - ${project.architecture.pattern} Architecture Test`,
+        input: "validateArchitecturePattern()",
+        expectedOutput: "Architecture pattern implemented correctly",
+        reasoning: `Tests the ${project.architecture.pattern} architecture implementation`,
+        framework: framework,
+        code: framework === "jest"
+          ? `describe('${projectName} Architecture', () => {\n  test('follows ${project.architecture.pattern} pattern', () => {\n    // Validate ${project.architecture.pattern} implementation\n    expect(validateArchitecturePattern()).toBe(true);\n  });\n});`
+          : `def test_architecture_pattern():\n    # Architecture pattern test for ${projectName}\n    assert validate_architecture_pattern() == True`
+      });
+    }
+
+    // Add error handling test
     testCases.push({
-      id: "6",
+      id: "error-1",
       title: `${projectName} - Error Handling Test`,
-      input: "invalidOperation()",
+      input: "triggerError()",
       expectedOutput: "Error handled gracefully",
       reasoning: "Ensures proper error handling throughout the application",
       framework: framework,
       code: framework === "jest"
-        ? `test('${projectName} handles errors gracefully', () => {\n  expect(() => invalidOperation()).toThrow();\n  // Or test error boundaries in React\n});`
-        : `def test_error_handling():\n    # Error handling test for ${projectName}\n    with pytest.raises(Exception):\n        invalid_operation()`
+        ? `describe('${projectName} Error Handling', () => {\n  test('handles errors gracefully', () => {\n    expect(() => triggerError()).toThrow();\n    // Test error boundaries and fallbacks\n  });\n});`
+        : `def test_error_handling():\n    # Error handling test for ${projectName}\n    with pytest.raises(Exception):\n        trigger_error()`
     });
 
     return testCases;
   };
 
   const generateCodeBasedTests = (code: string, framework: string): TestCase[] => {
-    // This is the existing logic for code-based test generation
     return [
       {
         id: "1",
@@ -500,7 +527,7 @@ const TestCaseGen = () => {
                             <div className="flex flex-col py-2">
                               <span className="font-medium text-white">{project.project_name}</span>
                               <span className="text-xs text-muted-foreground">
-                                {project.tech_stack} • {new Date(project.created_at).toLocaleDateString()}
+                                Created: {new Date(project.created_at).toLocaleDateString()}
                               </span>
                               {project.description && (
                                 <span className="text-xs text-muted-foreground mt-1 truncate max-w-[300px]">
