@@ -37,7 +37,7 @@ const TestCaseGen = () => {
   const fetchProjects = async () => {
     try {
       const { data, error } = await supabase
-        .from('projects')
+        .from('plans')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -54,9 +54,9 @@ const TestCaseGen = () => {
       if (data) {
         const typedProjects: Project[] = data.map(project => ({
           id: project.id,
-          project_name: project.project_name,
-          tech_stack: project.tech_stack,
-          description: project.description,
+          project_name: project.project_name || '',
+          tech_stack: project.tech_stack || '',
+          description: project.description || '',
           created_at: project.created_at,
           modules: project.modules || {},
           architecture: project.architecture || {},
@@ -105,69 +105,204 @@ Testing Strategy: ${JSON.stringify(project.testing_strategy, null, 2)}
         return;
       }
 
-      // Simulate test case generation
+      // Simulate test case generation based on project or code
       setTimeout(() => {
+        const project = selectedProject ? projects.find(p => p.id === selectedProject) : null;
+        const projectName = project?.project_name || 'Code Module';
+        const techStack = project?.tech_stack || 'JavaScript/TypeScript';
+        
         const mockTestCases = `
-// Generated Test Cases for ${selectedFramework}
+// Generated Test Cases for ${selectedFramework} - ${projectName}
+// Tech Stack: ${techStack}
 
-describe('${selectedProject ? projects.find(p => p.id === selectedProject)?.project_name || 'Application' : 'Code Module'}', () => {
+describe('${projectName}', () => {
   
   // Unit Tests
   describe('Unit Tests', () => {
-    test('should initialize correctly', () => {
-      // Test initialization logic
-      expect(true).toBeTruthy();
+    beforeEach(() => {
+      // Setup test environment
+      jest.clearAllMocks();
     });
 
-    test('should handle valid input', () => {
-      // Test valid input scenarios
-      expect(true).toBeTruthy();
+    test('should initialize application correctly', () => {
+      // Test application initialization
+      const app = initializeApp();
+      expect(app).toBeDefined();
+      expect(app.isReady).toBe(true);
     });
 
-    test('should handle invalid input', () => {
-      // Test error handling
-      expect(true).toBeTruthy();
+    test('should handle user authentication', () => {
+      // Test authentication flow
+      const user = { id: '123', email: 'test@example.com' };
+      const result = authenticateUser(user);
+      expect(result.success).toBe(true);
+    });
+
+    test('should validate input data', () => {
+      // Test input validation
+      const invalidData = { name: '', email: 'invalid-email' };
+      const result = validateInput(invalidData);
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toContain('Name is required');
     });
   });
 
   // Integration Tests
   describe('Integration Tests', () => {
-    test('should integrate with external services', () => {
-      // Test service integration
-      expect(true).toBeTruthy();
+    test('should integrate with database', async () => {
+      // Test database integration
+      const testData = { name: 'Test User', email: 'test@example.com' };
+      const result = await saveToDatabase(testData);
+      expect(result.id).toBeDefined();
     });
 
-    test('should handle API responses', () => {
+    test('should handle API requests', async () => {
       // Test API integration
-      expect(true).toBeTruthy();
+      const response = await makeApiRequest('/api/users');
+      expect(response.status).toBe(200);
+      expect(response.data).toBeDefined();
+    });
+
+    test('should manage state correctly', () => {
+      // Test state management
+      const initialState = getInitialState();
+      const action = { type: 'UPDATE_USER', payload: { id: '123' } };
+      const newState = reducer(initialState, action);
+      expect(newState.user.id).toBe('123');
     });
   });
 
   // Edge Cases
   describe('Edge Cases', () => {
-    test('should handle empty data', () => {
+    test('should handle empty responses', async () => {
       // Test empty data scenarios
-      expect(true).toBeTruthy();
+      const result = await fetchData({ limit: 0 });
+      expect(result.data).toEqual([]);
+      expect(result.total).toBe(0);
     });
 
-    test('should handle large datasets', () => {
+    test('should handle large datasets', async () => {
       // Test performance with large data
-      expect(true).toBeTruthy();
+      const largeDataset = generateLargeDataset(10000);
+      const startTime = Date.now();
+      const result = await processLargeDataset(largeDataset);
+      const endTime = Date.now();
+      
+      expect(result.processed).toBe(true);
+      expect(endTime - startTime).toBeLessThan(5000); // Should complete within 5 seconds
     });
 
-    test('should handle network failures', () => {
-      // Test network error scenarios
+    test('should handle network failures gracefully', async () => {
+      // Mock network failure
+      jest.spyOn(global, 'fetch').mockRejectedValue(new Error('Network error'));
+      
+      const result = await makeNetworkRequest('/api/test');
+      expect(result.error).toBe('Network error');
+      expect(result.data).toBeNull();
+    });
+
+    test('should handle concurrent operations', async () => {
+      // Test concurrent operations
+      const operations = Array.from({ length: 10 }, (_, i) => 
+        performOperation({ id: i })
+      );
+      
+      const results = await Promise.all(operations);
+      expect(results).toHaveLength(10);
+      results.forEach(result => {
+        expect(result.success).toBe(true);
+      });
+    });
+  });
+
+  // ${techStack.includes('React') ? 'React Component Tests' : 'Framework-Specific Tests'}
+  ${techStack.includes('React') ? `
+  describe('React Component Tests', () => {
+    test('should render component correctly', () => {
+      const { getByTestId } = render(<TestComponent />);
+      expect(getByTestId('test-component')).toBeInTheDocument();
+    });
+
+    test('should handle user interactions', () => {
+      const { getByRole } = render(<InteractiveComponent />);
+      const button = getByRole('button');
+      
+      fireEvent.click(button);
+      expect(button).toHaveAttribute('aria-pressed', 'true');
+    });
+
+    test('should update state on props change', () => {
+      const { rerender } = render(<StatefulComponent data={[]} />);
+      expect(screen.queryByText('No data')).toBeInTheDocument();
+      
+      rerender(<StatefulComponent data={[{ id: 1, name: 'Test' }]} />);
+      expect(screen.getByText('Test')).toBeInTheDocument();
+    });
+  });` : `
+  describe('Framework-Specific Tests', () => {
+    test('should handle framework-specific functionality', () => {
+      // Add framework-specific test cases here
       expect(true).toBeTruthy();
+    });
+  });`}
+
+  // Performance Tests
+  describe('Performance Tests', () => {
+    test('should meet performance benchmarks', async () => {
+      const startTime = performance.now();
+      await performHeavyOperation();
+      const endTime = performance.now();
+      
+      expect(endTime - startTime).toBeLessThan(1000); // Should complete within 1 second
+    });
+
+    test('should handle memory usage efficiently', () => {
+      const initialMemory = process.memoryUsage().heapUsed;
+      performMemoryIntensiveOperation();
+      const finalMemory = process.memoryUsage().heapUsed;
+      
+      // Memory increase should be reasonable
+      expect(finalMemory - initialMemory).toBeLessThan(50 * 1024 * 1024); // Less than 50MB
     });
   });
 });
+
+// Helper functions for testing
+function initializeApp() {
+  return { isReady: true };
+}
+
+function authenticateUser(user) {
+  return { success: true, user };
+}
+
+function validateInput(data) {
+  const errors = [];
+  if (!data.name) errors.push('Name is required');
+  if (!data.email.includes('@')) errors.push('Valid email required');
+  
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}
+
+async function saveToDatabase(data) {
+  // Mock database save
+  return { id: Date.now().toString(), ...data };
+}
+
+async function makeApiRequest(url) {
+  // Mock API request
+  return { status: 200, data: { success: true } };
+}
 `;
         setTestCases(mockTestCases);
         setLoading(false);
         
         toast({
           title: "Test Cases Generated!",
-          description: "Your test cases have been successfully generated.",
+          description: `Comprehensive test cases generated for ${projectName}`,
         });
       }, 2000);
       
