@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
@@ -65,19 +64,38 @@ const TestCaseGen = () => {
     
     setIsProjectsLoading(true);
     try {
+      console.log('Fetching projects for user:', user.id);
+      
       const { data, error } = await supabase
         .from('plans')
         .select('id, project_name, tech_stack, description, created_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setProjects(data || []);
+      console.log('Projects query result:', { data, error });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+      
+      // Handle case where data might be null
+      const projectsData = data || [];
+      console.log('Setting projects:', projectsData);
+      setProjects(projectsData);
+      
+      if (projectsData.length === 0) {
+        toast({
+          title: "No Projects Found",
+          description: "You don't have any saved projects yet. Create one using StackWizard first.",
+          variant: "default",
+        });
+      }
     } catch (error) {
       console.error('Error fetching projects:', error);
       toast({
         title: "Error",
-        description: "Failed to load projects",
+        description: `Failed to load projects: ${error.message || 'Unknown error'}`,
         variant: "destructive",
       });
     } finally {
@@ -347,21 +365,27 @@ const TestCaseGen = () => {
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent className="bg-black/90 border-white/20 backdrop-blur-sm max-h-60 overflow-y-auto">
-                      {projects.map((project) => (
-                        <SelectItem key={project.id} value={project.id} className="cursor-pointer">
-                          <div className="flex flex-col py-2">
-                            <span className="font-medium text-white">{project.project_name}</span>
-                            <span className="text-xs text-muted-foreground">
-                              {project.tech_stack} • {new Date(project.created_at).toLocaleDateString()}
-                            </span>
-                            {project.description && (
-                              <span className="text-xs text-muted-foreground mt-1 truncate max-w-[300px]">
-                                {project.description}
+                      {projects.length === 0 ? (
+                        <div className="p-4 text-center text-muted-foreground">
+                          No saved projects found. Create one using StackWizard first.
+                        </div>
+                      ) : (
+                        projects.map((project) => (
+                          <SelectItem key={project.id} value={project.id} className="cursor-pointer">
+                            <div className="flex flex-col py-2">
+                              <span className="font-medium text-white">{project.project_name}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {project.tech_stack} • {new Date(project.created_at).toLocaleDateString()}
                               </span>
-                            )}
-                          </div>
-                        </SelectItem>
-                      ))}
+                              {project.description && (
+                                <span className="text-xs text-muted-foreground mt-1 truncate max-w-[300px]">
+                                  {project.description}
+                                </span>
+                              )}
+                            </div>
+                          </SelectItem>
+                        ))
+                      )}
                     </SelectContent>
                   </Select>
                 )}
