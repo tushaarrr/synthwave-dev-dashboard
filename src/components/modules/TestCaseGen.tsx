@@ -22,11 +22,11 @@ const TestCaseGen = () => {
   return (
     <div className="space-y-6">
       <div className="glass-dark rounded-2xl p-6 animate-scale-in">
-        <h2 className="text-2xl font-bold font-sora mb-2 bg-gradient-to-r from-neon-pink to-neon-purple bg-clip-text text-transparent">
+        <h2 className="text-2xl font-bold font-sora mb-2 bg-gradient-to-r from-neon-pink to-neon-blue bg-clip-text text-transparent">
           🧪 TestCaseGen
         </h2>
         <p className="text-muted-foreground mb-6">
-          Generate comprehensive test cases with edge case coverage for your code
+          Generate comprehensive test cases for your code with edge case coverage
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -35,9 +35,9 @@ const TestCaseGen = () => {
             <select
               value={framework}
               onChange={(e) => setFramework(e.target.value)}
-              className="w-full glass rounded-xl px-4 py-3 bg-white/5 border-0 focus:ring-2 focus:ring-neon-pink transition-all"
+              className="w-full glass rounded-xl px-4 py-3 bg-black/20 border-0 focus:ring-2 focus:ring-neon-pink transition-all"
             >
-              <option value="jest">Jest (JavaScript/TypeScript)</option>
+              <option value="jest">Jest (JavaScript)</option>
               <option value="pytest">Pytest (Python)</option>
             </select>
           </div>
@@ -58,7 +58,7 @@ const TestCaseGen = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-neon-pink to-neon-purple rounded-xl py-3 font-semibold hover:scale-105 transition-all duration-300"
+            className="w-full bg-gradient-to-r from-neon-pink to-neon-blue rounded-xl py-3 font-semibold hover:scale-105 transition-all duration-300"
           >
             Generate Test Cases
           </button>
@@ -69,90 +69,45 @@ const TestCaseGen = () => {
         <div className="grid gap-4">
           <OutputCard
             title="Test Coverage Analysis"
-            tag="95% Coverage"
+            tag="92% Coverage"
             tagColor="bg-neon-green"
             content={
               <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span>Statements:</span>
-                  <span className="text-neon-green">100%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Branches:</span>
-                  <span className="text-neon-green">95%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Functions:</span>
-                  <span className="text-neon-green">100%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Lines:</span>
-                  <span className="text-neon-green">100%</span>
-                </div>
+                <div><strong>Total Test Cases:</strong> 8 generated</div>
+                <div><strong>Edge Cases:</strong> 5 covered</div>
+                <div><strong>Happy Path:</strong> 3 scenarios</div>
+                <div><strong>Error Handling:</strong> Comprehensive</div>
               </div>
             }
             delay={100}
           />
           <OutputCard
             title="Generated Test Suite"
-            tag="12 Test Cases"
+            tag="Jest Ready"
             tagColor="bg-neon-blue"
             content={
               <div className="bg-black/30 p-4 rounded-lg">
-                <code className="text-xs font-mono text-neon-blue whitespace-pre">
-{`describe('calculateDiscount', () => {
+                <code className="text-xs font-mono text-neon-blue block leading-relaxed">
+                  {`describe('calculateDiscount', () => {
   // Happy path tests
-  test('should calculate discount correctly', () => {
-    expect(calculateDiscount(100, 20)).toBe(80);
-    expect(calculateDiscount(50, 10)).toBe(45);
+  test('calculates 10% discount correctly', () => {
+    expect(calculateDiscount(100, 10)).toBe(90);
   });
-
+  
   // Edge cases
-  test('should handle zero discount', () => {
-    expect(calculateDiscount(100, 0)).toBe(100);
-  });
-
-  test('should handle 100% discount', () => {
-    expect(calculateDiscount(100, 100)).toBe(0);
-  });
-
-  // Error cases
-  test('should throw error for invalid price', () => {
+  test('throws error for negative price', () => {
     expect(() => calculateDiscount(-10, 20))
       .toThrow('Invalid input');
-    expect(() => calculateDiscount(0, 20))
-      .toThrow('Invalid input');
   });
-
-  test('should throw error for invalid percentage', () => {
-    expect(() => calculateDiscount(100, -5))
-      .toThrow('Invalid input');
-    expect(() => calculateDiscount(100, 150))
-      .toThrow('Invalid input');
+  
+  test('handles 0% discount', () => {
+    expect(calculateDiscount(100, 0)).toBe(100);
   });
 });`}
                 </code>
               </div>
             }
             delay={200}
-          />
-          <OutputCard
-            title="Edge Cases Covered"
-            tag="Comprehensive"
-            tagColor="bg-neon-orange"
-            content={
-              <ul className="space-y-2 list-disc list-inside">
-                <li>Boundary values (0%, 100% discount)</li>
-                <li>Negative price inputs</li>
-                <li>Invalid percentage ranges</li>
-                <li>Floating point precision handling</li>
-                <li>Large number inputs</li>
-                <li>Type validation tests</li>
-                <li>Error message verification</li>
-                <li>Performance stress tests</li>
-              </ul>
-            }
-            delay={300}
           />
         </div>
       )}

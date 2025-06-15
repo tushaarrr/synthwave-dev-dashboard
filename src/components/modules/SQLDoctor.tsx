@@ -6,7 +6,7 @@ import OutputCard from "../OutputCard";
 const SQLDoctor = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasResults, setHasResults] = useState(false);
-  const [sql, setSql] = useState("");
+  const [sqlQuery, setSqlQuery] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,18 +25,18 @@ const SQLDoctor = () => {
           🧾 SQLDoctor
         </h2>
         <p className="text-muted-foreground mb-6">
-          Analyze and optimize your SQL queries for better performance and readability
+          Analyze your SQL queries for performance issues and get optimized versions
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2">SQL Query</label>
             <textarea
-              value={sql}
-              onChange={(e) => setSql(e.target.value)}
+              value={sqlQuery}
+              onChange={(e) => setSqlQuery(e.target.value)}
               placeholder={`SELECT * FROM users 
-WHERE age > 18 
-AND created_at > '2023-01-01' 
+WHERE created_at > '2023-01-01' 
+AND status = 'active'
 ORDER BY created_at DESC;`}
               rows={8}
               className="w-full glass rounded-xl px-4 py-3 bg-black/20 border-0 focus:ring-2 focus:ring-neon-orange transition-all resize-none font-mono text-sm"
@@ -46,7 +46,7 @@ ORDER BY created_at DESC;`}
             type="submit"
             className="w-full bg-gradient-to-r from-neon-orange to-neon-pink rounded-xl py-3 font-semibold hover:scale-105 transition-all duration-300"
           >
-            Analyze & Optimize Query
+            Analyze & Optimize SQL
           </button>
         </form>
       </div>
@@ -54,72 +54,39 @@ ORDER BY created_at DESC;`}
       {hasResults && (
         <div className="grid gap-4">
           <OutputCard
-            title="Query Explanation"
-            tag="Analysis"
-            tagColor="bg-neon-blue"
+            title="Query Analysis"
+            tag="Performance Issues"
+            tagColor="bg-yellow-500"
             content={
               <div className="space-y-3">
-                <p><strong>Operation:</strong> SELECT with filtering and sorting</p>
-                <p><strong>Table:</strong> users</p>
-                <p><strong>Filters:</strong> Age greater than 18, created after 2023</p>
-                <p><strong>Sorting:</strong> By creation date, newest first</p>
-                <p><strong>Estimated Rows:</strong> ~2,500 records</p>
+                <div><strong>Execution Time:</strong> ~245ms (Slow)</div>
+                <div><strong>Rows Scanned:</strong> 1.2M rows</div>
+                <div><strong>Index Usage:</strong> Partial (created_at)</div>
+                <div><strong>Issues Found:</strong> Missing composite index, SELECT *</div>
               </div>
             }
             delay={100}
           />
           <OutputCard
-            title="Performance Issues"
-            tag="Needs Optimization"
-            tagColor="bg-yellow-500"
+            title="Optimized Query"
+            tag="85% Faster"
+            tagColor="bg-neon-green"
             content={
-              <div className="space-y-3">
-                <div className="bg-yellow-500/10 p-3 rounded-lg border border-yellow-500/20">
-                  <strong>SELECT *:</strong> Retrieving all columns is inefficient
-                </div>
-                <div className="bg-red-500/10 p-3 rounded-lg border border-red-500/20">
-                  <strong>Missing Index:</strong> No index on age + created_at combination
-                </div>
-                <div className="bg-orange-500/10 p-3 rounded-lg border border-orange-500/20">
-                  <strong>Date Comparison:</strong> String comparison instead of proper date handling
-                </div>
+              <div className="bg-black/30 p-4 rounded-lg">
+                <code className="text-xs font-mono text-neon-green block leading-relaxed">
+                  {`SELECT id, name, email, created_at 
+FROM users 
+WHERE status = 'active' 
+  AND created_at > '2023-01-01'
+ORDER BY created_at DESC;
+
+-- Recommended Index:
+CREATE INDEX idx_users_status_created 
+ON users(status, created_at DESC);`}
+                </code>
               </div>
             }
             delay={200}
-          />
-          <OutputCard
-            title="Optimized Query"
-            tag="Performance Boost"
-            tagColor="bg-neon-green"
-            content={
-              <div className="space-y-3">
-                <div className="bg-black/30 p-4 rounded-lg">
-                  <code className="text-xs font-mono text-neon-green whitespace-pre">
-{`-- Optimized version with specific columns
-SELECT id, name, email, created_at 
-FROM users 
-WHERE age > 18 
-  AND created_at > DATE('2023-01-01')
-ORDER BY created_at DESC
-LIMIT 100;
-
--- Recommended index
-CREATE INDEX idx_users_age_created 
-ON users(age, created_at DESC);`}
-                  </code>
-                </div>
-                <div className="text-sm space-y-1">
-                  <p><strong>Improvements:</strong></p>
-                  <ul className="list-disc list-inside space-y-1">
-                    <li>Selected only required columns</li>
-                    <li>Added proper date handling</li>
-                    <li>Included LIMIT for pagination</li>
-                    <li>Suggested composite index</li>
-                  </ul>
-                </div>
-              </div>
-            }
-            delay={300}
           />
         </div>
       )}
