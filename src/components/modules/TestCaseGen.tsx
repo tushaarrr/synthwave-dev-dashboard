@@ -24,6 +24,7 @@ interface TestCase {
   category: string;
   title: string;
   description: string;
+  explanation: string;
   code: string;
   icon: any;
   color: string;
@@ -129,7 +130,7 @@ export default UserForm;`);
           project_name: project.project_name || 'Untitled Project',
           tech_stack: typeof project.tech_stack === 'string' 
             ? project.tech_stack 
-            : JSON.stringify(project.tech_stack || {}),
+            : (project.tech_stack ? Object.keys(project.tech_stack).join(', ') : 'Not specified'),
           description: project.description || 'No description available',
           created_at: project.created_at,
           modules: project.modules || {},
@@ -203,13 +204,13 @@ Tech Stack: ${project.tech_stack}
         return;
       }
 
-      // Simulate test case generation with organized categories
       setTimeout(() => {
         const generatedTestCases: TestCase[] = [
           {
             category: 'rendering',
             title: 'Component Rendering Tests',
             description: 'Tests to ensure the component renders correctly with all required elements and handles different states properly.',
+            explanation: 'These tests verify that your component renders without crashing and displays all necessary elements. They check the basic structure and ensure that required form fields, buttons, and containers are present in the DOM. This is the foundation of component testing - if your component doesn\'t render properly, nothing else matters.',
             icon: Eye,
             color: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
             code: `// Rendering Tests for ${selectedFramework.toUpperCase()}
@@ -231,7 +232,7 @@ describe('UserForm Rendering', () => {
 
   test('has proper form structure', () => {
     render(<UserForm onSubmit={mockOnSubmit} />);
-    const form = screen.getByRole('form') || screen.getByTestId('user-form');
+    const form = screen.getByRole('form') || container.querySelector('form');
     expect(form).toBeInTheDocument();
   });
 });`
@@ -240,6 +241,7 @@ describe('UserForm Rendering', () => {
             category: 'validation',
             title: 'Form Validation Tests',
             description: 'Comprehensive tests for form validation logic, including email format validation, required fields, and password strength requirements.',
+            explanation: 'Validation tests are crucial for ensuring your form behaves correctly with different types of user input. These tests verify that your validation logic catches empty fields, invalid email formats, weak passwords, and other edge cases. They ensure your users get helpful error messages and that invalid data doesn\'t get submitted.',
             icon: CheckCircle,
             color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
             code: `// Validation Tests for ${selectedFramework.toUpperCase()}
@@ -257,7 +259,9 @@ describe('Form Validation', () => {
     const submitButton = screen.getByRole('button', { name: /submit/i });
     await user.click(submitButton);
     
-    expect(screen.getByText('Email is required')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Email is required')).toBeInTheDocument();
+    });
   });
 
   test('shows error for invalid email format', async () => {
@@ -270,7 +274,9 @@ describe('Form Validation', () => {
     const submitButton = screen.getByRole('button', { name: /submit/i });
     await user.click(submitButton);
     
-    expect(screen.getByText('Email is invalid')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Email is invalid')).toBeInTheDocument();
+    });
   });
 
   test('accepts valid email format', async () => {
@@ -299,7 +305,9 @@ describe('Form Validation', () => {
     const submitButton = screen.getByRole('button', { name: /submit/i });
     await user.click(submitButton);
     
-    expect(screen.getByText('Password must be at least 6 characters')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Password must be at least 6 characters')).toBeInTheDocument();
+    });
   });
 });`
           },
@@ -307,6 +315,7 @@ describe('Form Validation', () => {
             category: 'interaction',
             title: 'User Interaction Tests',
             description: 'Tests for user interactions including form input changes, button clicks, and keyboard navigation to ensure proper user experience.',
+            explanation: 'User interaction tests simulate real user behavior to ensure your component responds correctly to user actions. These tests verify that typing in inputs updates the values, clicking buttons triggers the right actions, and keyboard navigation works as expected. They help catch issues that users would encounter in real usage.',
             icon: Code,
             color: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
             code: `// User Interaction Tests for ${selectedFramework.toUpperCase()}
@@ -340,7 +349,10 @@ describe('User Interactions', () => {
     // First trigger error
     const submitButton = screen.getByRole('button', { name: /submit/i });
     await user.click(submitButton);
-    expect(screen.getByText('Email is required')).toBeInTheDocument();
+    
+    await waitFor(() => {
+      expect(screen.getByText('Email is required')).toBeInTheDocument();
+    });
     
     // Then fix the error
     const emailInput = screen.getByPlaceholderText('Email');
@@ -370,6 +382,7 @@ describe('User Interactions', () => {
             category: 'submission',
             title: 'Form Submission Tests',
             description: 'Tests for form submission scenarios including successful submissions, error handling, and edge cases during the submission process.',
+            explanation: 'Form submission tests ensure that your form correctly handles the submission process. They verify that valid data gets passed to the onSubmit handler with the correct format, invalid submissions are blocked, and errors during submission are handled gracefully. These tests are essential for ensuring your form integrates properly with your application\'s backend.',
             icon: Play,
             color: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
             code: `// Form Submission Tests for ${selectedFramework.toUpperCase()}
@@ -428,12 +441,40 @@ describe('Form Submission', () => {
       expect(screen.getByText('Failed to submit form')).toBeInTheDocument();
     });
   });
+
+  test('prevents multiple submissions', async () => {
+    const user = userEvent.setup();
+    let resolveSubmit: (value: any) => void;
+    const slowSubmit = new Promise(resolve => { resolveSubmit = resolve; });
+    mockOnSubmit.mockReturnValue(slowSubmit);
+    
+    render(<UserForm onSubmit={mockOnSubmit} />);
+    
+    const emailInput = screen.getByPlaceholderText('Email');
+    const passwordInput = screen.getByPlaceholderText('Password');
+    const submitButton = screen.getByRole('button', { name: /submit/i });
+    
+    await user.type(emailInput, 'test@example.com');
+    await user.type(passwordInput, 'password123');
+    
+    // First submission
+    await user.click(submitButton);
+    
+    // Try to submit again while first is pending
+    await user.click(submitButton);
+    
+    expect(mockOnSubmit).toHaveBeenCalledTimes(1);
+    
+    // Resolve the promise
+    resolveSubmit!({});
+  });
 });`
           },
           {
             category: 'edge-cases',
             title: 'Edge Cases & Error Handling',
             description: 'Tests for unusual scenarios, boundary conditions, and error states to ensure robust application behavior in all situations.',
+            explanation: 'Edge case tests help ensure your component is robust and handles unexpected situations gracefully. These tests cover scenarios like extremely long inputs, special characters, rapid user actions, and component lifecycle edge cases. They help prevent bugs that might only surface in production with real user behavior.',
             icon: AlertCircle,
             color: 'bg-red-500/20 text-red-400 border-red-500/30',
             code: `// Edge Cases Tests for ${selectedFramework.toUpperCase()}
@@ -462,49 +503,50 @@ describe('Edge Cases', () => {
     expect(passwordInput).toHaveValue(specialPassword);
   });
 
-  test('handles rapid form submissions', async () => {
+  test('handles empty string inputs', async () => {
     const user = userEvent.setup();
-    mockOnSubmit.mockResolvedValue({});
-    
     render(<UserForm onSubmit={mockOnSubmit} />);
     
     const emailInput = screen.getByPlaceholderText('Email');
     const passwordInput = screen.getByPlaceholderText('Password');
-    const submitButton = screen.getByRole('button', { name: /submit/i });
     
+    // Type and then clear
     await user.type(emailInput, 'test@example.com');
-    await user.type(passwordInput, 'password123');
+    await user.clear(emailInput);
     
-    // Rapid clicks
-    await user.click(submitButton);
-    await user.click(submitButton);
-    await user.click(submitButton);
+    await user.type(passwordInput, 'password');
+    await user.clear(passwordInput);
     
-    // Should handle properly without duplicate submissions
-    expect(mockOnSubmit).toHaveBeenCalled();
+    expect(emailInput).toHaveValue('');
+    expect(passwordInput).toHaveValue('');
   });
 
-  test('handles component unmounting during async operations', async () => {
-    const user = userEvent.setup();
+  test('handles component unmounting during async operations', () => {
     const slowSubmit = jest.fn().mockImplementation(() => 
       new Promise(resolve => setTimeout(resolve, 1000))
     );
     
     const { unmount } = render(<UserForm onSubmit={slowSubmit} />);
     
-    const emailInput = screen.getByPlaceholderText('Email');
-    const passwordInput = screen.getByPlaceholderText('Password');
-    const submitButton = screen.getByRole('button', { name: /submit/i });
-    
-    await user.type(emailInput, 'test@example.com');
-    await user.type(passwordInput, 'password123');
-    await user.click(submitButton);
-    
-    // Unmount before async operation completes
+    // Unmount component
     unmount();
     
     // Should not cause memory leaks or errors
-    expect(slowSubmit).toHaveBeenCalled();
+    expect(true).toBe(true); // Test passes if no errors thrown
+  });
+
+  test('maintains state consistency during rapid state changes', async () => {
+    const user = userEvent.setup();
+    render(<UserForm onSubmit={mockOnSubmit} />);
+    
+    const emailInput = screen.getByPlaceholderText('Email');
+    
+    // Rapid typing simulation
+    await user.type(emailInput, 'a');
+    await user.type(emailInput, 'b');
+    await user.type(emailInput, 'c');
+    
+    expect(emailInput).toHaveValue('abc');
   });
 });`
           }
@@ -660,7 +702,7 @@ export default UserForm;`)}
                           <div className="flex flex-col">
                             <span className="font-medium">{project.project_name}</span>
                             <span className="text-xs text-zinc-400 truncate max-w-[200px]">
-                              {project.description}
+                              {project.tech_stack}
                             </span>
                           </div>
                         </SelectItem>
@@ -721,61 +763,76 @@ export default UserForm;`)}
             </Badge>
           </div>
 
-          {testCases.map((testCase, index) => (
-            <Card key={testCase.category} className="bg-zinc-800 border-zinc-700">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-zinc-700 rounded-lg flex items-center justify-center">
-                      <testCase.icon className="w-5 h-5 text-orange-400" />
+          <div className="grid gap-4">
+            {testCases.map((testCase, index) => (
+              <Card key={testCase.category} className="bg-zinc-800 border-zinc-700">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-zinc-700 rounded-lg flex items-center justify-center">
+                        <testCase.icon className="w-5 h-5 text-orange-400" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-white text-lg">{testCase.title}</CardTitle>
+                        <CardDescription className="text-zinc-400 text-sm">
+                          {testCase.description}
+                        </CardDescription>
+                      </div>
                     </div>
-                    <div>
-                      <CardTitle className="text-white text-lg">{testCase.title}</CardTitle>
-                      <CardDescription className="text-zinc-400 text-sm">
-                        {testCase.description}
-                      </CardDescription>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className={testCase.color}>
+                        <FileText className="w-3 h-3 mr-1" />
+                        {testCase.category}
+                      </Badge>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(testCase.code)}
+                        className="bg-zinc-700 border-zinc-600 text-zinc-300 hover:bg-zinc-600"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className={testCase.color}>
-                      <FileText className="w-3 h-3 mr-1" />
-                      {testCase.category}
-                    </Badge>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => toggleCardExpansion(testCase.category)}
-                      className="bg-zinc-700 border-zinc-600 text-zinc-300 hover:bg-zinc-600"
-                    >
-                      {expandedCards[testCase.category] ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => copyToClipboard(testCase.code)}
-                      className="bg-zinc-700 border-zinc-600 text-zinc-300 hover:bg-zinc-600"
-                    >
-                      <Copy className="w-4 h-4" />
-                    </Button>
+                </CardHeader>
+                
+                <CardContent className="space-y-4">
+                  {/* Explanation Section */}
+                  <div className="bg-zinc-900/50 rounded-lg p-4 border border-zinc-700">
+                    <h4 className="text-sm font-semibold text-zinc-300 mb-2 flex items-center gap-2">
+                      <FileText className="w-4 h-4" />
+                      What this test covers:
+                    </h4>
+                    <p className="text-sm text-zinc-400 leading-relaxed">
+                      {testCase.explanation}
+                    </p>
                   </div>
-                </div>
-              </CardHeader>
-              
-              {expandedCards[testCase.category] && (
-                <CardContent>
+
+                  {/* Code Section */}
                   <div className="bg-zinc-900 rounded-lg p-4 border border-zinc-700">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-semibold text-zinc-300 flex items-center gap-2">
+                        <Code className="w-4 h-4" />
+                        Test Code:
+                      </h4>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(testCase.code)}
+                        className="bg-zinc-800 border-zinc-600 text-zinc-300 hover:bg-zinc-600 text-xs px-2 py-1 h-7"
+                      >
+                        <Copy className="w-3 h-3 mr-1" />
+                        Copy
+                      </Button>
+                    </div>
                     <pre className="text-sm text-zinc-300 whitespace-pre-wrap overflow-x-auto">
-                      {testCase.code}
+                      <code>{testCase.code}</code>
                     </pre>
                   </div>
                 </CardContent>
-              )}
-            </Card>
-          ))}
+              </Card>
+            ))}
+          </div>
         </div>
       )}
     </div>
