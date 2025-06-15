@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -22,12 +21,17 @@ interface Architecture {
   api_reason: string;
   database_type: string;
   database_reason: string;
+  deployment_strategy: string;
 }
 
 interface TestingStrategy {
   types: string[];
   tools: Record<string, string>;
+  coverage_targets: Record<string, string>;
   ai_testing?: string;
+  testing_environments: string[];
+  automated_testing: string;
+  manual_testing: string;
 }
 
 interface TeamRole {
@@ -113,162 +117,96 @@ export const useStackWizard = () => {
       console.log('=== RAW FUNCTION RESPONSE ===');
       console.log('Response type:', typeof data);
       console.log('Response data:', data);
-      console.log('Response keys:', data ? Object.keys(data) : 'null');
       console.log('==============================');
 
-      // Handle both new JSON format and legacy format
+      // Process the response data
       let planData: ProjectPlan;
       
-      if (data && (data.product_scope || data.modules)) {
-        console.log('Processing new JSON format');
-        // New JSON format
+      if (data && typeof data === 'object') {
+        console.log('Processing structured response data');
+        
+        // Ensure all required fields exist with proper defaults
         planData = {
           product_scope: data.product_scope || description,
-          tech_stack: data.tech_stack || {},
-          modules: data.modules || [],
-          bonus_modules: data.bonus_modules || [],
+          tech_stack: data.tech_stack || {
+            frontend: ['React', 'TypeScript'],
+            backend: ['Node.js'],
+            database: ['PostgreSQL'],
+            hosting: ['Vercel']
+          },
+          modules: Array.isArray(data.modules) ? data.modules : [],
+          bonus_modules: Array.isArray(data.bonus_modules) ? data.bonus_modules : [],
           architecture: data.architecture || {
-            pattern: '',
-            reason: '',
-            api_style: '',
-            api_reason: '',
-            database_type: '',
-            database_reason: ''
-          },
-          testing_strategy: data.testing_strategy || {
-            types: [],
-            tools: {}
-          },
-          timeline: data.timeline || [],
-          team_plan: data.team_plan || {
-            roles: [],
-            team_size: '',
-            duration: ''
-          },
-          budget_estimate: data.budget_estimate || {
-            development: {
-              team_cost: '',
-              duration: '',
-              total: ''
-            },
-            infrastructure: {
-              hosting: '',
-              ai_services: '',
-              third_party: '',
-              total_monthly: ''
-            },
-            total_project: ''
-          },
-          suggestions: data.suggestions || []
-        };
-      } else {
-        console.log('Creating fallback data structure');
-        // Create a fallback structure with some sample data
-        planData = {
-          product_scope: description,
-          tech_stack: {
-            frontend: ['React', 'TypeScript', 'Tailwind CSS'],
-            backend: ['Node.js', 'Express', 'PostgreSQL'],
-            hosting: ['Vercel', 'Supabase']
-          },
-          modules: [
-            {
-              name: 'User Authentication',
-              description: 'Secure user registration and login system',
-              dependencies: ['Supabase Auth'],
-              ai_used: false
-            },
-            {
-              name: 'Dashboard',
-              description: 'Main user interface and navigation',
-              dependencies: ['React Router'],
-              ai_used: false
-            }
-          ],
-          bonus_modules: [
-            {
-              name: 'Analytics Dashboard',
-              description: 'Track user engagement and metrics'
-            }
-          ],
-          architecture: {
-            pattern: 'Microservices',
-            reason: 'Scalable and maintainable architecture',
+            pattern: 'Modular Monolith',
+            reason: 'Good for MVP development',
             api_style: 'REST',
             api_reason: 'Simple and widely supported',
             database_type: 'PostgreSQL',
-            database_reason: 'Reliable and feature-rich'
+            database_reason: 'Reliable and feature-rich',
+            deployment_strategy: 'Container-based deployment'
           },
-          testing_strategy: {
+          testing_strategy: data.testing_strategy || {
             types: ['Unit Testing', 'Integration Testing'],
             tools: {
-              'unit': 'Jest',
-              'integration': 'Cypress'
-            }
-          },
-          timeline: [
-            {
-              week: 1,
-              title: 'Project Setup',
-              tasks: ['Initialize project', 'Set up development environment'],
-              progress: 0
+              unit: 'Jest',
+              integration: 'Supertest'
             },
-            {
-              week: 2,
-              title: 'Core Features',
-              tasks: ['Implement authentication', 'Build dashboard'],
-              progress: 0
-            }
-          ],
-          team_plan: {
+            coverage_targets: {
+              unit: '80%',
+              integration: '70%'
+            },
+            ai_testing: 'Test AI integrations and fallback scenarios',
+            testing_environments: ['Development', 'Staging', 'Production'],
+            automated_testing: 'CI/CD with automated testing',
+            manual_testing: 'User acceptance and cross-browser testing'
+          },
+          timeline: Array.isArray(data.timeline) ? data.timeline : [],
+          team_plan: data.team_plan || {
             roles: [
               {
-                role: 'Full Stack Developer',
-                responsibilities: 'Frontend and backend development'
-              },
-              {
-                role: 'UI/UX Designer',
-                responsibilities: 'User interface design'
+                role: 'Full-Stack Developer',
+                responsibilities: 'Full application development'
               }
             ],
-            team_size: '2-3 developers',
-            duration: '8-12 weeks'
+            team_size: '2-3 people',
+            duration: '4-6 weeks'
           },
-          budget_estimate: {
+          budget_estimate: data.budget_estimate || {
             development: {
-              team_cost: '$15,000 - $25,000',
-              duration: '8-12 weeks',
-              total: '$25,000'
+              team_cost: '$10,000 - $15,000',
+              duration: '4-6 weeks',
+              total: '$12,500'
             },
             infrastructure: {
               hosting: '$50/month',
               ai_services: '$100/month',
-              third_party: '$30/month',
-              total_monthly: '$180/month'
+              third_party: '$50/month',
+              total_monthly: '$200/month'
             },
-            total_project: '$25,000 + $180/month'
+            total_project: '$13,100'
           },
-          suggestions: [
-            'Start with MVP features to validate market fit',
-            'Focus on user experience and performance',
-            'Implement proper error handling and monitoring'
+          suggestions: Array.isArray(data.suggestions) ? data.suggestions : [
+            'Focus on MVP features first',
+            'Implement proper error handling',
+            'Plan for mobile responsiveness'
           ]
         };
-        
-        console.log('Created fallback data structure with sample content');
+      } else {
+        throw new Error('Invalid response format from AI service');
       }
 
       console.log('=== FINAL PROCESSED DATA ===');
-      console.log('Modules count:', planData.modules?.length);
-      console.log('Timeline count:', planData.timeline?.length);
+      console.log('Modules count:', planData.modules?.length || 0);
+      console.log('Timeline count:', planData.timeline?.length || 0);
       console.log('Budget exists:', !!planData.budget_estimate);
       console.log('Team plan exists:', !!planData.team_plan);
       console.log('Architecture exists:', !!planData.architecture);
+      console.log('Testing strategy exists:', !!planData.testing_strategy);
       console.log('=============================');
 
       setResult(planData);
 
-      // Save to Supabase - using type assertion to work around outdated types
+      // Save to Supabase
       try {
         console.log('Saving to database...');
         const { error: saveError } = await supabase
@@ -279,17 +217,17 @@ export const useStackWizard = () => {
             description,
             requirements,
             product_scope: planData.product_scope,
-            tech_stack: typeof planData.tech_stack === 'string' ? planData.tech_stack : JSON.stringify(planData.tech_stack),
-            timeline: typeof planData.timeline === 'string' ? planData.timeline : JSON.stringify(planData.timeline),
-            gantt_chart: planData.ganttChart || JSON.stringify(planData.timeline),
-            suggestions: typeof planData.suggestions === 'string' ? planData.suggestions : JSON.stringify(planData.suggestions),
+            tech_stack: JSON.stringify(planData.tech_stack),
+            timeline: JSON.stringify(planData.timeline),
+            gantt_chart: JSON.stringify(planData.timeline),
+            suggestions: JSON.stringify(planData.suggestions),
             modules: planData.modules,
             bonus_modules: planData.bonus_modules,
             architecture: planData.architecture,
             testing_strategy: planData.testing_strategy,
             team_plan: planData.team_plan,
             budget_estimate: planData.budget_estimate
-          } as any); // Type assertion to bypass outdated types
+          } as any);
 
         if (saveError) {
           console.error('Error saving plan to database:', saveError);
@@ -298,7 +236,6 @@ export const useStackWizard = () => {
         }
       } catch (dbError) {
         console.error('Database save failed:', dbError);
-        // Continue execution even if database save fails
       }
 
       console.log('=== useStackWizard.generatePlan SUCCESS ===');
