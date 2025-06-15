@@ -14,8 +14,7 @@ function FloatingMesh({ mouse, scrollY }: { mouse: { x: number; y: number }, scr
       wireframe: true,
       transparent: true,
       opacity: 1.0, // Full opacity
-      side: THREE.DoubleSide,
-      linewidth: 3
+      side: THREE.DoubleSide
     });
   }, []);
 
@@ -53,7 +52,7 @@ export default function FloatingGeometry({ scrollY = 0 }: { scrollY?: number }) 
 
   useMemo(() => {
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   return (
