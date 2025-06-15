@@ -7,36 +7,37 @@ function FloatingMesh({ mouse, scrollY }: { mouse: { x: number; y: number }, scr
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
 
-  // Bright wireframe material for maximum visibility
+  // Enhanced wireframe material for maximum visibility
   const wireframeMaterial = useMemo(() => {
     return new THREE.MeshBasicMaterial({
       color: 0xFDBA74, // Orange-300
       wireframe: true,
       transparent: true,
-      opacity: 0.8,
-      side: THREE.DoubleSide
+      opacity: 1.0, // Full opacity
+      side: THREE.DoubleSide,
+      linewidth: 3
     });
   }, []);
 
   useFrame((state) => {
     if (meshRef.current) {
       // Slow rotation for elegance
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.1;
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.08;
+      meshRef.current.rotation.x = state.clock.elapsedTime * 0.08;
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.1;
       
       // Subtle mouse interaction
-      meshRef.current.rotation.x += mouse.y * 0.0001;
-      meshRef.current.rotation.y += mouse.x * 0.0001;
+      meshRef.current.rotation.x += mouse.y * 0.0002;
+      meshRef.current.rotation.y += mouse.x * 0.0002;
       
       // Gentle scroll parallax
-      const scrollTilt = scrollY * 0.00005;
+      const scrollTilt = scrollY * 0.00003;
       meshRef.current.rotation.z = scrollTilt;
     }
   });
 
   return (
-    <mesh ref={meshRef} position={[2, 0, 0]}>
-      <torusGeometry args={[3.0, 0.1, 16, 100]} />
+    <mesh ref={meshRef} position={[0, 0, 0]}>
+      <torusGeometry args={[4.5, 0.15, 20, 120]} />
       <primitive object={wireframeMaterial} ref={materialRef} />
     </mesh>
   );
@@ -52,15 +53,15 @@ export default function FloatingGeometry({ scrollY = 0 }: { scrollY?: number }) 
 
   useMemo(() => {
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMouseMove);
   }, []);
 
   return (
     <div className="fixed inset-0 z-0 pointer-events-none">
       <Canvas 
         camera={{ 
-          position: [0, 0, 12], 
-          fov: 45 
+          position: [0, 0, 10], 
+          fov: 50 
         }}
         style={{ 
           position: 'absolute',
@@ -70,9 +71,10 @@ export default function FloatingGeometry({ scrollY = 0 }: { scrollY?: number }) 
           height: '100%'
         }}
       >
-        <ambientLight intensity={0.8} />
-        <directionalLight position={[5, 5, 5]} intensity={1} />
-        <pointLight position={[10, 10, 10]} intensity={0.8} color="#FDBA74" />
+        <ambientLight intensity={1.2} />
+        <directionalLight position={[8, 8, 8]} intensity={1.5} />
+        <pointLight position={[12, 12, 12]} intensity={1.2} color="#FDBA74" />
+        <pointLight position={[-8, -8, 8]} intensity={0.8} color="#FED7AA" />
         <FloatingMesh mouse={mouseRef.current} scrollY={scrollY} />
       </Canvas>
     </div>
