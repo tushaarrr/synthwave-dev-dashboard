@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import LoginPage from "./components/auth/LoginPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import PromptHistoryPage from "./pages/PromptHistoryPage";
+import CodeHistoryPage from "./pages/CodeHistoryPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/login" element={<LoginPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/prompt-history" element={<PromptHistoryPage />} />
+            <Route path="/code-history" element={<CodeHistoryPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

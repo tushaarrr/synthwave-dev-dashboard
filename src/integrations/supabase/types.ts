@@ -9,6 +9,45 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      code_lens_history: {
+        Row: {
+          bottlenecks: string[] | null
+          complexity: string | null
+          created_at: string
+          explanation: string | null
+          id: string
+          language: string
+          optimized_code: string | null
+          original_code: string
+          suggestions: string | null
+          user_id: string
+        }
+        Insert: {
+          bottlenecks?: string[] | null
+          complexity?: string | null
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          language: string
+          optimized_code?: string | null
+          original_code: string
+          suggestions?: string | null
+          user_id: string
+        }
+        Update: {
+          bottlenecks?: string[] | null
+          complexity?: string | null
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          language?: string
+          optimized_code?: string | null
+          original_code?: string
+          suggestions?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       plans: {
         Row: {
           created_at: string | null
