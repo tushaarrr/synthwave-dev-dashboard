@@ -24,33 +24,43 @@ const StackWizardDashboard = ({
 }: StackWizardDashboardProps) => {
   const { user } = useAuth();
 
-  console.log('=== StackWizardDashboard Debug ===');
-  console.log('Plan data received:', planData);
-  console.log('Plan data type:', typeof planData);
+  console.log('=== StackWizardDashboard FULL DEBUG ===');
+  console.log('Raw planData:', JSON.stringify(planData, null, 2));
+  console.log('planData type:', typeof planData);
+  console.log('planData keys:', Object.keys(planData || {}));
 
-  // Handle both legacy and new data formats safely
+  // Enhanced data extraction with fallbacks
   const techStack = planData?.tech_stack || planData?.techStack || {};
   const timeline = planData?.timeline || [];
   const suggestions = planData?.suggestions || [];
   const modules = planData?.modules || [];
-  const bonusModules = planData?.bonus_modules || [];
+  const bonusModules = planData?.bonus_modules || planData?.bonusModules || [];
   const architecture = planData?.architecture || {};
-  const testingStrategy = planData?.testing_strategy || {};
-  const teamPlan = planData?.team_plan || {};
-  const budgetEstimate = planData?.budget_estimate || {};
-  const productScope = planData?.product_scope || projectDescription;
+  const testingStrategy = planData?.testing_strategy || planData?.testingStrategy || {};
+  const teamPlan = planData?.team_plan || planData?.teamPlan || {};
+  const budgetEstimate = planData?.budget_estimate || planData?.budgetEstimate || {};
+  const productScope = planData?.product_scope || planData?.productScope || projectDescription;
 
-  console.log('Processed data for dashboard:', {
-    techStack,
-    timeline: timeline.length,
-    suggestions: suggestions.length,
-    modules: modules.length,
-    bonusModules: bonusModules.length,
-    architecture,
-    testingStrategy,
-    teamPlan,
-    budgetEstimate
-  });
+  console.log('=== EXTRACTED DATA DEBUG ===');
+  console.log('techStack:', techStack);
+  console.log('modules count:', modules?.length);
+  console.log('modules data:', modules);
+  console.log('bonusModules count:', bonusModules?.length);
+  console.log('timeline count:', timeline?.length);
+  console.log('timeline data:', timeline);
+  console.log('architecture:', architecture);
+  console.log('testingStrategy:', testingStrategy);
+  console.log('teamPlan:', teamPlan);
+  console.log('budgetEstimate:', budgetEstimate);
+  console.log('suggestions count:', suggestions?.length);
+  console.log('===========================');
+
+  // Force some test data if nothing is found
+  const hasAnyData = modules?.length > 0 || Object.keys(architecture).length > 0 || Object.keys(budgetEstimate).length > 0;
+  
+  if (!hasAnyData) {
+    console.warn('NO DATA FOUND - This might indicate an issue with data generation or parsing');
+  }
 
   const copyAllContent = async () => {
     const content = `Project: ${projectName}\n\nProduct Scope:\n${productScope}\n\nTech Stack:\n${JSON.stringify(techStack, null, 2)}\n\nModules:\n${JSON.stringify(modules, null, 2)}\n\nTimeline:\n${JSON.stringify(timeline, null, 2)}\n\nSuggestions:\n${JSON.stringify(suggestions, null, 2)}`;
@@ -315,15 +325,27 @@ const StackWizardDashboard = ({
       </div>
 
       <div id="stackwizard-dashboard" className="space-y-12">
-        {/* Debug info - remove in production */}
-        <div className="p-4 bg-gray-800 rounded-lg text-sm">
-          <h4 className="font-bold mb-2">Debug Info:</h4>
-          <p>Modules: {modules.length} items</p>
-          <p>Timeline: {Array.isArray(timeline) ? timeline.length : 'Not array'} items</p>
-          <p>Budget: {budgetEstimate ? 'exists' : 'missing'}</p>
-          <p>Team Plan: {teamPlan ? 'exists' : 'missing'}</p>
-          <p>Architecture: {architecture ? 'exists' : 'missing'}</p>
-          <p>Testing Strategy: {testingStrategy ? 'exists' : 'missing'}</p>
+        {/* Enhanced Debug Section */}
+        <div className="p-6 bg-gray-800 rounded-lg text-sm space-y-2">
+          <h4 className="font-bold mb-3 text-yellow-400">ENHANCED DEBUG INFO:</h4>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-green-400">Data Status:</p>
+              <p>• Modules: {modules?.length || 0} items {modules?.length > 0 ? '✅' : '❌'}</p>
+              <p>• Timeline: {Array.isArray(timeline) ? timeline.length : 'Not array'} items {timeline?.length > 0 ? '✅' : '❌'}</p>
+              <p>• Budget: {budgetEstimate && Object.keys(budgetEstimate).length > 0 ? 'exists ✅' : 'missing ❌'}</p>
+              <p>• Team Plan: {teamPlan && Object.keys(teamPlan).length > 0 ? 'exists ✅' : 'missing ❌'}</p>
+              <p>• Architecture: {architecture && Object.keys(architecture).length > 0 ? 'exists ✅' : 'missing ❌'}</p>
+              <p>• Testing Strategy: {testingStrategy && Object.keys(testingStrategy).length > 0 ? 'exists ✅' : 'missing ❌'}</p>
+            </div>
+            <div>
+              <p className="text-blue-400">Sample Data Preview:</p>
+              {modules?.length > 0 && <p>• First module: {modules[0]?.name}</p>}
+              {budgetEstimate?.total_mvp && <p>• MVP cost: {budgetEstimate.total_mvp}</p>}
+              {architecture?.pattern && <p>• Architecture: {architecture.pattern}</p>}
+              {teamPlan?.team_size && <p>• Team size: {teamPlan.team_size}</p>}
+            </div>
+          </div>
         </div>
 
         {/* Tech Stack & Core Modules */}
