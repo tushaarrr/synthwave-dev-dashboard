@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Navigate } from 'react-router-dom';
@@ -118,6 +117,21 @@ const ProjectsPage = () => {
       const jsPDF = (await import('jspdf')).default;
       const pdf = new jsPDF();
       
+      // Helper function to parse JSON fields safely
+      const parseJsonField = (field: string) => {
+        if (!field) return null;
+        try {
+          return typeof field === 'string' ? JSON.parse(field) : field;
+        } catch {
+          return field; // Return as-is if not valid JSON
+        }
+      };
+
+      // Parse JSON fields
+      const techStack = parseJsonField(project.tech_stack);
+      const timeline = parseJsonField(project.timeline);
+      const suggestions = parseJsonField(project.suggestions);
+      
       // Title
       pdf.setFontSize(20);
       pdf.text(project.project_name || 'Untitled Project', 20, 30);
@@ -135,35 +149,114 @@ const ProjectsPage = () => {
       
       let yPos = 90 + (descLines.length * 5);
       
-      // Tech Stack
+      // Tech Stack - Format properly
       pdf.setFontSize(14);
       pdf.text('Technology Stack:', 20, yPos);
-      pdf.setFontSize(10);
-      const techLines = pdf.splitTextToSize(project.tech_stack || 'No tech stack specified', 170);
-      pdf.text(techLines, 20, yPos + 10);
+      yPos += 15;
       
-      yPos += 25 + (techLines.length * 5);
+      if (techStack && typeof techStack === 'object') {
+        pdf.setFontSize(12);
+        Object.entries(techStack).forEach(([category, items]) => {
+          if (Array.isArray(items) && items.length > 0) {
+            pdf.setFont('helvetica', 'bold');
+            pdf.text(`${category.charAt(0).toUpperCase() + category.slice(1)}:`, 25, yPos);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(10);
+            const itemsText = items.join(', ');
+            const itemLines = pdf.splitTextToSize(itemsText, 160);
+            pdf.text(itemLines, 30, yPos + 6);
+            yPos += 12 + (itemLines.length * 4);
+          }
+        });
+      } else {
+        pdf.setFontSize(10);
+        const techLines = pdf.splitTextToSize(project.tech_stack || 'No tech stack specified', 170);
+        pdf.text(techLines, 20, yPos);
+        yPos += 15 + (techLines.length * 5);
+      }
       
-      // Timeline
-      pdf.setFontSize(14);
-      pdf.text('Development Timeline:', 20, yPos);
-      pdf.setFontSize(10);
-      const timelineLines = pdf.splitTextToSize(project.timeline || 'No timeline specified', 170);
-      pdf.text(timelineLines, 20, yPos + 10);
+      yPos += 10;
       
-      yPos += 25 + (timelineLines.length * 5);
-      
-      // Suggestions
-      if (yPos > 250) {
+      // Timeline - Format properly
+      if (yPos > 230) {
         pdf.addPage();
         yPos = 30;
       }
       
       pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Development Timeline:', 20, yPos);
+      yPos += 15;
+      
+      if (Array.isArray(timeline) && timeline.length > 0) {
+        timeline.forEach((week) => {
+          if (yPos > 250) {
+            pdf.addPage();
+            yPos = 30;
+          }
+          
+          pdf.setFontSize(12);
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(`Week ${week.week}: ${week.title || `Week ${week.week}`}`, 25, yPos);
+          
+          pdf.setFontSize(10);
+          pdf.setFont('helvetica', 'normal');
+          
+          if (week.tasks) {
+            const tasks = Array.isArray(week.tasks) ? week.tasks.join(', ') : week.tasks;
+            const taskLines = pdf.splitTextToSize(`Tasks: ${tasks}`, 160);
+            pdf.text(taskLines, 30, yPos + 8);
+            yPos += 12 + (taskLines.length * 4);
+          }
+          
+          if (week.deliverables && Array.isArray(week.deliverables)) {
+            const deliverables = week.deliverables.join(', ');
+            const deliverableLines = pdf.splitTextToSize(`Deliverables: ${deliverables}`, 160);
+            pdf.text(deliverableLines, 30, yPos + 4);
+            yPos += 8 + (deliverableLines.length * 4);
+          }
+          
+          yPos += 8;
+        });
+      } else {
+        pdf.setFontSize(10);
+        const timelineLines = pdf.splitTextToSize(project.timeline || 'No timeline specified', 170);
+        pdf.text(timelineLines, 20, yPos);
+        yPos += 15 + (timelineLines.length * 5);
+      }
+      
+      yPos += 10;
+      
+      // Suggestions/Recommendations
+      if (yPos > 230) {
+        pdf.addPage();
+        yPos = 30;
+      }
+      
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
       pdf.text('Recommendations:', 20, yPos);
-      pdf.setFontSize(10);
-      const suggestionLines = pdf.splitTextToSize(project.suggestions || 'No recommendations available', 170);
-      pdf.text(suggestionLines, 20, yPos + 10);
+      yPos += 15;
+      
+      if (Array.isArray(suggestions) && suggestions.length > 0) {
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'normal');
+        suggestions.forEach((suggestion, index) => {
+          if (yPos > 250) {
+            pdf.addPage();
+            yPos = 30;
+          }
+          
+          const suggestionText = typeof suggestion === 'object' ? suggestion.text || suggestion.content || JSON.stringify(suggestion) : suggestion;
+          const suggestionLines = pdf.splitTextToSize(`${index + 1}. ${suggestionText}`, 170);
+          pdf.text(suggestionLines, 25, yPos);
+          yPos += 8 + (suggestionLines.length * 4);
+        });
+      } else {
+        pdf.setFontSize(10);
+        const suggestionLines = pdf.splitTextToSize(project.suggestions || 'No recommendations available', 170);
+        pdf.text(suggestionLines, 20, yPos);
+      }
       
       pdf.save(`${project.project_name || 'project'}-development-plan.pdf`);
       
@@ -172,6 +265,7 @@ const ProjectsPage = () => {
         description: "Project exported as PDF",
       });
     } catch (error) {
+      console.error('PDF export error:', error);
       toast({
         title: "Error",
         description: "Failed to export PDF",
