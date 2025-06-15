@@ -4,7 +4,6 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { 
   Code2, 
-  Sparkles, 
   Database, 
   FileText, 
   Zap, 
@@ -140,7 +139,7 @@ const LandingPage = () => {
         {/* Floating Orb */}
         <FloatingOrb />
 
-        {/* HIGHLY VISIBLE Animated Background */}
+        {/* HIGHLY VISIBLE Animated Background with STRONG Ring Animations */}
         <motion.div 
           className="fixed inset-0 z-0"
           style={{ y: backgroundY }}
@@ -150,82 +149,53 @@ const LandingPage = () => {
           
           {/* HIGHLY VISIBLE floating orbs with strong glow and opacity */}
           <motion.div 
-            className="absolute top-1/4 left-1/4 w-[32rem] h-[32rem] bg-orange-200/60 rounded-full blur-3xl"
+            className="absolute top-1/4 left-1/4 w-[32rem] h-[32rem] bg-orange-200/40 rounded-full blur-3xl"
             animate={{ 
               scale: [1, 1.6, 1],
-              opacity: [0.6, 0.9, 0.6],
+              opacity: [0.4, 0.6, 0.4],
               x: [0, 120, 0],
               y: [0, 80, 0]
             }}
             transition={{ duration: 8, repeat: Infinity }}
           />
           <motion.div 
-            className="absolute bottom-1/4 right-1/4 w-[36rem] h-[36rem] bg-orange-300/50 rounded-full blur-3xl"
+            className="absolute bottom-1/4 right-1/4 w-[36rem] h-[36rem] bg-orange-300/35 rounded-full blur-3xl"
             animate={{ 
               scale: [1.2, 1, 1.2],
-              opacity: [0.5, 0.8, 0.5],
+              opacity: [0.35, 0.5, 0.35],
               x: [0, -80, 0],
               y: [0, -100, 0]
             }}
             transition={{ duration: 10, repeat: Infinity }}
           />
-          <motion.div 
-            className="absolute top-1/2 left-1/2 w-[28rem] h-[28rem] bg-orange-100/40 rounded-full blur-2xl"
-            animate={{ 
-              scale: [1, 1.8, 1],
-              opacity: [0.4, 0.7, 0.4],
-              rotate: [0, 180, 360]
-            }}
-            transition={{ duration: 12, repeat: Infinity }}
-          />
           
-          {/* HIGHLY VISIBLE animated grid with strong orange colors */}
+          {/* ULTRA VISIBLE ring animations with VERY thick borders and bright colors */}
           <motion.div 
-            className="absolute inset-0 opacity-80"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(253, 186, 116, 0.8) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(253, 186, 116, 0.8) 1px, transparent 1px)
-              `,
-              backgroundSize: '60px 60px',
-            }}
-            animate={{
-              backgroundPosition: ['0px 0px', '60px 60px'],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
-          
-          {/* HIGHLY VISIBLE ring animations with THICK borders and bright colors */}
-          <motion.div 
-            className="absolute top-20 right-20 w-80 h-80 border-8 border-orange-200/90 rounded-full"
+            className="absolute top-10 right-20 w-96 h-96 border-[12px] border-orange-300 rounded-full opacity-80"
             animate={{ 
               rotate: [0, 360],
-              scale: [1, 1.3, 1]
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.div 
-            className="absolute bottom-32 left-32 w-96 h-96 border-6 border-orange-300/80 rounded-full"
-            animate={{ 
-              rotate: [360, 0],
-              scale: [1.1, 0.9, 1.1]
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.div 
-            className="absolute top-1/3 right-1/3 w-48 h-48 border-4 border-orange-100/70 rounded-full"
-            animate={{ 
-              rotate: [0, -360],
-              scale: [0.8, 1.2, 0.8]
+              scale: [1, 1.4, 1]
             }}
             transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute bottom-1/3 left-1/3 w-64 h-64 border-6 border-orange-200/85 rounded-full"
+            className="absolute bottom-20 left-20 w-[28rem] h-[28rem] border-[10px] border-orange-200 rounded-full opacity-75"
+            animate={{ 
+              rotate: [360, 0],
+              scale: [1.1, 0.8, 1.1]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div 
+            className="absolute top-1/3 right-1/4 w-64 h-64 border-[8px] border-orange-100 rounded-full opacity-70"
+            animate={{ 
+              rotate: [0, -360],
+              scale: [0.8, 1.3, 0.8]
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div 
+            className="absolute bottom-1/3 left-1/4 w-80 h-80 border-[10px] border-orange-300 rounded-full opacity-85"
             animate={{ 
               rotate: [180, 540],
               scale: [1, 0.7, 1]
@@ -233,15 +203,15 @@ const LandingPage = () => {
             transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute top-10 left-1/2 w-56 h-56 border-4 border-orange-300/75 rounded-full"
+            className="absolute top-20 left-1/2 w-72 h-72 border-[8px] border-orange-200 rounded-full opacity-80"
             animate={{ 
               rotate: [90, 450],
-              scale: [0.9, 1.4, 0.9]
+              scale: [0.9, 1.5, 0.9]
             }}
             transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute bottom-20 right-1/2 w-72 h-72 border-5 border-orange-100/80 rounded-full"
+            className="absolute bottom-32 right-1/3 w-[20rem] h-[20rem] border-[12px] border-orange-100 rounded-full opacity-75"
             animate={{ 
               rotate: [270, -90],
               scale: [1.2, 0.8, 1.2]
@@ -249,44 +219,28 @@ const LandingPage = () => {
             transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
           />
           
-          {/* VERY VISIBLE pulsing rings */}
+          {/* Additional rings for maximum visibility */}
           <motion.div 
-            className="absolute top-10 left-10 w-40 h-40 border-4 border-orange-300/90 rounded-full"
+            className="absolute top-1/2 left-10 w-56 h-56 border-[6px] border-orange-300/90 rounded-full"
             animate={{ 
-              scale: [1, 1.8, 1],
-              opacity: [0.9, 0.5, 0.9]
+              rotate: [0, 360],
+              scale: [1, 1.6, 1]
             }}
-            transition={{ duration: 6, repeat: Infinity }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute bottom-10 right-10 w-52 h-52 border-3 border-orange-100/80 rounded-full"
+            className="absolute bottom-1/4 right-10 w-64 h-64 border-[8px] border-orange-200/85 rounded-full"
             animate={{ 
-              scale: [1.2, 0.6, 1.2],
-              opacity: [0.8, 1, 0.8]
+              rotate: [180, -180],
+              scale: [0.9, 1.4, 0.9]
             }}
-            transition={{ duration: 8, repeat: Infinity }}
-          />
-          <motion.div 
-            className="absolute top-1/2 left-10 w-36 h-36 border-4 border-orange-200/85 rounded-full"
-            animate={{ 
-              scale: [0.8, 1.6, 0.8],
-              opacity: [1, 0.6, 1]
-            }}
-            transition={{ duration: 7, repeat: Infinity }}
-          />
-          <motion.div 
-            className="absolute bottom-1/2 right-10 w-44 h-44 border-5 border-orange-300/70 rounded-full"
-            animate={{ 
-              scale: [1.1, 0.7, 1.1],
-              opacity: [0.7, 0.9, 0.7]
-            }}
-            transition={{ duration: 9, repeat: Infinity }}
+            transition={{ duration: 11, repeat: Infinity, ease: "linear" }}
           />
         </motion.div>
 
         {/* Navigation */}
         <motion.nav 
-          className="fixed top-0 w-full z-50 backdrop-blur-xl bg-zinc-900/80 border-b border-zinc-800"
+          className="fixed top-0 w-full z-50 backdrop-blur-xl bg-zinc-900/90 border-b border-zinc-700"
           initial={{ y: -100 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.8, type: "spring" }}
@@ -302,18 +256,19 @@ const LandingPage = () => {
                     className="w-10 h-10 bg-orange-300 rounded-xl flex items-center justify-center"
                     animate={{ 
                       boxShadow: [
-                        "0 0 20px rgba(253, 186, 116, 0.2)",
-                        "0 0 30px rgba(253, 186, 116, 0.3)",
-                        "0 0 20px rgba(253, 186, 116, 0.2)"
+                        "0 0 20px rgba(253, 186, 116, 0.3)",
+                        "0 0 30px rgba(253, 186, 116, 0.5)",
+                        "0 0 20px rgba(253, 186, 116, 0.3)"
                       ]
                     }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <Sparkles className="w-5 h-5 text-zinc-900" />
+                    <Zap className="w-5 h-5 text-zinc-900" />
                   </motion.div>
                 </div>
                 <motion.span 
                   className="text-xl font-bold font-sora text-white"
+                  style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.5)" }}
                 >
                   OneAI
                 </motion.span>
@@ -329,7 +284,8 @@ const LandingPage = () => {
                   <motion.button
                     key={item.name}
                     onClick={() => navigate(item.path)}
-                    className="text-gray-300 hover:text-white transition-all duration-300 relative"
+                    className="text-gray-200 hover:text-white transition-all duration-300 relative font-medium"
+                    style={{ textShadow: "0 0 8px rgba(255, 255, 255, 0.3)" }}
                     whileHover={{ scale: 1.05 }}
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -373,18 +329,24 @@ const LandingPage = () => {
             <div className="max-w-5xl mx-auto">
               {/* Badge */}
               <FadeInUp delay={0.2}>
-                <div className="inline-flex items-center gap-2 bg-zinc-800 border border-zinc-700 rounded-full px-4 py-2 mb-8">
-                  <Sparkles className="w-4 h-4 text-orange-300" />
-                  <span className="text-sm text-orange-200">AI-Powered Developer Suite</span>
+                <div className="inline-flex items-center gap-2 bg-zinc-800/80 border border-zinc-600 rounded-full px-4 py-2 mb-8 backdrop-blur-sm">
+                  <Zap className="w-4 h-4 text-orange-300" />
+                  <span className="text-sm text-orange-200 font-medium">AI-Powered Developer Suite</span>
                 </div>
               </FadeInUp>
 
               {/* Main Headline */}
               <FadeInUp delay={0.4}>
                 <h1 className="text-6xl md:text-8xl font-bold font-sora mb-8 leading-tight">
-                  <span className="block text-white">Code Smarter</span>
+                  <span 
+                    className="block text-white"
+                    style={{ textShadow: "0 0 20px rgba(255, 255, 255, 0.5)" }}
+                  >
+                    Code Smarter
+                  </span>
                   <motion.span 
                     className="block text-orange-300"
+                    style={{ textShadow: "0 0 20px rgba(253, 186, 116, 0.7)" }}
                   >
                     Build Faster
                   </motion.span>
@@ -393,7 +355,10 @@ const LandingPage = () => {
               
               {/* Subheadline */}
               <FadeInUp delay={0.6}>
-                <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+                <p 
+                  className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed font-medium"
+                  style={{ textShadow: "0 0 15px rgba(255, 255, 255, 0.3)" }}
+                >
                   Transform your development workflow with intelligent code analysis, 
                   SQL optimization, and AI-driven productivity tools that feel like magic.
                 </p>
@@ -407,7 +372,7 @@ const LandingPage = () => {
                     className="group relative px-10 py-4 bg-orange-300 text-zinc-900 rounded-2xl text-lg font-semibold border border-orange-300 hover:bg-orange-200 transition-colors"
                     whileHover={{ 
                       scale: 1.05,
-                      boxShadow: "0 20px 40px rgba(253, 186, 116, 0.2)"
+                      boxShadow: "0 20px 40px rgba(253, 186, 116, 0.3)"
                     }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -418,7 +383,7 @@ const LandingPage = () => {
                   </motion.button>
                   
                   <motion.button 
-                    className="group px-10 py-4 border border-zinc-700 text-gray-300 rounded-2xl text-lg font-semibold bg-zinc-800 hover:bg-zinc-700 flex items-center gap-3 transition-colors"
+                    className="group px-10 py-4 border border-zinc-600 text-gray-200 rounded-2xl text-lg font-semibold bg-zinc-800/50 hover:bg-zinc-700/50 flex items-center gap-3 transition-colors backdrop-blur-sm"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -433,14 +398,20 @@ const LandingPage = () => {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-32 relative bg-zinc-800">
+        <section id="features" className="py-32 relative bg-zinc-800/50">
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="text-center mb-20">
-                <h2 className="text-5xl font-bold font-sora mb-6 text-white">
+                <h2 
+                  className="text-5xl font-bold font-sora mb-6 text-white"
+                  style={{ textShadow: "0 0 20px rgba(255, 255, 255, 0.3)" }}
+                >
                   Powerful Features
                 </h2>
-                <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                <p 
+                  className="text-xl text-gray-200 max-w-3xl mx-auto"
+                  style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}
+                >
                   Everything you need to supercharge your development workflow, powered by cutting-edge AI
                 </p>
               </div>
@@ -449,10 +420,10 @@ const LandingPage = () => {
             <div className="grid lg:grid-cols-3 gap-8">
               {benefits.map((benefit, index) => (
                 <SlideIn key={index} delay={index * 0.2} direction="up">
-                  <FloatingCard className="group relative p-8 rounded-3xl bg-zinc-900 border border-zinc-700 hover:border-orange-300/50 transition-all duration-500 shadow-sm hover:shadow-md">
+                  <FloatingCard className="group relative p-8 rounded-3xl bg-zinc-900/80 border border-zinc-600 hover:border-orange-300/50 transition-all duration-500 shadow-sm hover:shadow-md backdrop-blur-sm">
                     <div className="relative z-10">
                       <motion.div 
-                        className="w-16 h-16 bg-zinc-800 border border-zinc-700 rounded-2xl flex items-center justify-center mb-6"
+                        className="w-16 h-16 bg-zinc-800 border border-zinc-600 rounded-2xl flex items-center justify-center mb-6"
                         whileHover={{ 
                           scale: 1.1,
                           rotate: 5
@@ -460,8 +431,18 @@ const LandingPage = () => {
                       >
                         <benefit.icon className="w-8 h-8 text-orange-300" />
                       </motion.div>
-                      <h3 className="text-2xl font-bold mb-4 text-white">{benefit.title}</h3>
-                      <p className="text-gray-300 leading-relaxed">{benefit.description}</p>
+                      <h3 
+                        className="text-2xl font-bold mb-4 text-white"
+                        style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.3)" }}
+                      >
+                        {benefit.title}
+                      </h3>
+                      <p 
+                        className="text-gray-200 leading-relaxed"
+                        style={{ textShadow: "0 0 8px rgba(255, 255, 255, 0.2)" }}
+                      >
+                        {benefit.description}
+                      </p>
                     </div>
                   </FloatingCard>
                 </SlideIn>
@@ -475,10 +456,16 @@ const LandingPage = () => {
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="text-center mb-20">
-                <h2 className="text-5xl font-bold font-sora mb-6 text-white">
+                <h2 
+                  className="text-5xl font-bold font-sora mb-6 text-white"
+                  style={{ textShadow: "0 0 20px rgba(255, 255, 255, 0.3)" }}
+                >
                   AI Modules
                 </h2>
-                <p className="text-xl text-gray-300">
+                <p 
+                  className="text-xl text-gray-200"
+                  style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}
+                >
                   Each module is designed to work seamlessly together for maximum productivity
                 </p>
               </div>
@@ -487,10 +474,10 @@ const LandingPage = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
                 <SlideIn key={index} delay={index * 0.15} direction={index % 2 === 0 ? 'left' : 'right'}>
-                  <FloatingCard className="group relative p-8 rounded-3xl bg-zinc-800 border border-zinc-700 hover:border-orange-300/50 transition-all duration-500 shadow-sm hover:shadow-md">
+                  <FloatingCard className="group relative p-8 rounded-3xl bg-zinc-800/80 border border-zinc-600 hover:border-orange-300/50 transition-all duration-500 shadow-sm hover:shadow-md backdrop-blur-sm">
                     <div className="relative z-10">
                       <motion.div 
-                        className="w-14 h-14 bg-zinc-900 border border-zinc-700 rounded-2xl flex items-center justify-center mb-6"
+                        className="w-14 h-14 bg-zinc-900 border border-zinc-600 rounded-2xl flex items-center justify-center mb-6"
                         whileHover={{ 
                           scale: 1.1,
                           rotate: -5
@@ -498,8 +485,18 @@ const LandingPage = () => {
                       >
                         <feature.icon className="w-7 h-7 text-orange-300" />
                       </motion.div>
-                      <h3 className="text-xl font-bold mb-4 text-white">{feature.title}</h3>
-                      <p className="text-gray-300 text-sm leading-relaxed">{feature.description}</p>
+                      <h3 
+                        className="text-xl font-bold mb-4 text-white"
+                        style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.3)" }}
+                      >
+                        {feature.title}
+                      </h3>
+                      <p 
+                        className="text-gray-200 text-sm leading-relaxed"
+                        style={{ textShadow: "0 0 8px rgba(255, 255, 255, 0.2)" }}
+                      >
+                        {feature.description}
+                      </p>
                     </div>
                   </FloatingCard>
                 </SlideIn>
@@ -509,14 +506,20 @@ const LandingPage = () => {
         </section>
 
         {/* Tech Stack */}
-        <section id="techstack" className="py-32 relative bg-zinc-800">
+        <section id="techstack" className="py-32 relative bg-zinc-800/50">
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="text-center mb-20">
-                <h2 className="text-5xl font-bold font-sora mb-6 text-white">
+                <h2 
+                  className="text-5xl font-bold font-sora mb-6 text-white"
+                  style={{ textShadow: "0 0 20px rgba(255, 255, 255, 0.3)" }}
+                >
                   Modern Tech Stack
                 </h2>
-                <p className="text-xl text-gray-300">
+                <p 
+                  className="text-xl text-gray-200"
+                  style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}
+                >
                   Built with the latest technologies for optimal performance and developer experience
                 </p>
               </div>
@@ -526,7 +529,7 @@ const LandingPage = () => {
               {techStack.map((tech, index) => (
                 <ScaleIn key={index} delay={index * 0.1}>
                   <motion.div
-                    className="group relative p-8 rounded-3xl bg-zinc-900 border border-zinc-700 hover:border-orange-300 text-center transition-all duration-500 shadow-sm hover:shadow-md"
+                    className="group relative p-8 rounded-3xl bg-zinc-900/80 border border-zinc-600 hover:border-orange-300 text-center transition-all duration-500 shadow-sm hover:shadow-md backdrop-blur-sm"
                     whileHover={{ 
                       scale: 1.1,
                       y: -10
@@ -545,7 +548,12 @@ const LandingPage = () => {
                     >
                       {tech.logo}
                     </motion.div>
-                    <div className={`font-semibold ${tech.color}`}>{tech.name}</div>
+                    <div 
+                      className={`font-semibold ${tech.color}`}
+                      style={{ textShadow: "0 0 8px rgba(255, 255, 255, 0.2)" }}
+                    >
+                      {tech.name}
+                    </div>
                   </motion.div>
                 </ScaleIn>
               ))}
@@ -559,10 +567,16 @@ const LandingPage = () => {
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <SlideIn direction="left">
                 <div>
-                  <h2 className="text-5xl font-bold font-sora mb-8 text-white">
+                  <h2 
+                    className="text-5xl font-bold font-sora mb-8 text-white"
+                    style={{ textShadow: "0 0 20px rgba(255, 255, 255, 0.3)" }}
+                  >
                     What is OneAI?
                   </h2>
-                  <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+                  <p 
+                    className="text-xl text-gray-200 mb-8 leading-relaxed"
+                    style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}
+                  >
                     OneAI is the ultimate productivity suite for modern developers. 
                     Our platform combines cutting-edge artificial intelligence with intuitive design 
                     to help you write better code, optimize databases, and accelerate your development workflow.
@@ -587,7 +601,12 @@ const LandingPage = () => {
                         >
                           <CheckCircle className="w-4 h-4 text-zinc-900" />
                         </motion.div>
-                        <span className="text-gray-300">{item}</span>
+                        <span 
+                          className="text-gray-200"
+                          style={{ textShadow: "0 0 8px rgba(255, 255, 255, 0.2)" }}
+                        >
+                          {item}
+                        </span>
                       </motion.div>
                     ))}
                   </div>
@@ -597,7 +616,7 @@ const LandingPage = () => {
               <SlideIn direction="right">
                 <div className="relative">
                   <motion.div 
-                    className="relative p-8 rounded-3xl bg-zinc-800 border border-zinc-700 shadow-lg"
+                    className="relative p-8 rounded-3xl bg-zinc-800/80 border border-zinc-600 shadow-lg backdrop-blur-sm"
                     whileHover={{ 
                       scale: 1.02,
                       boxShadow: "0 25px 50px rgba(253, 186, 116, 0.1)"
@@ -608,11 +627,17 @@ const LandingPage = () => {
                         <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                         <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                         <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                        <span className="text-sm text-gray-400 ml-4">devsynth-ai.terminal</span>
+                        <span 
+                          className="text-sm text-gray-300 ml-4"
+                          style={{ textShadow: "0 0 5px rgba(255, 255, 255, 0.2)" }}
+                        >
+                          devsynth-ai.terminal
+                        </span>
                       </div>
                       <div className="font-mono text-sm space-y-3 text-left">
                         <motion.div 
-                          className="text-gray-300"
+                          className="text-gray-200"
+                          style={{ textShadow: "0 0 5px rgba(255, 255, 255, 0.2)" }}
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           transition={{ delay: 0.1 }}
@@ -620,7 +645,7 @@ const LandingPage = () => {
                           $ devsynth analyze --query="SELECT * FROM users"
                         </motion.div>
                         <motion.div 
-                          className="text-gray-400"
+                          className="text-gray-300"
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           transition={{ delay: 0.3 }}
@@ -669,20 +694,26 @@ const LandingPage = () => {
         </section>
 
         {/* Call to Action */}
-        <section className="py-32 relative bg-zinc-800">
+        <section className="py-32 relative bg-zinc-800/50">
           <div className="container mx-auto px-6 text-center">
             <FadeInUp>
               <motion.div 
-                className="relative max-w-4xl mx-auto p-16 rounded-3xl bg-zinc-900 border border-zinc-700 shadow-lg"
+                className="relative max-w-4xl mx-auto p-16 rounded-3xl bg-zinc-900/80 border border-zinc-600 shadow-lg backdrop-blur-sm"
                 whileHover={{ 
                   scale: 1.02,
                   boxShadow: "0 25px 50px rgba(0, 0, 0, 0.3)"
                 }}
               >
-                <h2 className="text-5xl font-bold font-sora mb-8 text-white">
+                <h2 
+                  className="text-5xl font-bold font-sora mb-8 text-white"
+                  style={{ textShadow: "0 0 20px rgba(255, 255, 255, 0.3)" }}
+                >
                   Ready to Transform Your Workflow?
                 </h2>
-                <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+                <p 
+                  className="text-xl text-gray-200 mb-12 max-w-2xl mx-auto"
+                  style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.2)" }}
+                >
                   Join thousands of developers who are already building faster, smarter, and more efficiently with OneAI.
                 </p>
                 
@@ -694,18 +725,18 @@ const LandingPage = () => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <span className="relative z-10 flex items-center gap-3">
-                      <Sparkles className="w-5 h-5" />
+                      <Zap className="w-5 h-5" />
                       Get Started Free
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </motion.button>
 
                   <motion.div 
-                    className="flex items-center gap-2 text-gray-400"
+                    className="flex items-center gap-2 text-gray-300"
                     whileHover={{ scale: 1.05 }}
                   >
                     <Users className="w-5 h-5" />
-                    <span>10,000+ developers</span>
+                    <span style={{ textShadow: "0 0 5px rgba(255, 255, 255, 0.2)" }}>10,000+ developers</span>
                   </motion.div>
                 </div>
               </motion.div>
@@ -714,7 +745,7 @@ const LandingPage = () => {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-zinc-800 py-16 relative bg-zinc-900">
+        <footer className="border-t border-zinc-700 py-16 relative bg-zinc-900/80">
           <div className="container mx-auto px-6">
             <div className="grid md:grid-cols-4 gap-12 mb-12">
               <FadeInUp>
@@ -735,14 +766,20 @@ const LandingPage = () => {
                         }}
                         transition={{ duration: 2, repeat: Infinity }}
                       >
-                        <Sparkles className="w-5 h-5 text-zinc-900" />
+                        <Zap className="w-5 h-5 text-zinc-900" />
                       </motion.div>
                     </div>
-                    <span className="text-xl font-bold font-sora text-white">
+                    <span 
+                      className="text-xl font-bold font-sora text-white"
+                      style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.3)" }}
+                    >
                       OneAI
                     </span>
                   </motion.div>
-                  <p className="text-gray-400 leading-relaxed">
+                  <p 
+                    className="text-gray-300 leading-relaxed"
+                    style={{ textShadow: "0 0 5px rgba(255, 255, 255, 0.2)" }}
+                  >
                     The ultimate AI-powered productivity suite for modern developers. 
                     Build faster, code smarter.
                   </p>
@@ -751,7 +788,12 @@ const LandingPage = () => {
               
               <SlideIn delay={0.1} direction="up">
                 <div>
-                  <h4 className="font-semibold text-white mb-6">Product</h4>
+                  <h4 
+                    className="font-semibold text-white mb-6"
+                    style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.3)" }}
+                  >
+                    Product
+                  </h4>
                   <div className="space-y-4">
                     {[
                       { name: "Features", path: "/features" },
@@ -761,7 +803,8 @@ const LandingPage = () => {
                       <motion.button
                         key={link.name}
                         onClick={() => navigate(link.path)}
-                        className="block text-gray-400 hover:text-white transition-colors relative text-left"
+                        className="block text-gray-300 hover:text-white transition-colors relative text-left"
+                        style={{ textShadow: "0 0 5px rgba(255, 255, 255, 0.2)" }}
                         whileHover={{ x: 5 }}
                       >
                         {link.name}
@@ -773,7 +816,12 @@ const LandingPage = () => {
 
               <SlideIn delay={0.2} direction="up">
                 <div>
-                  <h4 className="font-semibold text-white mb-6">Support</h4>
+                  <h4 
+                    className="font-semibold text-white mb-6"
+                    style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.3)" }}
+                  >
+                    Support
+                  </h4>
                   <div className="space-y-4">
                     {[
                       { name: "Contact", path: "/contact" },
@@ -783,7 +831,8 @@ const LandingPage = () => {
                       <motion.button
                         key={link.name}
                         onClick={() => navigate(link.path)}
-                        className="block text-gray-400 hover:text-white transition-colors relative text-left"
+                        className="block text-gray-300 hover:text-white transition-colors relative text-left"
+                        style={{ textShadow: "0 0 5px rgba(255, 255, 255, 0.2)" }}
                         whileHover={{ x: 5 }}
                       >
                         {link.name}
@@ -795,19 +844,24 @@ const LandingPage = () => {
 
               <SlideIn delay={0.3} direction="up">
                 <div>
-                  <h4 className="font-semibold text-white mb-6">Connect</h4>
+                  <h4 
+                    className="font-semibold text-white mb-6"
+                    style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.3)" }}
+                  >
+                    Connect
+                  </h4>
                   <div className="flex space-x-4">
                     {[Github, Twitter, Linkedin].map((Icon, i) => (
                       <motion.a
                         key={i}
                         href="#"
-                        className="p-3 rounded-xl bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 transition-all duration-300"
+                        className="p-3 rounded-xl bg-zinc-800/80 border border-zinc-600 hover:bg-zinc-700/80 transition-all duration-300 backdrop-blur-sm"
                         whileHover={{ 
                           scale: 1.1,
                           y: -2
                         }}
                       >
-                        <Icon className="w-5 h-5 text-gray-400 hover:text-white transition-colors" />
+                        <Icon className="w-5 h-5 text-gray-300 hover:text-white transition-colors" />
                       </motion.a>
                     ))}
                   </div>
@@ -816,18 +870,25 @@ const LandingPage = () => {
             </div>
             
             <FadeInUp delay={0.5}>
-              <div className="border-t border-zinc-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p className="text-gray-400">&copy; 2024 OneAI. All rights reserved.</p>
+              <div className="border-t border-zinc-700 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p 
+                  className="text-gray-400"
+                  style={{ textShadow: "0 0 5px rgba(255, 255, 255, 0.2)" }}
+                >
+                  &copy; 2024 OneAI. All rights reserved.
+                </p>
                 <div className="flex space-x-6 mt-4 md:mt-0">
                   <button 
                     onClick={() => navigate('/privacy')}
                     className="text-gray-400 hover:text-white transition-colors"
+                    style={{ textShadow: "0 0 5px rgba(255, 255, 255, 0.2)" }}
                   >
                     Privacy Policy
                   </button>
                   <button 
                     onClick={() => navigate('/terms')}
                     className="text-gray-400 hover:text-white transition-colors"
+                    style={{ textShadow: "0 0 5px rgba(255, 255, 255, 0.2)" }}
                   >
                     Terms of Service
                   </button>
