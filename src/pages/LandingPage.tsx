@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -19,8 +18,7 @@ import {
   Download,
   Play,
   Users,
-  Clock,
-  Star
+  Clock
 } from "lucide-react";
 import FloatingGeometry from "@/components/3D/FloatingGeometry";
 import FloatingOrb from "@/components/3D/FloatingOrb";
@@ -142,7 +140,7 @@ const LandingPage = () => {
         {/* Floating Orb */}
         <FloatingOrb />
 
-        {/* MUCH MORE VISIBLE Animated Background */}
+        {/* HIGHLY VISIBLE Animated Background */}
         <motion.div 
           className="fixed inset-0 z-0"
           style={{ y: backgroundY }}
@@ -150,49 +148,49 @@ const LandingPage = () => {
           {/* Primary dark background */}
           <div className="absolute inset-0 bg-zinc-900"></div>
           
-          {/* HIGHLY VISIBLE floating orbs with MUCH stronger glow and opacity */}
+          {/* HIGHLY VISIBLE floating orbs with strong glow and opacity */}
           <motion.div 
-            className="absolute top-1/4 left-1/4 w-[32rem] h-[32rem] bg-orange-200/80 rounded-full blur-3xl"
+            className="absolute top-1/4 left-1/4 w-[32rem] h-[32rem] bg-orange-200/60 rounded-full blur-3xl"
             animate={{ 
               scale: [1, 1.6, 1],
-              opacity: [0.8, 1, 0.8],
+              opacity: [0.6, 0.9, 0.6],
               x: [0, 120, 0],
               y: [0, 80, 0]
             }}
             transition={{ duration: 8, repeat: Infinity }}
           />
           <motion.div 
-            className="absolute bottom-1/4 right-1/4 w-[36rem] h-[36rem] bg-orange-300/70 rounded-full blur-3xl"
+            className="absolute bottom-1/4 right-1/4 w-[36rem] h-[36rem] bg-orange-300/50 rounded-full blur-3xl"
             animate={{ 
               scale: [1.2, 1, 1.2],
-              opacity: [0.7, 1, 0.7],
+              opacity: [0.5, 0.8, 0.5],
               x: [0, -80, 0],
               y: [0, -100, 0]
             }}
             transition={{ duration: 10, repeat: Infinity }}
           />
           <motion.div 
-            className="absolute top-1/2 left-1/2 w-[28rem] h-[28rem] bg-orange-100/60 rounded-full blur-2xl"
+            className="absolute top-1/2 left-1/2 w-[28rem] h-[28rem] bg-orange-100/40 rounded-full blur-2xl"
             animate={{ 
               scale: [1, 1.8, 1],
-              opacity: [0.6, 0.9, 0.6],
+              opacity: [0.4, 0.7, 0.4],
               rotate: [0, 180, 360]
             }}
             transition={{ duration: 12, repeat: Infinity }}
           />
           
-          {/* MUCH MORE VISIBLE animated grid with stronger colors */}
+          {/* HIGHLY VISIBLE animated grid with strong orange colors */}
           <motion.div 
-            className="absolute inset-0 opacity-50"
+            className="absolute inset-0 opacity-80"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(253, 186, 116, 1) 2px, transparent 2px),
-                linear-gradient(90deg, rgba(253, 186, 116, 1) 2px, transparent 2px)
+                linear-gradient(rgba(253, 186, 116, 0.8) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(253, 186, 116, 0.8) 1px, transparent 1px)
               `,
-              backgroundSize: '80px 80px',
+              backgroundSize: '60px 60px',
             }}
             animate={{
-              backgroundPosition: ['0px 0px', '80px 80px'],
+              backgroundPosition: ['0px 0px', '60px 60px'],
             }}
             transition={{
               duration: 20,
@@ -203,136 +201,87 @@ const LandingPage = () => {
           
           {/* HIGHLY VISIBLE ring animations with THICK borders and bright colors */}
           <motion.div 
-            className="absolute top-20 right-20 w-64 h-64 border-4 border-orange-200 rounded-full"
+            className="absolute top-20 right-20 w-80 h-80 border-8 border-orange-200/90 rounded-full"
             animate={{ 
               rotate: [0, 360],
-              scale: [1, 1.5, 1]
+              scale: [1, 1.3, 1]
             }}
             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute bottom-32 left-32 w-80 h-80 border-4 border-orange-300 rounded-full"
+            className="absolute bottom-32 left-32 w-96 h-96 border-6 border-orange-300/80 rounded-full"
             animate={{ 
               rotate: [360, 0],
-              scale: [1.1, 1, 1.1]
+              scale: [1.1, 0.9, 1.1]
             }}
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute top-1/3 right-1/3 w-40 h-40 border-3 border-orange-100 rounded-full"
+            className="absolute top-1/3 right-1/3 w-48 h-48 border-4 border-orange-100/70 rounded-full"
             animate={{ 
               rotate: [0, -360],
-              scale: [0.8, 1.4, 0.8]
+              scale: [0.8, 1.2, 0.8]
             }}
             transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
           />
           <motion.div 
-            className="absolute bottom-1/3 left-1/3 w-72 h-72 border-3 border-orange-200 rounded-full"
+            className="absolute bottom-1/3 left-1/3 w-64 h-64 border-6 border-orange-200/85 rounded-full"
             animate={{ 
               rotate: [180, 540],
-              scale: [1, 0.8, 1]
+              scale: [1, 0.7, 1]
             }}
             transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div 
+            className="absolute top-10 left-1/2 w-56 h-56 border-4 border-orange-300/75 rounded-full"
+            animate={{ 
+              rotate: [90, 450],
+              scale: [0.9, 1.4, 0.9]
+            }}
+            transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div 
+            className="absolute bottom-20 right-1/2 w-72 h-72 border-5 border-orange-100/80 rounded-full"
+            animate={{ 
+              rotate: [270, -90],
+              scale: [1.2, 0.8, 1.2]
+            }}
+            transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
           />
           
           {/* VERY VISIBLE pulsing rings */}
           <motion.div 
-            className="absolute top-10 left-10 w-32 h-32 border-2 border-orange-300 rounded-full"
+            className="absolute top-10 left-10 w-40 h-40 border-4 border-orange-300/90 rounded-full"
             animate={{ 
-              scale: [1, 2, 1],
-              opacity: [1, 0.4, 1]
+              scale: [1, 1.8, 1],
+              opacity: [0.9, 0.5, 0.9]
             }}
             transition={{ duration: 6, repeat: Infinity }}
           />
           <motion.div 
-            className="absolute bottom-10 right-10 w-48 h-48 border-2 border-orange-100 rounded-full"
+            className="absolute bottom-10 right-10 w-52 h-52 border-3 border-orange-100/80 rounded-full"
             animate={{ 
               scale: [1.2, 0.6, 1.2],
               opacity: [0.8, 1, 0.8]
             }}
             transition={{ duration: 8, repeat: Infinity }}
           />
-          
-          {/* MUCH MORE VISIBLE star-like floating elements with BRIGHT colors */}
           <motion.div 
-            className="absolute top-1/4 right-1/4 w-8 h-8"
+            className="absolute top-1/2 left-10 w-36 h-36 border-4 border-orange-200/85 rounded-full"
             animate={{ 
-              rotate: [0, 180, 360],
-              scale: [1, 2, 1],
-              opacity: [1, 0.7, 1]
-            }}
-            transition={{ duration: 4, repeat: Infinity }}
-          >
-            <Star className="w-8 h-8 text-orange-200 fill-orange-200/80" />
-          </motion.div>
-          <motion.div 
-            className="absolute bottom-1/4 left-1/4 w-10 h-10"
-            animate={{ 
-              rotate: [360, 180, 0],
-              scale: [0.8, 2, 0.8],
-              opacity: [0.8, 1, 0.8]
-            }}
-            transition={{ duration: 6, repeat: Infinity }}
-          >
-            <Star className="w-10 h-10 text-orange-300 fill-orange-300/80" />
-          </motion.div>
-          <motion.div 
-            className="absolute top-2/3 right-1/6 w-6 h-6"
-            animate={{ 
-              rotate: [0, -360],
-              scale: [1.2, 1.8, 1.2],
+              scale: [0.8, 1.6, 0.8],
               opacity: [1, 0.6, 1]
             }}
-            transition={{ duration: 5, repeat: Infinity }}
-          >
-            <Star className="w-6 h-6 text-orange-100 fill-orange-100/70" />
-          </motion.div>
-          <motion.div 
-            className="absolute top-1/6 left-2/3 w-8 h-8"
-            animate={{ 
-              rotate: [180, 540],
-              scale: [0.9, 2.2, 0.9],
-              opacity: [0.9, 1, 0.9]
-            }}
             transition={{ duration: 7, repeat: Infinity }}
-          >
-            <Star className="w-8 h-8 text-orange-200 fill-orange-200/90" />
-          </motion.div>
-          
-          {/* Additional BRIGHT floating stars scattered everywhere */}
+          />
           <motion.div 
-            className="absolute top-1/5 left-1/5 w-5 h-5"
+            className="absolute bottom-1/2 right-10 w-44 h-44 border-5 border-orange-300/70 rounded-full"
             animate={{ 
-              rotate: [0, 360],
-              scale: [1, 1.8, 1],
-              opacity: [0.8, 1, 0.8]
-            }}
-            transition={{ duration: 8, repeat: Infinity }}
-          >
-            <Star className="w-5 h-5 text-orange-300 fill-orange-300/70" />
-          </motion.div>
-          <motion.div 
-            className="absolute bottom-1/5 right-1/5 w-7 h-7"
-            animate={{ 
-              rotate: [360, 0],
-              scale: [1.1, 2.1, 1.1],
-              opacity: [0.7, 1, 0.7]
+              scale: [1.1, 0.7, 1.1],
+              opacity: [0.7, 0.9, 0.7]
             }}
             transition={{ duration: 9, repeat: Infinity }}
-          >
-            <Star className="w-7 h-7 text-orange-100 fill-orange-100/80" />
-          </motion.div>
-          <motion.div 
-            className="absolute top-3/4 left-3/4 w-6 h-6"
-            animate={{ 
-              rotate: [0, -180],
-              scale: [0.9, 2, 0.9],
-              opacity: [0.9, 0.6, 0.9]
-            }}
-            transition={{ duration: 10, repeat: Infinity }}
-          >
-            <Star className="w-6 h-6 text-orange-200 fill-orange-200/85" />
-          </motion.div>
+          />
         </motion.div>
 
         {/* Navigation */}
@@ -425,7 +374,7 @@ const LandingPage = () => {
               {/* Badge */}
               <FadeInUp delay={0.2}>
                 <div className="inline-flex items-center gap-2 bg-zinc-800 border border-zinc-700 rounded-full px-4 py-2 mb-8">
-                  <Star className="w-4 h-4 text-orange-300" />
+                  <Sparkles className="w-4 h-4 text-orange-300" />
                   <span className="text-sm text-orange-200">AI-Powered Developer Suite</span>
                 </div>
               </FadeInUp>
@@ -610,10 +559,10 @@ const LandingPage = () => {
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <SlideIn direction="left">
                 <div>
-                  <h2 className="text-5xl font-bold font-sora mb-8 text-gray-900">
+                  <h2 className="text-5xl font-bold font-sora mb-8 text-white">
                     What is OneAI?
                   </h2>
-                  <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                  <p className="text-xl text-gray-300 mb-8 leading-relaxed">
                     OneAI is the ultimate productivity suite for modern developers. 
                     Our platform combines cutting-edge artificial intelligence with intuitive design 
                     to help you write better code, optimize databases, and accelerate your development workflow.
@@ -633,12 +582,12 @@ const LandingPage = () => {
                         transition={{ delay: index * 0.1 }}
                       >
                         <motion.div 
-                          className="w-6 h-6 bg-orange-400 rounded-full flex items-center justify-center"
+                          className="w-6 h-6 bg-orange-300 rounded-full flex items-center justify-center"
                           whileHover={{ scale: 1.2 }}
                         >
-                          <CheckCircle className="w-4 h-4 text-white" />
+                          <CheckCircle className="w-4 h-4 text-zinc-900" />
                         </motion.div>
-                        <span className="text-gray-700">{item}</span>
+                        <span className="text-gray-300">{item}</span>
                       </motion.div>
                     ))}
                   </div>
@@ -648,10 +597,10 @@ const LandingPage = () => {
               <SlideIn direction="right">
                 <div className="relative">
                   <motion.div 
-                    className="relative p-8 rounded-3xl bg-white border border-gray-200 shadow-lg"
+                    className="relative p-8 rounded-3xl bg-zinc-800 border border-zinc-700 shadow-lg"
                     whileHover={{ 
                       scale: 1.02,
-                      boxShadow: "0 25px 50px rgba(251, 146, 60, 0.1)"
+                      boxShadow: "0 25px 50px rgba(253, 186, 116, 0.1)"
                     }}
                   >
                     <div className="space-y-4">
@@ -659,11 +608,11 @@ const LandingPage = () => {
                         <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                         <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                         <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                        <span className="text-sm text-gray-500 ml-4">devsynth-ai.terminal</span>
+                        <span className="text-sm text-gray-400 ml-4">devsynth-ai.terminal</span>
                       </div>
                       <div className="font-mono text-sm space-y-3 text-left">
                         <motion.div 
-                          className="text-gray-700"
+                          className="text-gray-300"
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           transition={{ delay: 0.1 }}
@@ -671,7 +620,7 @@ const LandingPage = () => {
                           $ devsynth analyze --query="SELECT * FROM users"
                         </motion.div>
                         <motion.div 
-                          className="text-gray-500"
+                          className="text-gray-400"
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           transition={{ delay: 0.3 }}
@@ -679,7 +628,7 @@ const LandingPage = () => {
                           🔍 Analyzing SQL query...
                         </motion.div>
                         <motion.div 
-                          className="text-orange-500"
+                          className="text-orange-300"
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           transition={{ delay: 0.5 }}
@@ -687,7 +636,7 @@ const LandingPage = () => {
                           ✅ Performance: 85/100
                         </motion.div>
                         <motion.div 
-                          className="text-orange-400"
+                          className="text-orange-200"
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           transition={{ delay: 0.7 }}
@@ -695,7 +644,7 @@ const LandingPage = () => {
                           ⚠️  Recommendation: Avoid SELECT *
                         </motion.div>
                         <motion.div 
-                          className="text-orange-500"
+                          className="text-orange-300"
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           transition={{ delay: 0.9 }}
@@ -703,7 +652,7 @@ const LandingPage = () => {
                           🚀 Optimized query generated
                         </motion.div>
                         <motion.div 
-                          className="text-orange-400"
+                          className="text-orange-200"
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           transition={{ delay: 1.1 }}
@@ -793,7 +742,7 @@ const LandingPage = () => {
                       OneAI
                     </span>
                   </motion.div>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-gray-400 leading-relaxed">
                     The ultimate AI-powered productivity suite for modern developers. 
                     Build faster, code smarter.
                   </p>
@@ -802,7 +751,7 @@ const LandingPage = () => {
               
               <SlideIn delay={0.1} direction="up">
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-6">Product</h4>
+                  <h4 className="font-semibold text-white mb-6">Product</h4>
                   <div className="space-y-4">
                     {[
                       { name: "Features", path: "/features" },
@@ -812,7 +761,7 @@ const LandingPage = () => {
                       <motion.button
                         key={link.name}
                         onClick={() => navigate(link.path)}
-                        className="block text-gray-600 hover:text-gray-900 transition-colors relative text-left"
+                        className="block text-gray-400 hover:text-white transition-colors relative text-left"
                         whileHover={{ x: 5 }}
                       >
                         {link.name}
@@ -824,7 +773,7 @@ const LandingPage = () => {
 
               <SlideIn delay={0.2} direction="up">
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-6">Support</h4>
+                  <h4 className="font-semibold text-white mb-6">Support</h4>
                   <div className="space-y-4">
                     {[
                       { name: "Contact", path: "/contact" },
@@ -834,7 +783,7 @@ const LandingPage = () => {
                       <motion.button
                         key={link.name}
                         onClick={() => navigate(link.path)}
-                        className="block text-gray-600 hover:text-gray-900 transition-colors relative text-left"
+                        className="block text-gray-400 hover:text-white transition-colors relative text-left"
                         whileHover={{ x: 5 }}
                       >
                         {link.name}
@@ -846,19 +795,19 @@ const LandingPage = () => {
 
               <SlideIn delay={0.3} direction="up">
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-6">Connect</h4>
+                  <h4 className="font-semibold text-white mb-6">Connect</h4>
                   <div className="flex space-x-4">
                     {[Github, Twitter, Linkedin].map((Icon, i) => (
                       <motion.a
                         key={i}
                         href="#"
-                        className="p-3 rounded-xl bg-gray-100 border border-gray-200 hover:bg-gray-200 transition-all duration-300"
+                        className="p-3 rounded-xl bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 transition-all duration-300"
                         whileHover={{ 
                           scale: 1.1,
                           y: -2
                         }}
                       >
-                        <Icon className="w-5 h-5 text-gray-600 hover:text-gray-800 transition-colors" />
+                        <Icon className="w-5 h-5 text-gray-400 hover:text-white transition-colors" />
                       </motion.a>
                     ))}
                   </div>
@@ -868,17 +817,17 @@ const LandingPage = () => {
             
             <FadeInUp delay={0.5}>
               <div className="border-t border-zinc-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p className="text-gray-600">&copy; 2024 OneAI. All rights reserved.</p>
+                <p className="text-gray-400">&copy; 2024 OneAI. All rights reserved.</p>
                 <div className="flex space-x-6 mt-4 md:mt-0">
                   <button 
                     onClick={() => navigate('/privacy')}
-                    className="text-gray-600 hover:text-gray-900 transition-colors"
+                    className="text-gray-400 hover:text-white transition-colors"
                   >
                     Privacy Policy
                   </button>
                   <button 
                     onClick={() => navigate('/terms')}
-                    className="text-gray-600 hover:text-gray-900 transition-colors"
+                    className="text-gray-400 hover:text-white transition-colors"
                   >
                     Terms of Service
                   </button>
