@@ -12,7 +12,8 @@ import {
   User,
   FolderOpen,
   History,
-  CodeXml
+  CodeXml,
+  Database
 } from "lucide-react";
 
 interface SidebarProps {
@@ -54,9 +55,14 @@ const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
     navigate('/code-history');
   };
 
+  const handleSQLHistoryClick = () => {
+    navigate('/sql-history');
+  };
+
   const isProjectsActive = location.pathname === '/projects';
   const isPromptHistoryActive = location.pathname === '/prompt-history';
   const isCodeHistoryActive = location.pathname === '/code-history';
+  const isSQLHistoryActive = location.pathname === '/sql-history';
 
   return (
     <div className={`glass-dark rounded-2xl p-4 transition-all duration-500 ${isExpanded ? 'w-64' : 'w-20'} animate-slide-in flex flex-col h-full`}>
@@ -124,6 +130,23 @@ const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
             isCodeHistoryActive ? 'text-white' : 'text-muted-foreground'
           }`}>
             Code History
+          </span>
+        </button>
+
+        {/* SQL History */}
+        <button
+          onClick={handleSQLHistoryClick}
+          className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 hover:scale-105 ${
+            isSQLHistoryActive 
+              ? 'glass neon-glow transform scale-105' 
+              : 'hover:bg-white/5'
+          }`}
+        >
+          <Database className={`w-6 h-6 ${isSQLHistoryActive ? 'text-neon-orange animate-glow' : 'text-muted-foreground'}`} />
+          <span className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 font-medium ${
+            isSQLHistoryActive ? 'text-white' : 'text-muted-foreground'
+          }`}>
+            SQL History
           </span>
         </button>
 

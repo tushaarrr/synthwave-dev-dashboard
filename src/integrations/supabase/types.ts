@@ -117,6 +117,39 @@ export type Database = {
         }
         Relationships: []
       }
+      sql_analysis_history: {
+        Row: {
+          created_at: string
+          explanation: string | null
+          id: string
+          optimized_query: string | null
+          original_query: string
+          suggestions: string[] | null
+          tags: string[] | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          optimized_query?: string | null
+          original_query: string
+          suggestions?: string[] | null
+          tags?: string[] | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          optimized_query?: string | null
+          original_query?: string
+          suggestions?: string[] | null
+          tags?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

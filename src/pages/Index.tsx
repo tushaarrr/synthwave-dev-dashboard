@@ -1,8 +1,8 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { useLocation } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
-import ActionButtons from "@/components/ActionButtons";
-import ThemeToggle from "@/components/ThemeToggle";
 import StackWizard from "@/components/modules/StackWizard";
 import PromptRefiner from "@/components/modules/PromptRefiner";
 import CodeLens from "@/components/modules/CodeLens";
@@ -10,7 +10,29 @@ import SQLDoctor from "@/components/modules/SQLDoctor";
 import TestCaseGen from "@/components/modules/TestCaseGen";
 
 const Index = () => {
+  const { user, loading } = useAuth();
+  const location = useLocation();
   const [activeModule, setActiveModule] = useState("stackwizard");
+
+  // Handle navigation state for SQL Doctor
+  useEffect(() => {
+    if (location.state?.activeModule) {
+      setActiveModule(location.state.activeModule);
+    }
+  }, [location.state]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-neon-blue"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    window.location.href = '/login';
+    return null;
+  }
 
   const renderModule = () => {
     switch (activeModule) {
@@ -31,36 +53,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="flex h-screen overflow-hidden">
-        {/* Sidebar */}
-        <div className="flex-shrink-0 p-6">
+      <div className="flex h-screen">
+        <div className="w-auto flex-shrink-0 p-4">
           <Sidebar activeModule={activeModule} onModuleChange={setActiveModule} />
         </div>
-
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Header */}
-          <header className="p-6 flex justify-between items-center border-b border-white/10">
-            <div className="animate-float">
-              <h1 className="text-3xl font-bold font-sora bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink bg-clip-text text-transparent">
-                DevSynth AI Dashboard
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                AI-Powered Developer Productivity Suite
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <ActionButtons />
-              <ThemeToggle />
-            </div>
-          </header>
-
-          {/* Module Content */}
-          <main className="flex-1 overflow-auto p-6">
-            <div className="max-w-4xl mx-auto">
-              {renderModule()}
-            </div>
-          </main>
+        <div className="flex-1 p-6 overflow-auto">
+          {renderModule()}
         </div>
       </div>
     </div>
