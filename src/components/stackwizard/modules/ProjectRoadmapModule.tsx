@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { GitBranch, TestTube, Database, Code, Shield, Target, CheckCircle } from 'lucide-react';
+import { Settings, TestTube, Layers, Database, Globe, Shield } from 'lucide-react';
 
 interface Architecture {
   pattern?: string;
@@ -30,164 +30,203 @@ interface ProjectRoadmapModuleProps {
 }
 
 const ProjectRoadmapModule = ({ architecture, testingStrategy }: ProjectRoadmapModuleProps) => {
-  console.log('ProjectRoadmapModule - architecture:', architecture);
-  console.log('ProjectRoadmapModule - testingStrategy:', testingStrategy);
+  console.log('ProjectRoadmapModule props:', { architecture, testingStrategy });
+
+  const hasArchitectureData = architecture && Object.keys(architecture).length > 0;
+  const hasTestingData = testingStrategy && Object.keys(testingStrategy).length > 0;
+
+  if (!hasArchitectureData && !hasTestingData) {
+    return (
+      <Card className="glass-dark border-0">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <Settings className="w-6 h-6 text-neon-purple" />
+            <div>
+              <div className="text-2xl font-bold font-sora">Architecture & Testing Strategy</div>
+              <div className="text-sm text-muted-foreground">Technical foundation and quality assurance</div>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No architecture or testing strategy data available</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <GitBranch className="w-6 h-6 text-neon-purple" />
-        <h3 className="text-2xl font-bold font-sora bg-gradient-to-r from-neon-purple to-neon-blue bg-clip-text text-transparent">
-          Architecture & Testing Strategy
-        </h3>
-      </div>
+    <Card className="glass-dark border-0 animate-fade-in" style={{ animationDelay: '600ms' }}>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-3">
+          <Settings className="w-6 h-6 text-neon-purple" />
+          <div>
+            <div className="text-2xl font-bold font-sora">Architecture & Testing Strategy</div>
+            <div className="text-sm text-muted-foreground">Technical foundation and quality assurance</div>
+          </div>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-8">
+        {/* Architecture Section */}
+        {hasArchitectureData && (
+          <div className="space-y-6">
+            <h4 className="text-xl font-semibold font-sora flex items-center gap-2">
+              <Layers className="w-5 h-5 text-neon-blue" />
+              System Architecture
+            </h4>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Architecture Recommendations */}
-        <Card className="glass-dark border-0 animate-fade-in" style={{ animationDelay: '400ms' }}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <GitBranch className="w-6 h-6 text-neon-purple" />
-              <div>
-                <div className="text-xl font-bold font-sora">Architecture</div>
-                <div className="text-sm text-muted-foreground">System design recommendations</div>
-              </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {architecture?.pattern && (
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Code className="w-5 h-5 text-neon-green" />
-                  <h4 className="font-semibold">Architecture Pattern</h4>
-                </div>
-                <div className="p-3 rounded-lg bg-neon-green/10 border border-neon-green/20">
-                  <Badge variant="outline" className="bg-neon-green/20 border-neon-green text-neon-green mb-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Architecture Pattern */}
+              {architecture.pattern && (
+                <div className="p-4 rounded-lg bg-gradient-to-br from-blue-500/20 to-indigo-600/20 border border-blue-500/30">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Layers className="w-5 h-5 text-blue-400" />
+                    <h5 className="font-semibold text-blue-400">Architecture Pattern</h5>
+                  </div>
+                  <div className="text-xl font-bold text-white mb-2">
                     {architecture.pattern}
-                  </Badge>
-                  <p className="text-sm text-muted-foreground">{architecture.reason}</p>
+                  </div>
+                  {architecture.reason && (
+                    <p className="text-sm text-muted-foreground">
+                      {architecture.reason}
+                    </p>
+                  )}
                 </div>
-              </div>
-            )}
+              )}
 
-            {architecture?.api_style && (
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-neon-blue" />
-                  <h4 className="font-semibold">API Design</h4>
-                </div>
-                <div className="p-3 rounded-lg bg-neon-blue/10 border border-neon-blue/20">
-                  <Badge variant="outline" className="bg-neon-blue/20 border-neon-blue text-neon-blue mb-2">
+              {/* API Style */}
+              {architecture.api_style && (
+                <div className="p-4 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-600/20 border border-green-500/30">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Globe className="w-5 h-5 text-green-400" />
+                    <h5 className="font-semibold text-green-400">API Style</h5>
+                  </div>
+                  <div className="text-xl font-bold text-white mb-2">
                     {architecture.api_style}
-                  </Badge>
-                  <p className="text-sm text-muted-foreground">{architecture.api_reason}</p>
+                  </div>
+                  {architecture.api_reason && (
+                    <p className="text-sm text-muted-foreground">
+                      {architecture.api_reason}
+                    </p>
+                  )}
                 </div>
-              </div>
-            )}
+              )}
 
-            {architecture?.database_type && (
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Database className="w-5 h-5 text-neon-coral" />
-                  <h4 className="font-semibold">Database Choice</h4>
-                </div>
-                <div className="p-3 rounded-lg bg-neon-coral/10 border border-neon-coral/20">
-                  <Badge variant="outline" className="bg-neon-coral/20 border-neon-coral text-neon-coral mb-2">
+              {/* Database */}
+              {architecture.database_type && (
+                <div className="p-4 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-600/20 border border-purple-500/30">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Database className="w-5 h-5 text-purple-400" />
+                    <h5 className="font-semibold text-purple-400">Database Strategy</h5>
+                  </div>
+                  <div className="text-xl font-bold text-white mb-2">
                     {architecture.database_type}
-                  </Badge>
-                  <p className="text-sm text-muted-foreground">{architecture.database_reason}</p>
+                  </div>
+                  {architecture.database_reason && (
+                    <p className="text-sm text-muted-foreground">
+                      {architecture.database_reason}
+                    </p>
+                  )}
                 </div>
-              </div>
-            )}
+              )}
 
-            {architecture?.deployment_strategy && (
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Target className="w-5 h-5 text-neon-orange" />
-                  <h4 className="font-semibold">Deployment Strategy</h4>
+              {/* Deployment */}
+              {architecture.deployment_strategy && (
+                <div className="p-4 rounded-lg bg-gradient-to-br from-orange-500/20 to-red-600/20 border border-orange-500/30">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Shield className="w-5 h-5 text-orange-400" />
+                    <h5 className="font-semibold text-orange-400">Deployment Strategy</h5>
+                  </div>
+                  <div className="text-lg font-bold text-white">
+                    {architecture.deployment_strategy}
+                  </div>
                 </div>
-                <div className="p-3 rounded-lg bg-neon-orange/10 border border-neon-orange/20">
-                  <p className="text-sm text-muted-foreground">{architecture.deployment_strategy}</p>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              )}
+            </div>
+          </div>
+        )}
 
-        {/* Testing Strategy */}
-        <Card className="glass-dark border-0 animate-fade-in" style={{ animationDelay: '450ms' }}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <TestTube className="w-6 h-6 text-neon-yellow" />
-              <div>
-                <div className="text-xl font-bold font-sora">Testing Strategy</div>
-                <div className="text-sm text-muted-foreground">Quality assurance plan</div>
-              </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {testingStrategy?.types && testingStrategy.types.length > 0 && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-neon-orange flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4" />
-                  Test Types
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {testingStrategy.types.map((type, index) => (
-                    <Badge 
-                      key={index} 
-                      variant="outline" 
-                      className="bg-neon-orange/20 border-neon-orange text-neon-orange"
-                    >
-                      {type}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
+        {/* Testing Strategy Section */}
+        {hasTestingData && (
+          <div className="space-y-6">
+            <h4 className="text-xl font-semibold font-sora flex items-center gap-2">
+              <TestTube className="w-5 h-5 text-neon-green" />
+              Testing Strategy
+            </h4>
 
-            {testingStrategy?.tools && Object.keys(testingStrategy.tools).length > 0 && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-neon-purple">Recommended Tools</h4>
-                <div className="space-y-2">
-                  {Object.entries(testingStrategy.tools).map(([type, tool], index) => (
-                    <div key={index} className="flex justify-between items-center p-2 rounded bg-white/5">
-                      <span className="text-sm capitalize text-muted-foreground">{type}:</span>
-                      <Badge variant="secondary" className="bg-neon-purple/20 text-neon-purple">
-                        {tool}
-                      </Badge>
+            {/* Testing Types & Tools */}
+            {(testingStrategy.types || testingStrategy.tools) && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Testing Types */}
+                {testingStrategy.types && testingStrategy.types.length > 0 && (
+                  <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+                    <h5 className="font-semibold text-green-400 mb-3 flex items-center gap-2">
+                      <TestTube className="w-4 h-4" />
+                      Testing Types
+                    </h5>
+                    <div className="flex flex-wrap gap-2">
+                      {testingStrategy.types.map((type, index) => (
+                        <Badge key={index} variant="secondary" className="bg-green-500/20 text-green-300">
+                          {type}
+                        </Badge>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
+
+                {/* Testing Tools */}
+                {testingStrategy.tools && Object.keys(testingStrategy.tools).length > 0 && (
+                  <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+                    <h5 className="font-semibold text-blue-400 mb-3 flex items-center gap-2">
+                      <Settings className="w-4 h-4" />
+                      Testing Tools
+                    </h5>
+                    <div className="space-y-2">
+                      {Object.entries(testingStrategy.tools).map(([type, tool], index) => (
+                        <div key={index} className="flex justify-between items-center">
+                          <span className="text-sm capitalize">{type}:</span>
+                          <Badge variant="outline" className="text-xs">
+                            {tool}
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
-            {testingStrategy?.coverage_targets && Object.keys(testingStrategy.coverage_targets).length > 0 && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-neon-blue">Coverage Targets</h4>
-                <div className="space-y-2">
+            {/* Coverage Targets */}
+            {testingStrategy.coverage_targets && Object.keys(testingStrategy.coverage_targets).length > 0 && (
+              <div className="p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                <h5 className="font-semibold text-yellow-400 mb-3">Coverage Targets</h5>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {Object.entries(testingStrategy.coverage_targets).map(([type, target], index) => (
-                    <div key={index} className="flex justify-between items-center p-2 rounded bg-blue-500/5">
-                      <span className="text-sm capitalize text-muted-foreground">{type}:</span>
-                      <Badge variant="outline" className="bg-neon-blue/20 border-neon-blue text-neon-blue">
-                        {target}
-                      </Badge>
+                    <div key={index} className="text-center">
+                      <div className="text-sm text-muted-foreground capitalize">{type.replace('_', ' ')}</div>
+                      <div className="text-lg font-bold text-yellow-300">{target}</div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {testingStrategy?.testing_environments && testingStrategy.testing_environments.length > 0 && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-neon-coral">Testing Environments</h4>
+            {/* AI Testing */}
+            {testingStrategy.ai_testing && (
+              <div className="p-4 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                <h5 className="font-semibold text-purple-400 mb-2">🤖 AI Testing Strategy</h5>
+                <p className="text-sm text-muted-foreground">{testingStrategy.ai_testing}</p>
+              </div>
+            )}
+
+            {/* Testing Environments */}
+            {testingStrategy.testing_environments && testingStrategy.testing_environments.length > 0 && (
+              <div>
+                <h5 className="font-semibold text-cyan-400 mb-2">Testing Environments</h5>
                 <div className="flex flex-wrap gap-2">
                   {testingStrategy.testing_environments.map((env, index) => (
-                    <Badge 
-                      key={index} 
-                      variant="outline" 
-                      className="bg-neon-coral/20 border-neon-coral text-neon-coral"
-                    >
+                    <Badge key={index} variant="outline" className="bg-cyan-500/20 text-cyan-300">
                       {env}
                     </Badge>
                   ))}
@@ -195,36 +234,17 @@ const ProjectRoadmapModule = ({ architecture, testingStrategy }: ProjectRoadmapM
               </div>
             )}
 
-            {testingStrategy?.automated_testing && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-neon-green">Automated Testing</h4>
-                <div className="p-3 rounded-lg bg-neon-green/10 border border-neon-green/20">
-                  <p className="text-sm text-muted-foreground">{testingStrategy.automated_testing}</p>
-                </div>
+            {/* Automated Testing */}
+            {testingStrategy.automated_testing && (
+              <div className="p-4 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                <h5 className="font-semibold text-indigo-400 mb-2">Automated Testing</h5>
+                <p className="text-sm text-muted-foreground">{testingStrategy.automated_testing}</p>
               </div>
             )}
-
-            {testingStrategy?.manual_testing && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-neon-yellow">Manual Testing</h4>
-                <div className="p-3 rounded-lg bg-neon-yellow/10 border border-neon-yellow/20">
-                  <p className="text-sm text-muted-foreground">{testingStrategy.manual_testing}</p>
-                </div>
-              </div>
-            )}
-
-            {testingStrategy?.ai_testing && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-neon-green">AI-Powered Testing</h4>
-                <div className="p-3 rounded-lg bg-neon-green/10 border border-neon-green/20">
-                  <p className="text-sm text-muted-foreground">{testingStrategy.ai_testing}</p>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

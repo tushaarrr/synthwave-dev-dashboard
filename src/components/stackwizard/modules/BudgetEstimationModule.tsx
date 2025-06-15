@@ -2,13 +2,35 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { DollarSign, Users, Clock, Server, Zap, Target } from 'lucide-react';
+import { DollarSign, Users, Clock, TrendingUp } from 'lucide-react';
+
+interface BudgetEstimate {
+  development?: {
+    team_cost?: string;
+    duration?: string;
+    total?: string;
+    breakdown?: any;
+  };
+  infrastructure?: {
+    hosting?: string;
+    ai_services?: string;
+    third_party?: string;
+    total_monthly?: string;
+  };
+  one_time_costs?: any;
+  total_mvp?: string;
+  total_project?: string;
+  post_mvp_monthly?: string;
+  scaling_costs?: string;
+}
 
 interface TeamRole {
   role: string;
   responsibilities: string;
-  hourly_rate?: string;
-  hours_per_week?: string;
+  experience_level?: string;
+  time_commitment?: string;
+  estimated_cost?: string;
+  key_skills?: string[];
 }
 
 interface TeamPlan {
@@ -16,26 +38,13 @@ interface TeamPlan {
   team_size?: string;
   duration?: string;
   team_composition?: {
-    total_size: string;
-    duration: string;
-    cost_range: string;
+    total_size?: string;
+    duration?: string;
+    cost_range?: string;
   };
-}
-
-interface BudgetEstimate {
-  development?: {
-    team_cost: string;
-    duration: string;
-    total: string;
-  };
-  infrastructure?: {
-    hosting: string;
-    ai_services: string;
-    third_party: string;
-    total_monthly: string;
-  };
-  total_project?: string;
-  total_mvp?: string;
+  optional_roles?: any[];
+  working_methodology?: string;
+  communication_tools?: string[];
 }
 
 interface BudgetEstimationModuleProps {
@@ -44,222 +53,263 @@ interface BudgetEstimationModuleProps {
 }
 
 const BudgetEstimationModule = ({ budgetEstimate, teamPlan }: BudgetEstimationModuleProps) => {
-  console.log('BudgetEstimationModule - budgetEstimate:', budgetEstimate);
-  console.log('BudgetEstimationModule - teamPlan:', teamPlan);
+  console.log('BudgetEstimationModule props:', { budgetEstimate, teamPlan });
+
+  // Check if we have any meaningful data to display
+  const hasBudgetData = budgetEstimate && (
+    budgetEstimate.development?.team_cost ||
+    budgetEstimate.total_mvp ||
+    budgetEstimate.infrastructure?.total_monthly ||
+    Object.keys(budgetEstimate).length > 0
+  );
+
+  const hasTeamData = teamPlan && (
+    teamPlan.roles?.length > 0 ||
+    teamPlan.team_size ||
+    teamPlan.team_composition?.total_size ||
+    Object.keys(teamPlan).length > 0
+  );
+
+  console.log('Data check:', { hasBudgetData, hasTeamData });
+
+  if (!hasBudgetData && !hasTeamData) {
+    return (
+      <Card className="glass-dark border-0">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <DollarSign className="w-6 h-6 text-neon-green" />
+            <div>
+              <div className="text-2xl font-bold font-sora">Budget & Team Planning</div>
+              <div className="text-sm text-muted-foreground">Cost estimates and team structure</div>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No budget or team planning data available</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <DollarSign className="w-6 h-6 text-neon-green" />
-        <h3 className="text-2xl font-bold font-sora bg-gradient-to-r from-neon-green to-neon-aqua bg-clip-text text-transparent">
-          Budget & Team Planning
-        </h3>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Budget Estimation */}
-        <Card className="glass-dark border-0 animate-fade-in" style={{ animationDelay: '300ms' }}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <DollarSign className="w-6 h-6 text-neon-green" />
-              <div>
-                <div className="text-xl font-bold font-sora">Budget Estimation</div>
-                <div className="text-sm text-muted-foreground">Complete cost breakdown</div>
-              </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Total MVP Cost */}
-            {budgetEstimate?.total_mvp && (
-              <div className="p-4 rounded-lg bg-neon-green/10 border border-neon-green/20">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-semibold">Total MVP Cost</span>
-                  <Badge className="bg-neon-green text-black font-bold text-lg px-4 py-2">
-                    {budgetEstimate.total_mvp}
-                  </Badge>
+    <Card className="glass-dark border-0 animate-fade-in" style={{ animationDelay: '400ms' }}>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-3">
+          <DollarSign className="w-6 h-6 text-neon-green" />
+          <div>
+            <div className="text-2xl font-bold font-sora">Budget & Team Planning</div>
+            <div className="text-sm text-muted-foreground">Cost estimates and team structure</div>
+          </div>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-8">
+        {/* Budget Overview */}
+        {hasBudgetData && (
+          <div className="space-y-6">
+            <h4 className="text-xl font-semibold font-sora flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-neon-coral" />
+              Budget Breakdown
+            </h4>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* MVP Cost */}
+              {(budgetEstimate.total_mvp || budgetEstimate.development?.total || budgetEstimate.total_project) && (
+                <div className="p-4 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-600/20 border border-green-500/30">
+                  <div className="flex items-center gap-2 mb-2">
+                    <DollarSign className="w-4 h-4 text-green-400" />
+                    <span className="text-sm font-medium text-green-400">Total MVP Cost</span>
+                  </div>
+                  <div className="text-2xl font-bold text-white">
+                    {budgetEstimate.total_mvp || budgetEstimate.development?.total || budgetEstimate.total_project}
+                  </div>
+                  {budgetEstimate.development?.duration && (
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Duration: {budgetEstimate.development.duration}
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Development Costs */}
-            {budgetEstimate?.development && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-neon-coral flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  Development Team
-                </h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center p-2 rounded bg-white/5">
-                    <span className="text-sm text-muted-foreground">Team Cost:</span>
-                    <Badge variant="secondary" className="bg-neon-coral/20 text-neon-coral">
-                      {budgetEstimate.development.team_cost}
-                    </Badge>
+              {/* Development Cost */}
+              {budgetEstimate.development?.team_cost && (
+                <div className="p-4 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-600/20 border border-blue-500/30">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Users className="w-4 h-4 text-blue-400" />
+                    <span className="text-sm font-medium text-blue-400">Development Team</span>
+                  </div>
+                  <div className="text-xl font-bold text-white">
+                    {budgetEstimate.development.team_cost}
                   </div>
                   {budgetEstimate.development.duration && (
-                    <div className="flex justify-between items-center p-2 rounded bg-white/5">
-                      <span className="text-sm text-muted-foreground">Duration:</span>
-                      <Badge variant="secondary" className="bg-neon-blue/20 text-neon-blue">
-                        {budgetEstimate.development.duration}
-                      </Badge>
-                    </div>
-                  )}
-                  {budgetEstimate.development.total && (
-                    <div className="flex justify-between items-center p-2 rounded bg-white/5">
-                      <span className="text-sm text-muted-foreground">Total:</span>
-                      <Badge variant="secondary" className="bg-neon-green/20 text-neon-green">
-                        {budgetEstimate.development.total}
-                      </Badge>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {budgetEstimate.development.duration}
                     </div>
                   )}
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Infrastructure Costs */}
-            {budgetEstimate?.infrastructure && (
+              {/* Monthly Infrastructure */}
+              {budgetEstimate.infrastructure?.total_monthly && (
+                <div className="p-4 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-600/20 border border-purple-500/30">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Clock className="w-4 h-4 text-purple-400" />
+                    <span className="text-sm font-medium text-purple-400">Monthly Infrastructure</span>
+                  </div>
+                  <div className="text-xl font-bold text-white">
+                    {budgetEstimate.infrastructure.total_monthly}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    Recurring operational costs
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Detailed Infrastructure Breakdown */}
+            {budgetEstimate.infrastructure && (
               <div className="space-y-3">
-                <h4 className="font-semibold text-neon-blue flex items-center gap-2">
-                  <Server className="w-4 h-4" />
-                  Monthly Infrastructure
-                </h4>
-                <div className="space-y-2">
+                <h5 className="text-lg font-semibold text-neon-blue">Infrastructure Costs</h5>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {budgetEstimate.infrastructure.hosting && (
-                    <div className="flex justify-between items-center p-2 rounded bg-blue-500/5">
-                      <span className="text-sm text-muted-foreground">Hosting:</span>
-                      <Badge variant="outline" className="bg-neon-blue/20 border-neon-blue text-neon-blue">
-                        {budgetEstimate.infrastructure.hosting}
-                      </Badge>
+                    <div className="flex justify-between items-center p-3 rounded bg-white/5">
+                      <span className="text-sm">Hosting & Deployment</span>
+                      <Badge variant="outline">{budgetEstimate.infrastructure.hosting}</Badge>
                     </div>
                   )}
                   {budgetEstimate.infrastructure.ai_services && (
-                    <div className="flex justify-between items-center p-2 rounded bg-blue-500/5">
-                      <span className="text-sm text-muted-foreground">AI Services:</span>
-                      <Badge variant="outline" className="bg-purple-500/20 border-purple-500 text-purple-300">
-                        {budgetEstimate.infrastructure.ai_services}
-                      </Badge>
+                    <div className="flex justify-between items-center p-3 rounded bg-white/5">
+                      <span className="text-sm">AI Services</span>
+                      <Badge variant="outline">{budgetEstimate.infrastructure.ai_services}</Badge>
                     </div>
                   )}
                   {budgetEstimate.infrastructure.third_party && (
-                    <div className="flex justify-between items-center p-2 rounded bg-blue-500/5">
-                      <span className="text-sm text-muted-foreground">Third Party:</span>
-                      <Badge variant="outline" className="bg-neon-orange/20 border-neon-orange text-neon-orange">
-                        {budgetEstimate.infrastructure.third_party}
-                      </Badge>
-                    </div>
-                  )}
-                  {budgetEstimate.infrastructure.total_monthly && (
-                    <div className="flex justify-between items-center p-3 rounded bg-neon-blue/10 border border-neon-blue/20 mt-3">
-                      <span className="font-medium">Total Monthly:</span>
-                      <Badge className="bg-neon-blue text-white font-bold">
-                        {budgetEstimate.infrastructure.total_monthly}
-                      </Badge>
+                    <div className="flex justify-between items-center p-3 rounded bg-white/5">
+                      <span className="text-sm">Third-party Services</span>
+                      <Badge variant="outline">{budgetEstimate.infrastructure.third_party}</Badge>
                     </div>
                   )}
                 </div>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        )}
 
         {/* Team Planning */}
-        <Card className="glass-dark border-0 animate-fade-in" style={{ animationDelay: '350ms' }}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <Users className="w-6 h-6 text-neon-coral" />
-              <div>
-                <div className="text-xl font-bold font-sora">Team Planning</div>
-                <div className="text-sm text-muted-foreground">Recommended team structure</div>
-              </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Team Composition Summary */}
-            {teamPlan?.team_composition && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-neon-orange flex items-center gap-2">
-                  <Target className="w-4 h-4" />
-                  Team Overview
-                </h4>
-                <div className="grid grid-cols-1 gap-3">
-                  <div className="p-3 rounded-lg bg-neon-orange/10 border border-neon-orange/20">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Team Size:</span>
-                      <Badge className="bg-neon-orange/20 border-neon-orange text-neon-orange">
-                        {teamPlan.team_composition.total_size}
-                      </Badge>
+        {hasTeamData && (
+          <div className="space-y-6">
+            <h4 className="text-xl font-semibold font-sora flex items-center gap-2">
+              <Users className="w-5 h-5 text-neon-purple" />
+              Team Structure & Planning
+            </h4>
+
+            {/* Team Overview */}
+            {(teamPlan.team_size || teamPlan.team_composition) && (
+              <div className="p-4 rounded-lg bg-gradient-to-r from-indigo-500/20 to-purple-600/20 border border-indigo-500/30">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {(teamPlan.team_size || teamPlan.team_composition?.total_size) && (
+                    <div>
+                      <div className="text-sm text-indigo-300 mb-1">Team Size</div>
+                      <div className="text-lg font-bold">
+                        {teamPlan.team_size || teamPlan.team_composition?.total_size}
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-3 rounded-lg bg-neon-coral/10 border border-neon-coral/20">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Duration:</span>
-                      <Badge className="bg-neon-coral/20 border-neon-coral text-neon-coral">
-                        {teamPlan.team_composition.duration}
-                      </Badge>
+                  )}
+                  {(teamPlan.duration || teamPlan.team_composition?.duration) && (
+                    <div>
+                      <div className="text-sm text-indigo-300 mb-1">Duration</div>
+                      <div className="text-lg font-bold">
+                        {teamPlan.duration || teamPlan.team_composition?.duration}
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-3 rounded-lg bg-neon-green/10 border border-neon-green/20">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Cost Range:</span>
-                      <Badge className="bg-neon-green/20 border-neon-green text-neon-green">
+                  )}
+                  {teamPlan.team_composition?.cost_range && (
+                    <div>
+                      <div className="text-sm text-indigo-300 mb-1">Cost Range</div>
+                      <div className="text-lg font-bold">
                         {teamPlan.team_composition.cost_range}
-                      </Badge>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
-              </div>
-            )}
-
-            {/* Legacy format support */}
-            {teamPlan?.team_size && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-neon-orange">Team Size</h4>
-                <Badge className="bg-neon-orange/20 text-neon-orange">
-                  {teamPlan.team_size}
-                </Badge>
-              </div>
-            )}
-
-            {teamPlan?.duration && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-neon-coral">Project Duration</h4>
-                <Badge className="bg-neon-coral/20 text-neon-coral">
-                  {teamPlan.duration}
-                </Badge>
               </div>
             )}
 
             {/* Team Roles */}
-            {teamPlan?.roles && teamPlan.roles.length > 0 && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-neon-purple">Team Roles</h4>
-                <div className="space-y-3">
+            {teamPlan.roles && teamPlan.roles.length > 0 && (
+              <div className="space-y-4">
+                <h5 className="text-lg font-semibold text-neon-yellow">Team Roles</h5>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {teamPlan.roles.map((role, index) => (
-                    <div key={index} className="p-3 rounded-lg bg-white/5 border border-white/10">
-                      <div className="flex items-start justify-between mb-2">
-                        <h5 className="font-medium text-neon-purple">{role.role}</h5>
-                        <div className="flex gap-2">
-                          {role.hourly_rate && (
-                            <Badge variant="outline" className="text-xs bg-green-500/20 text-green-300">
-                              {role.hourly_rate}/hr
-                            </Badge>
-                          )}
-                          {role.hours_per_week && (
-                            <Badge variant="outline" className="text-xs bg-blue-500/20 text-blue-300">
-                              {role.hours_per_week}h/week
+                    <div key={index} className="p-4 rounded-lg bg-white/5 border border-white/10">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h6 className="font-semibold text-white">{role.role}</h6>
+                          {role.experience_level && (
+                            <Badge variant="secondary" className="mt-1 text-xs">
+                              {role.experience_level}
                             </Badge>
                           )}
                         </div>
+                        {role.estimated_cost && (
+                          <Badge variant="outline" className="text-green-400 border-green-400">
+                            {role.estimated_cost}
+                          </Badge>
+                        )}
                       </div>
-                      <p className="text-sm text-muted-foreground">{role.responsibilities}</p>
+                      
+                      <p className="text-sm text-muted-foreground mb-3">
+                        {role.responsibilities}
+                      </p>
+                      
+                      {role.time_commitment && (
+                        <div className="text-xs text-blue-300 mb-2">
+                          <Clock className="w-3 h-3 inline mr-1" />
+                          {role.time_commitment}
+                        </div>
+                      )}
+                      
+                      {role.key_skills && role.key_skills.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {role.key_skills.map((skill, skillIndex) => (
+                            <Badge key={skillIndex} variant="secondary" className="text-xs">
+                              {skill}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
             )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+
+            {/* Working Methodology */}
+            {teamPlan.working_methodology && (
+              <div className="p-4 rounded-lg bg-orange-500/10 border border-orange-500/20">
+                <h5 className="text-sm font-medium text-orange-300 mb-2">Working Methodology</h5>
+                <p className="text-sm text-white">{teamPlan.working_methodology}</p>
+              </div>
+            )}
+
+            {/* Communication Tools */}
+            {teamPlan.communication_tools && teamPlan.communication_tools.length > 0 && (
+              <div>
+                <h5 className="text-sm font-medium text-cyan-300 mb-2">Communication Tools</h5>
+                <div className="flex flex-wrap gap-2">
+                  {teamPlan.communication_tools.map((tool, index) => (
+                    <Badge key={index} variant="outline" className="text-xs bg-cyan-500/20 text-cyan-300">
+                      {tool}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
