@@ -83,7 +83,7 @@ const SQLHistoryPage = () => {
             className="flex items-center gap-2 border-orange-200/20 text-orange-200 hover:bg-orange-500/10"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to DevSynth
+            Back to OneAI
           </Button>
           <div>
             <h1 className="text-3xl font-bold font-sora gradient-text">
@@ -107,7 +107,7 @@ const SQLHistoryPage = () => {
         ) : (
           <div className="grid gap-6">
             {history.map((entry) => (
-              <Card key={entry.id} className="glass-dark border-orange-200/10 bg-zinc-800/50">
+              <Card key={entry.id} className="glass-dark border-orange-200/10">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">

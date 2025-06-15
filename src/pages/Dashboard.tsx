@@ -43,7 +43,7 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
         <div className="relative">
           <motion.div 
             className="w-20 h-20 border-4 border-orange-300/30 border-t-orange-400 rounded-full"
@@ -79,22 +79,22 @@ const Dashboard = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-white text-gray-900">
+      <div className="min-h-screen bg-zinc-900 text-orange-200">
         {/* 3D Background */}
         <FloatingGeometry />
         
         {/* Floating Orb */}
         <FloatingOrb />
 
-        {/* Animated Background - matching landing page */}
+        {/* Dark theme background */}
         <div className="fixed inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-orange-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-200/10 via-zinc-900 to-orange-200/10"></div>
           <motion.div 
             className="absolute inset-0 opacity-[0.02]"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(251, 146, 60, 0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(251, 146, 60, 0.3) 1px, transparent 1px)
+                linear-gradient(rgba(253, 186, 116, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(253, 186, 116, 0.3) 1px, transparent 1px)
               `,
               backgroundSize: '50px 50px'
             }}
@@ -166,7 +166,7 @@ const Dashboard = () => {
                       >
                         {/* Module Container with Glass Effect */}
                         <motion.div
-                          className="relative p-8 rounded-3xl bg-white/80 backdrop-blur-xl border border-orange-200/20 shadow-lg"
+                          className="relative p-8 rounded-3xl glass-dark border border-orange-200/20 shadow-lg"
                           initial={{ scale: 0.95, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ duration: 0.5, delay: 0.2 }}

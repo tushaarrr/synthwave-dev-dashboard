@@ -125,21 +125,21 @@ const StackWizardDashboard = ({
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-lg border-b border-orange-200/20 p-6 -mx-6 rounded-t-3xl">
+      <div className="sticky top-0 z-10 glass-dark border-b border-orange-200/20 p-6 -mx-6 rounded-t-3xl">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold font-sora bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold font-sora gradient-text">
               {projectName}
             </h1>
-            <p className="text-gray-600 mt-1">Complete SaaS Development Blueprint</p>
+            <p className="text-orange-200/70 mt-1">Complete SaaS Development Blueprint</p>
           </div>
           <div className="flex gap-3">
             <button
               onClick={saveProject}
-              className="bg-white/80 backdrop-blur-sm rounded-xl px-4 py-2 flex items-center gap-2 hover:scale-105 transition-all duration-300 border border-orange-200/30 hover:border-orange-300/50 shadow-md"
+              className="glass-dark rounded-xl px-4 py-2 flex items-center gap-2 hover:scale-105 transition-all duration-300 border border-orange-200/30 hover:border-orange-300/50 shadow-md"
             >
-              <Save className="w-4 h-4 text-orange-500" />
-              <span className="text-sm font-medium text-gray-700">Save Project</span>
+              <Save className="w-4 h-4 text-orange-400" />
+              <span className="text-sm font-medium text-orange-200">Save Project</span>
             </button>
             <ActionButtons 
               projectData={{
@@ -155,23 +155,23 @@ const StackWizardDashboard = ({
         
         {/* Data Completeness Status */}
         <div className="mt-4">
-          <Card className="bg-white/80 backdrop-blur-sm border-orange-200/20 shadow-md">
+          <Card className="glass-dark border-orange-200/20 shadow-md">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <Info className="w-5 h-5 text-orange-500" />
+                <Info className="w-5 h-5 text-orange-400" />
                 <div className="flex-1">
-                  <div className="text-sm font-medium text-gray-800">
+                  <div className="text-sm font-medium text-orange-200">
                     Blueprint Completion: {completedSections}/{totalSections} sections
                   </div>
-                  <div className="text-xs text-gray-600 mt-1">
+                  <div className="text-xs text-orange-200/60 mt-1">
                     {modules.length} modules • {timeline.length} timeline items • {Object.keys(architecture).length > 0 ? '✓' : '○'} architecture • {Object.keys(testingStrategy).length > 0 ? '✓' : '○'} testing strategy
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-lg font-bold text-orange-500">
+                  <div className="text-lg font-bold text-orange-400">
                     {Math.round((completedSections / totalSections) * 100)}%
                   </div>
-                  <div className="text-xs text-gray-600">Complete</div>
+                  <div className="text-xs text-orange-200/60">Complete</div>
                 </div>
               </div>
             </CardContent>

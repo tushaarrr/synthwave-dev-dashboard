@@ -105,7 +105,7 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
   const isOnDashboard = location.pathname === '/dashboard';
 
   return (
-    <div className={`relative backdrop-blur-xl bg-white/80 border-r border-orange-200/20 transition-all duration-500 flex flex-col h-full shadow-lg ${
+    <div className={`relative glass-dark border-r border-orange-200/20 transition-all duration-500 flex flex-col h-full shadow-lg ${
       collapsed ? 'w-20' : 'w-80'
     }`}>
       {/* Glow effect */}
@@ -123,10 +123,10 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl blur opacity-50 animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-xl font-bold font-sora bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold font-sora gradient-text">
                   OneAI
                 </h1>
-                <p className="text-xs text-gray-500 font-medium">Developer Suite</p>
+                <p className="text-xs text-orange-200/60 font-medium">Developer Suite</p>
               </div>
             </div>
           )}
@@ -134,12 +134,12 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
           {onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
-              className="relative p-2 rounded-xl bg-white/60 border border-orange-200/30 hover:bg-white/80 transition-all duration-300 hover:scale-110 group"
+              className="relative p-2 rounded-xl glass-dark border border-orange-200/30 hover:border-orange-300/50 transition-all duration-300 hover:scale-110 group"
             >
               {collapsed ? (
-                <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-gray-700 transition-colors" />
+                <ChevronRight className="w-4 h-4 text-orange-300 group-hover:text-orange-200 transition-colors" />
               ) : (
-                <ChevronLeft className="w-4 h-4 text-gray-500 group-hover:text-gray-700 transition-colors" />
+                <ChevronLeft className="w-4 h-4 text-orange-300 group-hover:text-orange-200 transition-colors" />
               )}
             </button>
           )}
@@ -151,7 +151,7 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
         {/* AI Modules */}
         <div>
           {!collapsed && (
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <h3 className="text-xs font-semibold text-orange-300 uppercase tracking-wider mb-4 flex items-center gap-2">
               <Activity className="w-3 h-3" />
               AI Modules
             </h3>
@@ -163,8 +163,8 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                 onClick={() => handleModuleClick(module.id)}
                 className={`group relative w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 hover:scale-105 ${
                   activeModule === module.id && isOnDashboard
-                    ? 'bg-orange-100/80 border border-orange-200/40 shadow-lg' 
-                    : 'hover:bg-white/60 border border-transparent hover:border-orange-200/30'
+                    ? 'glass-dark border border-orange-300/40 shadow-lg' 
+                    : 'hover:bg-orange-200/5 border border-transparent hover:border-orange-200/30'
                 }`}
                 title={collapsed ? module.name : undefined}
               >
@@ -178,8 +178,8 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                     <module.icon 
                       className={`w-5 h-5 transition-colors ${
                         activeModule === module.id && isOnDashboard 
-                          ? 'text-orange-600' 
-                          : 'text-gray-500 group-hover:text-orange-600'
+                          ? 'text-orange-400' 
+                          : 'text-orange-300 group-hover:text-orange-400'
                       }`} 
                     />
                     {activeModule === module.id && isOnDashboard && (
@@ -191,12 +191,12 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                     <div className="flex-1 text-left">
                       <div className={`font-semibold transition-colors ${
                         activeModule === module.id && isOnDashboard 
-                          ? 'text-gray-800' 
-                          : 'text-gray-600 group-hover:text-gray-800'
+                          ? 'text-orange-200' 
+                          : 'text-orange-200/80 group-hover:text-orange-200'
                       }`}>
                         {module.name}
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-xs text-orange-200/50 mt-1">
                         {module.description}
                       </div>
                     </div>
@@ -214,7 +214,7 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
         {/* Workspace */}
         <div>
           {!collapsed && (
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <h3 className="text-xs font-semibold text-orange-300 uppercase tracking-wider mb-4 flex items-center gap-2">
               <FolderOpen className="w-3 h-3" />
               Workspace
             </h3>
@@ -226,8 +226,8 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                 onClick={() => navigate(route.path)}
                 className={`group relative w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 hover:scale-105 ${
                   location.pathname === route.path
-                    ? 'bg-orange-100/80 border border-orange-200/40 shadow-lg' 
-                    : 'hover:bg-white/60 border border-transparent hover:border-orange-200/30'
+                    ? 'glass-dark border border-orange-300/40 shadow-lg' 
+                    : 'hover:bg-orange-200/5 border border-transparent hover:border-orange-200/30'
                 }`}
                 title={collapsed ? route.name : undefined}
               >
@@ -241,8 +241,8 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                     <route.icon 
                       className={`w-5 h-5 transition-colors ${
                         location.pathname === route.path 
-                          ? 'text-orange-600' 
-                          : 'text-gray-500 group-hover:text-orange-600'
+                          ? 'text-orange-400' 
+                          : 'text-orange-300 group-hover:text-orange-400'
                       }`} 
                     />
                     {location.pathname === route.path && (
@@ -254,12 +254,12 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
                     <div className="flex-1 text-left">
                       <div className={`font-semibold transition-colors ${
                         location.pathname === route.path 
-                          ? 'text-gray-800' 
-                          : 'text-gray-600 group-hover:text-gray-800'
+                          ? 'text-orange-200' 
+                          : 'text-orange-200/80 group-hover:text-orange-200'
                       }`}>
                         {route.name}
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-xs text-orange-200/50 mt-1">
                         {route.description}
                       </div>
                     </div>
@@ -278,15 +278,15 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
       {/* Status Indicator */}
       {!collapsed && (
         <div className="p-6 border-t border-orange-200/20">
-          <div className="relative p-4 rounded-2xl bg-gradient-to-r from-green-500/10 via-green-500/10 to-green-500/10 border border-green-500/20 backdrop-blur-sm shadow-md">
+          <div className="relative p-4 rounded-2xl bg-gradient-to-r from-green-500/10 via-green-500/10 to-green-500/10 border border-green-500/20 glass-dark shadow-md">
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
                 <div className="absolute inset-0 w-3 h-3 bg-green-400 rounded-full blur animate-pulse"></div>
               </div>
               <div className="flex-1">
-                <div className="text-sm font-semibold text-green-600">System Online</div>
-                <div className="text-xs text-gray-500">All modules operational</div>
+                <div className="text-sm font-semibold text-green-400">System Online</div>
+                <div className="text-xs text-orange-200/50">All modules operational</div>
               </div>
             </div>
             <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-green-500/5 rounded-2xl"></div>
