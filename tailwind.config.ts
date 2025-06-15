@@ -68,8 +68,8 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				neon: {
-					blue: '#00d4ff',
-					purple: '#9d4edd',
+					aqua: '#38f9d7',
+					purple: '#5f5fff',
 					pink: '#ff006e',
 					green: '#00f5a0',
 					orange: '#ff8500'
@@ -120,6 +120,26 @@ export default {
 				'scale-in': {
 					from: { transform: 'scale(0.95)', opacity: '0' },
 					to: { transform: 'scale(1)', opacity: '1' }
+				},
+				'pulse-glow': {
+					'0%, 100%': { 
+						boxShadow: '0 0 20px rgba(56, 249, 215, 0.3)',
+						textShadow: '0 0 10px rgba(56, 249, 215, 0.5)'
+					},
+					'50%': { 
+						boxShadow: '0 0 40px rgba(95, 95, 255, 0.6)',
+						textShadow: '0 0 20px rgba(95, 95, 255, 0.7)'
+					}
+				},
+				'neon-pulse': {
+					'0%, 100%': { 
+						filter: 'drop-shadow(0 0 5px #38f9d7)',
+						opacity: '1'
+					},
+					'50%': { 
+						filter: 'drop-shadow(0 0 25px #5f5fff)',
+						opacity: '0.8'
+					}
 				}
 			},
 			animation: {
@@ -130,7 +150,9 @@ export default {
 				'shimmer': 'shimmer 2s linear infinite',
 				'slide-in': 'slide-in 0.5s ease-out',
 				'fade-in': 'fade-in 0.5s ease-out',
-				'scale-in': 'scale-in 0.3s ease-out'
+				'scale-in': 'scale-in 0.3s ease-out',
+				'pulse-glow': 'pulse-glow 8s ease-in-out infinite',
+				'neon-pulse': 'neon-pulse 8s ease-in-out infinite'
 			},
 			backdropBlur: {
 				xs: '2px',
