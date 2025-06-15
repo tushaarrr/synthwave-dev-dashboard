@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Zap, Database, Globe, Server, Palette, Brain, Plus, Clock, AlertCircle, CheckCircle } from 'lucide-react';
+import { Zap, Database, Globe, Server, Palette, Brain, Plus, Clock, AlertCircle, CheckCircle, Users, TestTube, Target } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface Module {
@@ -14,6 +14,8 @@ interface Module {
   ai_used: boolean;
   complexity?: string;
   estimated_hours?: string;
+  key_features?: string[];
+  acceptance_criteria?: string[];
 }
 
 interface BonusModule {
@@ -87,7 +89,7 @@ const TechStackModule = ({ techStack, modules = [], bonusModules = [] }: TechSta
         DevOps: { 
           icon: Globe, 
           color: 'bg-green-500', 
-          items: [...(stack.hosting || []), ...(stack.analytics || [])] 
+          items: [...(stack.hosting || []), ...(stack.analytics || []), ...(stack.development || [])]
         },
         AI: {
           icon: Brain,
@@ -219,6 +221,27 @@ const TechStackModule = ({ techStack, modules = [], bonusModules = [] }: TechSta
                   </CardHeader>
                   
                   <CardContent className="pt-0 space-y-4">
+                    {/* Key Features */}
+                    {module.key_features && module.key_features.length > 0 && (
+                      <div>
+                        <span className="text-xs font-medium text-neon-green flex items-center gap-1 mb-2">
+                          <Target className="w-3 h-3" />
+                          Key Features:
+                        </span>
+                        <div className="flex flex-wrap gap-1">
+                          {module.key_features.map((feature, featureIndex) => (
+                            <Badge 
+                              key={featureIndex}
+                              variant="outline"
+                              className="text-xs border-green-500/30 text-green-300"
+                            >
+                              {feature}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {/* Dependencies */}
                     {module.dependencies.length > 0 && (
                       <div>
@@ -238,7 +261,7 @@ const TechStackModule = ({ techStack, modules = [], bonusModules = [] }: TechSta
                     )}
 
                     {/* Expandable Details */}
-                    {(module.detailed_description || module.technical_details) && (
+                    {(module.detailed_description || module.technical_details || module.acceptance_criteria) && (
                       <div>
                         <CollapsibleTrigger className="text-sm bg-white/10 hover:bg-white/20 px-3 py-2 rounded transition-colors flex items-center gap-2">
                           <Plus className="w-4 h-4" />
@@ -260,6 +283,19 @@ const TechStackModule = ({ techStack, modules = [], bonusModules = [] }: TechSta
                                 <p className="text-xs text-blue-300/80 leading-relaxed">
                                   {module.technical_details}
                                 </p>
+                              </div>
+                            )}
+                            {module.acceptance_criteria && module.acceptance_criteria.length > 0 && (
+                              <div>
+                                <h5 className="text-sm font-medium text-yellow-400 mb-2">Acceptance Criteria:</h5>
+                                <ul className="text-xs text-yellow-300/80 space-y-1">
+                                  {module.acceptance_criteria.map((criteria, criteriaIndex) => (
+                                    <li key={criteriaIndex} className="flex items-start gap-2">
+                                      <CheckCircle className="w-3 h-3 mt-0.5 text-green-400 flex-shrink-0" />
+                                      {criteria}
+                                    </li>
+                                  ))}
+                                </ul>
                               </div>
                             )}
                           </div>
