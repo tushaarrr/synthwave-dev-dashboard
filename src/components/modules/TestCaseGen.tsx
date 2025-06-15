@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, TestTube, Zap, Code, Database, Play, CheckCircle, AlertCircle } from "lucide-react";
+import { FileText, TestTube, Zap, Code, Database, Play, CheckCircle, AlertCircle, Copy } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -22,7 +22,70 @@ interface Project {
 }
 
 const TestCaseGen = () => {
-  const [inputCode, setInputCode] = useState('');
+  const [inputCode, setInputCode] = useState(`// Example React Component
+import React, { useState } from 'react';
+
+const UserForm = ({ onSubmit }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (validateForm()) {
+      try {
+        await onSubmit({ email, password });
+      } catch (error) {
+        setErrors({ submit: 'Failed to submit form' });
+      }
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+      />
+      {errors.email && <span className="error">{errors.email}</span>}
+      
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+      />
+      {errors.password && <span className="error">{errors.password}</span>}
+      
+      <button type="submit">Submit</button>
+      {errors.submit && <span className="error">{errors.submit}</span>}
+    </form>
+  );
+};
+
+export default UserForm;`);
   const [selectedProject, setSelectedProject] = useState<string>('');
   const [projects, setProjects] = useState<Project[]>([]);
   const [testCases, setTestCases] = useState('');
@@ -54,9 +117,11 @@ const TestCaseGen = () => {
       if (data) {
         const typedProjects: Project[] = data.map(project => ({
           id: project.id,
-          project_name: project.project_name || '',
-          tech_stack: project.tech_stack || '',
-          description: project.description || '',
+          project_name: project.project_name || 'Untitled Project',
+          tech_stack: typeof project.tech_stack === 'string' 
+            ? project.tech_stack 
+            : JSON.stringify(project.tech_stack || {}),
+          description: project.description || 'No description available',
           created_at: project.created_at,
           modules: project.modules || {},
           architecture: project.architecture || {},
@@ -74,11 +139,28 @@ const TestCaseGen = () => {
     }
   };
 
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: "Copied!",
+        description: "Test cases copied to clipboard",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to copy to clipboard",
+        variant: "destructive",
+      });
+    }
+  };
+
   const generateTestCases = async () => {
     setLoading(true);
     
     try {
       let analysisInput = '';
+      let projectContext = '';
       
       if (selectedProject) {
         const project = projects.find(p => p.id === selectedProject);
@@ -87,12 +169,12 @@ const TestCaseGen = () => {
 Project: ${project.project_name}
 Description: ${project.description}
 Tech Stack: ${project.tech_stack}
-Architecture: ${JSON.stringify(project.architecture, null, 2)}
-Testing Strategy: ${JSON.stringify(project.testing_strategy, null, 2)}
 `;
+          projectContext = project.project_name;
         }
       } else {
         analysisInput = inputCode;
+        projectContext = 'Code Analysis';
       }
 
       if (!analysisInput.trim()) {
@@ -105,206 +187,319 @@ Testing Strategy: ${JSON.stringify(project.testing_strategy, null, 2)}
         return;
       }
 
-      // Simulate test case generation based on project or code
+      // Simulate test case generation
       setTimeout(() => {
-        const project = selectedProject ? projects.find(p => p.id === selectedProject) : null;
-        const projectName = project?.project_name || 'Code Module';
-        const techStack = project?.tech_stack || 'JavaScript/TypeScript';
-        
-        const mockTestCases = `
-// Generated Test Cases for ${selectedFramework} - ${projectName}
-// Tech Stack: ${techStack}
+        const generatedTests = `// Generated Test Cases for ${selectedFramework.toUpperCase()} - ${projectContext}
+// Framework: ${selectedFramework}
+// Generated on: ${new Date().toLocaleDateString()}
 
-describe('${projectName}', () => {
-  
-  // Unit Tests
-  describe('Unit Tests', () => {
-    beforeEach(() => {
-      // Setup test environment
-      jest.clearAllMocks();
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event';
+import UserForm from './UserForm';
+
+describe('UserForm Component', () => {
+  const mockOnSubmit = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  // Rendering Tests
+  describe('Rendering', () => {
+    test('renders form with all required fields', () => {
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument();
     });
 
-    test('should initialize application correctly', () => {
-      // Test application initialization
-      const app = initializeApp();
-      expect(app).toBeDefined();
-      expect(app.isReady).toBe(true);
-    });
-
-    test('should handle user authentication', () => {
-      // Test authentication flow
-      const user = { id: '123', email: 'test@example.com' };
-      const result = authenticateUser(user);
-      expect(result.success).toBe(true);
-    });
-
-    test('should validate input data', () => {
-      // Test input validation
-      const invalidData = { name: '', email: 'invalid-email' };
-      const result = validateInput(invalidData);
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain('Name is required');
+    test('renders without crashing', () => {
+      const { container } = render(<UserForm onSubmit={mockOnSubmit} />);
+      expect(container).toBeInTheDocument();
     });
   });
 
-  // Integration Tests
-  describe('Integration Tests', () => {
-    test('should integrate with database', async () => {
-      // Test database integration
-      const testData = { name: 'Test User', email: 'test@example.com' };
-      const result = await saveToDatabase(testData);
-      expect(result.id).toBeDefined();
+  // Validation Tests
+  describe('Form Validation', () => {
+    test('shows error when email is empty', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      const submitButton = screen.getByRole('button', { name: /submit/i });
+      await user.click(submitButton);
+      
+      expect(screen.getByText('Email is required')).toBeInTheDocument();
     });
 
-    test('should handle API requests', async () => {
-      // Test API integration
-      const response = await makeApiRequest('/api/users');
-      expect(response.status).toBe(200);
-      expect(response.data).toBeDefined();
+    test('shows error for invalid email format', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      const emailInput = screen.getByPlaceholderText('Email');
+      await user.type(emailInput, 'invalid-email');
+      
+      const submitButton = screen.getByRole('button', { name: /submit/i });
+      await user.click(submitButton);
+      
+      expect(screen.getByText('Email is invalid')).toBeInTheDocument();
     });
 
-    test('should manage state correctly', () => {
-      // Test state management
-      const initialState = getInitialState();
-      const action = { type: 'UPDATE_USER', payload: { id: '123' } };
-      const newState = reducer(initialState, action);
-      expect(newState.user.id).toBe('123');
+    test('shows error when password is empty', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      const submitButton = screen.getByRole('button', { name: /submit/i });
+      await user.click(submitButton);
+      
+      expect(screen.getByText('Password is required')).toBeInTheDocument();
+    });
+
+    test('shows error for short password', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      const passwordInput = screen.getByPlaceholderText('Password');
+      await user.type(passwordInput, '123');
+      
+      const submitButton = screen.getByRole('button', { name: /submit/i });
+      await user.click(submitButton);
+      
+      expect(screen.getByText('Password must be at least 6 characters')).toBeInTheDocument();
+    });
+
+    test('accepts valid email format', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      const emailInput = screen.getByPlaceholderText('Email');
+      const passwordInput = screen.getByPlaceholderText('Password');
+      
+      await user.type(emailInput, 'test@example.com');
+      await user.type(passwordInput, 'password123');
+      
+      const submitButton = screen.getByRole('button', { name: /submit/i });
+      await user.click(submitButton);
+      
+      expect(screen.queryByText('Email is invalid')).not.toBeInTheDocument();
+    });
+  });
+
+  // User Interaction Tests
+  describe('User Interactions', () => {
+    test('updates email input value', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      const emailInput = screen.getByPlaceholderText('Email');
+      await user.type(emailInput, 'test@example.com');
+      
+      expect(emailInput).toHaveValue('test@example.com');
+    });
+
+    test('updates password input value', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      const passwordInput = screen.getByPlaceholderText('Password');
+      await user.type(passwordInput, 'mypassword');
+      
+      expect(passwordInput).toHaveValue('mypassword');
+    });
+
+    test('clears errors when valid input is entered', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      // First trigger error
+      const submitButton = screen.getByRole('button', { name: /submit/i });
+      await user.click(submitButton);
+      expect(screen.getByText('Email is required')).toBeInTheDocument();
+      
+      // Then fix the error
+      const emailInput = screen.getByPlaceholderText('Email');
+      await user.type(emailInput, 'test@example.com');
+      await user.click(submitButton);
+      
+      expect(screen.queryByText('Email is required')).not.toBeInTheDocument();
+    });
+  });
+
+  // Form Submission Tests
+  describe('Form Submission', () => {
+    test('calls onSubmit with correct data when form is valid', async () => {
+      const user = userEvent.setup();
+      mockOnSubmit.mockResolvedValue({});
+      
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      const emailInput = screen.getByPlaceholderText('Email');
+      const passwordInput = screen.getByPlaceholderText('Password');
+      const submitButton = screen.getByRole('button', { name: /submit/i });
+      
+      await user.type(emailInput, 'test@example.com');
+      await user.type(passwordInput, 'password123');
+      await user.click(submitButton);
+      
+      expect(mockOnSubmit).toHaveBeenCalledWith({
+        email: 'test@example.com',
+        password: 'password123'
+      });
+    });
+
+    test('does not call onSubmit when form is invalid', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      const submitButton = screen.getByRole('button', { name: /submit/i });
+      await user.click(submitButton);
+      
+      expect(mockOnSubmit).not.toHaveBeenCalled();
+    });
+
+    test('handles submission errors gracefully', async () => {
+      const user = userEvent.setup();
+      mockOnSubmit.mockRejectedValue(new Error('Submission failed'));
+      
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      const emailInput = screen.getByPlaceholderText('Email');
+      const passwordInput = screen.getByPlaceholderText('Password');
+      const submitButton = screen.getByRole('button', { name: /submit/i });
+      
+      await user.type(emailInput, 'test@example.com');
+      await user.type(passwordInput, 'password123');
+      await user.click(submitButton);
+      
+      await waitFor(() => {
+        expect(screen.getByText('Failed to submit form')).toBeInTheDocument();
+      });
     });
   });
 
   // Edge Cases
   describe('Edge Cases', () => {
-    test('should handle empty responses', async () => {
-      // Test empty data scenarios
-      const result = await fetchData({ limit: 0 });
-      expect(result.data).toEqual([]);
-      expect(result.total).toBe(0);
+    test('handles extremely long email input', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      const longEmail = 'a'.repeat(100) + '@example.com';
+      const emailInput = screen.getByPlaceholderText('Email');
+      
+      await user.type(emailInput, longEmail);
+      expect(emailInput).toHaveValue(longEmail);
     });
 
-    test('should handle large datasets', async () => {
-      // Test performance with large data
-      const largeDataset = generateLargeDataset(10000);
-      const startTime = Date.now();
-      const result = await processLargeDataset(largeDataset);
-      const endTime = Date.now();
+    test('handles special characters in password', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
       
-      expect(result.processed).toBe(true);
-      expect(endTime - startTime).toBeLessThan(5000); // Should complete within 5 seconds
+      const specialPassword = 'p@ssw0rd!#$';
+      const passwordInput = screen.getByPlaceholderText('Password');
+      
+      await user.type(passwordInput, specialPassword);
+      expect(passwordInput).toHaveValue(specialPassword);
     });
 
-    test('should handle network failures gracefully', async () => {
-      // Mock network failure
-      jest.spyOn(global, 'fetch').mockRejectedValue(new Error('Network error'));
+    test('handles rapid form submissions', async () => {
+      const user = userEvent.setup();
+      mockOnSubmit.mockResolvedValue({});
       
-      const result = await makeNetworkRequest('/api/test');
-      expect(result.error).toBe('Network error');
-      expect(result.data).toBeNull();
-    });
-
-    test('should handle concurrent operations', async () => {
-      // Test concurrent operations
-      const operations = Array.from({ length: 10 }, (_, i) => 
-        performOperation({ id: i })
-      );
+      render(<UserForm onSubmit={mockOnSubmit} />);
       
-      const results = await Promise.all(operations);
-      expect(results).toHaveLength(10);
-      results.forEach(result => {
-        expect(result.success).toBe(true);
-      });
+      const emailInput = screen.getByPlaceholderText('Email');
+      const passwordInput = screen.getByPlaceholderText('Password');
+      const submitButton = screen.getByRole('button', { name: /submit/i });
+      
+      await user.type(emailInput, 'test@example.com');
+      await user.type(passwordInput, 'password123');
+      
+      // Rapid clicks
+      await user.click(submitButton);
+      await user.click(submitButton);
+      await user.click(submitButton);
+      
+      // Should only call once (or handle properly)
+      expect(mockOnSubmit).toHaveBeenCalled();
     });
   });
 
-  // ${techStack.includes('React') ? 'React Component Tests' : 'Framework-Specific Tests'}
-  ${techStack.includes('React') ? `
-  describe('React Component Tests', () => {
-    test('should render component correctly', () => {
-      const { getByTestId } = render(<TestComponent />);
-      expect(getByTestId('test-component')).toBeInTheDocument();
+  // Accessibility Tests
+  describe('Accessibility', () => {
+    test('form is accessible via keyboard navigation', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
+      
+      // Tab through elements
+      await user.tab();
+      expect(screen.getByPlaceholderText('Email')).toHaveFocus();
+      
+      await user.tab();
+      expect(screen.getByPlaceholderText('Password')).toHaveFocus();
+      
+      await user.tab();
+      expect(screen.getByRole('button', { name: /submit/i })).toHaveFocus();
     });
 
-    test('should handle user interactions', () => {
-      const { getByRole } = render(<InteractiveComponent />);
-      const button = getByRole('button');
+    test('error messages are properly associated with inputs', async () => {
+      const user = userEvent.setup();
+      render(<UserForm onSubmit={mockOnSubmit} />);
       
-      fireEvent.click(button);
-      expect(button).toHaveAttribute('aria-pressed', 'true');
-    });
-
-    test('should update state on props change', () => {
-      const { rerender } = render(<StatefulComponent data={[]} />);
-      expect(screen.queryByText('No data')).toBeInTheDocument();
+      const submitButton = screen.getByRole('button', { name: /submit/i });
+      await user.click(submitButton);
       
-      rerender(<StatefulComponent data={[{ id: 1, name: 'Test' }]} />);
-      expect(screen.getByText('Test')).toBeInTheDocument();
-    });
-  });` : `
-  describe('Framework-Specific Tests', () => {
-    test('should handle framework-specific functionality', () => {
-      // Add framework-specific test cases here
-      expect(true).toBeTruthy();
-    });
-  });`}
-
-  // Performance Tests
-  describe('Performance Tests', () => {
-    test('should meet performance benchmarks', async () => {
-      const startTime = performance.now();
-      await performHeavyOperation();
-      const endTime = performance.now();
+      const emailError = screen.getByText('Email is required');
+      const passwordError = screen.getByText('Password is required');
       
-      expect(endTime - startTime).toBeLessThan(1000); // Should complete within 1 second
-    });
-
-    test('should handle memory usage efficiently', () => {
-      const initialMemory = process.memoryUsage().heapUsed;
-      performMemoryIntensiveOperation();
-      const finalMemory = process.memoryUsage().heapUsed;
-      
-      // Memory increase should be reasonable
-      expect(finalMemory - initialMemory).toBeLessThan(50 * 1024 * 1024); // Less than 50MB
+      expect(emailError).toBeInTheDocument();
+      expect(passwordError).toBeInTheDocument();
     });
   });
 });
 
-// Helper functions for testing
-function initializeApp() {
-  return { isReady: true };
-}
+// Additional utility functions for testing
+const createMockUser = (overrides = {}) => ({
+  email: 'test@example.com',
+  password: 'password123',
+  ...overrides
+});
 
-function authenticateUser(user) {
-  return { success: true, user };
-}
-
-function validateInput(data) {
-  const errors = [];
-  if (!data.name) errors.push('Name is required');
-  if (!data.email.includes('@')) errors.push('Valid email required');
-  
+const renderWithMockSubmit = (onSubmit = jest.fn()) => {
   return {
-    isValid: errors.length === 0,
-    errors
+    ...render(<UserForm onSubmit={onSubmit} />),
+    mockOnSubmit: onSubmit
   };
-}
+};
 
-async function saveToDatabase(data) {
-  // Mock database save
-  return { id: Date.now().toString(), ...data };
-}
+// Test data generators
+const generateValidEmails = () => [
+  'test@example.com',
+  'user.name@domain.co.uk',
+  'user+tag@example.org',
+  'user123@test-domain.com'
+];
 
-async function makeApiRequest(url) {
-  // Mock API request
-  return { status: 200, data: { success: true } };
-}
+const generateInvalidEmails = () => [
+  'invalid-email',
+  '@example.com',
+  'user@',
+  'user.example.com',
+  'user @example.com'
+];
+
+export { createMockUser, renderWithMockSubmit, generateValidEmails, generateInvalidEmails };
 `;
-        setTestCases(mockTestCases);
+        
+        setTestCases(generatedTests);
         setLoading(false);
         
         toast({
           title: "Test Cases Generated!",
-          description: `Comprehensive test cases generated for ${projectName}`,
+          description: `Comprehensive ${selectedFramework} test cases generated successfully`,
         });
-      }, 2000);
+      }, 1500);
       
     } catch (error) {
       console.error('Error generating test cases:', error);
@@ -318,49 +513,137 @@ async function makeApiRequest(url) {
   };
 
   const frameworks = [
-    { value: 'jest', label: 'Jest', icon: TestTube },
-    { value: 'vitest', label: 'Vitest', icon: Zap },
-    { value: 'cypress', label: 'Cypress', icon: Play },
-    { value: 'playwright', label: 'Playwright', icon: Database }
+    { value: 'jest', label: 'Jest + React Testing Library', icon: TestTube },
+    { value: 'vitest', label: 'Vitest + React Testing Library', icon: Zap },
+    { value: 'cypress', label: 'Cypress E2E', icon: Play },
+    { value: 'playwright', label: 'Playwright E2E', icon: Database }
   ];
 
   return (
     <div className="space-y-6">
-      <Card className="glass-dark border-white/10">
+      <Card className="bg-zinc-800 border-zinc-700">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-neon-coral to-pink-500 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
               <TestTube className="w-6 h-6 text-white" />
             </div>
             <div>
               <CardTitle className="text-white">TestCaseGen</CardTitle>
-              <CardDescription className="text-gray-400">Generate comprehensive test cases automatically</CardDescription>
+              <CardDescription className="text-zinc-400">Generate comprehensive test cases automatically</CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          <Tabs defaultValue="project" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 glass-dark">
-              <TabsTrigger value="project" className="data-[state=active]:bg-neon-coral/20">Saved Project</TabsTrigger>
-              <TabsTrigger value="code" className="data-[state=active]:bg-neon-coral/20">Raw Code</TabsTrigger>
+          <Tabs defaultValue="code" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-zinc-700">
+              <TabsTrigger value="code" className="data-[state=active]:bg-orange-500/20 data-[state=active]:text-orange-400">Raw Code</TabsTrigger>
+              <TabsTrigger value="project" className="data-[state=active]:bg-orange-500/20 data-[state=active]:text-orange-400">Saved Project</TabsTrigger>
             </TabsList>
+            
+            <TabsContent value="code" className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-medium text-zinc-300">Paste Your Code</label>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setInputCode(`// Example React Component
+import React, { useState } from 'react';
+
+const UserForm = ({ onSubmit }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\\S+@\\S+\\.\\S+/.test(email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (validateForm()) {
+      try {
+        await onSubmit({ email, password });
+      } catch (error) {
+        setErrors({ submit: 'Failed to submit form' });
+      }
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+      />
+      {errors.email && <span className="error">{errors.email}</span>}
+      
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+      />
+      {errors.password && <span className="error">{errors.password}</span>}
+      
+      <button type="submit">Submit</button>
+      {errors.submit && <span className="error">{errors.submit}</span>}
+    </form>
+  );
+};
+
+export default UserForm;`)}
+                    className="bg-orange-500/10 border-orange-500/30 text-orange-400 hover:bg-orange-500/20"
+                  >
+                    <Code className="w-4 h-4 mr-1" />
+                    Load Example
+                  </Button>
+                </div>
+                <Textarea
+                  placeholder="Paste your code here to generate test cases..."
+                  value={inputCode}
+                  onChange={(e) => setInputCode(e.target.value)}
+                  className="min-h-[300px] bg-zinc-700 border-zinc-600 text-white placeholder-zinc-400 font-mono text-sm"
+                />
+              </div>
+            </TabsContent>
             
             <TabsContent value="project" className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">Select Project</label>
+                <label className="text-sm font-medium text-zinc-300">Select Project</label>
                 <Select value={selectedProject} onValueChange={setSelectedProject}>
-                  <SelectTrigger className="glass-dark border-white/20 text-white">
+                  <SelectTrigger className="bg-zinc-700 border-zinc-600 text-white">
                     <SelectValue placeholder="Choose a saved project..." />
                   </SelectTrigger>
-                  <SelectContent className="glass-dark border-white/20">
+                  <SelectContent className="bg-zinc-700 border-zinc-600">
                     {projects.length === 0 ? (
-                      <SelectItem value="no-projects" disabled>No projects found</SelectItem>
+                      <SelectItem value="no-projects" disabled className="text-zinc-400">No projects found</SelectItem>
                     ) : (
                       projects.map((project) => (
-                        <SelectItem key={project.id} value={project.id} className="text-white hover:bg-white/10">
+                        <SelectItem key={project.id} value={project.id} className="text-white hover:bg-zinc-600">
                           <div className="flex flex-col">
-                            <span>{project.project_name}</span>
-                            <span className="text-xs text-gray-400">{project.tech_stack}</span>
+                            <span className="font-medium">{project.project_name}</span>
+                            <span className="text-xs text-zinc-400 truncate max-w-[200px]">
+                              {project.description}
+                            </span>
                           </div>
                         </SelectItem>
                       ))
@@ -369,29 +652,17 @@ async function makeApiRequest(url) {
                 </Select>
               </div>
             </TabsContent>
-            
-            <TabsContent value="code" className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">Paste Your Code</label>
-                <Textarea
-                  placeholder="Paste your code here to generate test cases..."
-                  value={inputCode}
-                  onChange={(e) => setInputCode(e.target.value)}
-                  className="min-h-[200px] glass-dark border-white/20 text-white placeholder-gray-400"
-                />
-              </div>
-            </TabsContent>
           </Tabs>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">Testing Framework</label>
+            <label className="text-sm font-medium text-zinc-300">Testing Framework</label>
             <Select value={selectedFramework} onValueChange={setSelectedFramework}>
-              <SelectTrigger className="glass-dark border-white/20 text-white">
+              <SelectTrigger className="bg-zinc-700 border-zinc-600 text-white">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="glass-dark border-white/20">
+              <SelectContent className="bg-zinc-700 border-zinc-600">
                 {frameworks.map((framework) => (
-                  <SelectItem key={framework.value} value={framework.value} className="text-white hover:bg-white/10">
+                  <SelectItem key={framework.value} value={framework.value} className="text-white hover:bg-zinc-600">
                     <div className="flex items-center gap-2">
                       <framework.icon className="w-4 h-4" />
                       {framework.label}
@@ -405,7 +676,7 @@ async function makeApiRequest(url) {
           <Button 
             onClick={generateTestCases} 
             disabled={loading || (!selectedProject && !inputCode.trim())}
-            className="w-full bg-gradient-to-r from-neon-coral to-pink-500 hover:from-neon-coral/80 hover:to-pink-500/80"
+            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
           >
             {loading ? (
               <>
@@ -423,12 +694,23 @@ async function makeApiRequest(url) {
       </Card>
 
       {testCases && (
-        <Card className="glass-dark border-white/10">
+        <Card className="bg-zinc-800 border-zinc-700">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-emerald-400" />
-              Generated Test Cases
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-emerald-400" />
+                <CardTitle className="text-white">Generated Test Cases</CardTitle>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => copyToClipboard(testCases)}
+                className="bg-zinc-700 border-zinc-600 text-zinc-300 hover:bg-zinc-600"
+              >
+                <Copy className="w-4 h-4 mr-1" />
+                Copy All
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -445,10 +727,14 @@ async function makeApiRequest(url) {
                   <AlertCircle className="w-3 h-3 mr-1" />
                   Edge Cases
                 </Badge>
+                <Badge variant="outline" className="bg-purple-500/20 text-purple-400 border-purple-500/30">
+                  <FileText className="w-3 h-3 mr-1" />
+                  Accessibility
+                </Badge>
               </div>
               
-              <div className="bg-slate-900/50 rounded-lg p-4 border border-white/10">
-                <pre className="text-sm text-gray-300 whitespace-pre-wrap overflow-x-auto">
+              <div className="bg-zinc-900 rounded-lg p-4 border border-zinc-700">
+                <pre className="text-sm text-zinc-300 whitespace-pre-wrap overflow-x-auto">
                   {testCases}
                 </pre>
               </div>
