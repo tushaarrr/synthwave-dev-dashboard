@@ -50,47 +50,223 @@ const StackWizardDashboard = ({
 
   const exportToPDF = async () => {
     try {
-      const html2canvas = (await import('html2canvas')).default;
-      const jsPDF = (await import('jspdf')).default;
-      
-      const element = document.getElementById('stackwizard-dashboard');
-      if (!element) return;
-
-      const canvas = await html2canvas(element, {
-        backgroundColor: '#0a0a0a',
-        scale: 1.5,
-        useCORS: true,
+      toast({
+        title: "Generating PDF...",
+        description: "Creating your development strategy document",
       });
 
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210;
-      const pageHeight = 295;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
+      const jsPDF = (await import('jspdf')).default;
+      const pdf = new jsPDF();
+      let yPos = 30;
 
-      let position = 0;
+      // Title Page
+      pdf.setFontSize(24);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(projectName, 20, yPos);
+      
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('Development Strategy Report', 20, yPos + 15);
+      
+      pdf.setFontSize(12);
+      pdf.text(`Generated: ${new Date().toLocaleDateString()}`, 20, yPos + 30);
+      pdf.text(`Created by: ${user?.email || 'DevSynth AI'}`, 20, yPos + 40);
 
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+      yPos = 90;
 
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+      // Project Description
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('📋 Project Overview', 20, yPos);
+      
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
+      const descLines = pdf.splitTextToSize(projectDescription, 170);
+      pdf.text(descLines, 20, yPos + 10);
+      
+      yPos += 20 + (descLines.length * 5);
+
+      // Requirements
+      if (requirements) {
+        pdf.setFontSize(14);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('🎯 Requirements', 20, yPos);
+        
+        pdf.setFontSize(11);
+        pdf.setFont('helvetica', 'normal');
+        const reqLines = pdf.splitTextToSize(requirements, 170);
+        pdf.text(reqLines, 20, yPos + 10);
+        
+        yPos += 20 + (reqLines.length * 5);
       }
 
-      pdf.save(`${projectName}-strategy-plan.pdf`);
+      // Check if we need a new page
+      if (yPos > 250) {
+        pdf.addPage();
+        yPos = 30;
+      }
+
+      // Technology Stack
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('🛠️ Technology Stack', 20, yPos);
+      
+      const techLines = techStack.split('\n').filter(line => line.trim());
+      let currentCategory = '';
+      
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
+      yPos += 15;
+
+      for (const line of techLines) {
+        const cleanLine = line.replace(/[#*-]/g, '').trim();
+        if (!cleanLine) continue;
+
+        if (cleanLine.toLowerCase().includes('frontend') || 
+            cleanLine.toLowerCase().includes('backend') || 
+            cleanLine.toLowerCase().includes('database') ||
+            cleanLine.toLowerCase().includes('devops')) {
+          
+          if (yPos > 270) {
+            pdf.addPage();
+            yPos = 30;
+          }
+          
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(`• ${cleanLine}`, 25, yPos);
+          pdf.setFont('helvetica', 'normal');
+          yPos += 8;
+        } else if (cleanLine.includes(':')) {
+          const [tech, desc] = cleanLine.split(':');
+          pdf.text(`  - ${tech.trim()}: ${desc.trim()}`, 30, yPos);
+          yPos += 6;
+        }
+
+        if (yPos > 270) {
+          pdf.addPage();
+          yPos = 30;
+        }
+      }
+
+      yPos += 10;
+
+      // Development Timeline
+      if (yPos > 240) {
+        pdf.addPage();
+        yPos = 30;
+      }
+
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('📅 Development Timeline', 20, yPos);
+      
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
+      yPos += 15;
+
+      const timelineLines = timeline.split('\n').filter(line => line.trim());
+      for (const line of timelineLines) {
+        const cleanLine = line.replace(/[#*-]/g, '').trim();
+        if (!cleanLine) continue;
+
+        if (cleanLine.toLowerCase().includes('week')) {
+          if (yPos > 270) {
+            pdf.addPage();
+            yPos = 30;
+          }
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(`${cleanLine}`, 25, yPos);
+          pdf.setFont('helvetica', 'normal');
+          yPos += 8;
+        } else {
+          const wrappedLines = pdf.splitTextToSize(cleanLine, 160);
+          pdf.text(wrappedLines, 30, yPos);
+          yPos += wrappedLines.length * 6;
+        }
+
+        if (yPos > 270) {
+          pdf.addPage();
+          yPos = 30;
+        }
+      }
+
+      yPos += 10;
+
+      // Budget Estimation
+      if (yPos > 240) {
+        pdf.addPage();
+        yPos = 30;
+      }
+
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('💰 Budget Estimation', 20, yPos);
+      
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
+      yPos += 15;
+
+      const budgetItems = [
+        'Development Team (1-2 developers): $8,000 - $15,000/month',
+        'Infrastructure (Hosting, DB, Services): $100 - $500/month',
+        'Third-party Services (APIs, Tools): $200 - $800/month',
+        'Total Project Cost (3-6 months): $25,000 - $95,000'
+      ];
+
+      for (const item of budgetItems) {
+        pdf.text(`• ${item}`, 25, yPos);
+        yPos += 8;
+      }
+
+      yPos += 10;
+
+      // Recommendations
+      if (yPos > 200) {
+        pdf.addPage();
+        yPos = 30;
+      }
+
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('💡 Recommendations & Best Practices', 20, yPos);
+      
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
+      yPos += 15;
+
+      const suggestionLines = suggestions.split('\n').filter(line => line.trim());
+      for (const line of suggestionLines) {
+        const cleanLine = line.replace(/[#*-]/g, '').trim();
+        if (!cleanLine) continue;
+
+        if (yPos > 270) {
+          pdf.addPage();
+          yPos = 30;
+        }
+
+        const wrappedLines = pdf.splitTextToSize(`• ${cleanLine}`, 170);
+        pdf.text(wrappedLines, 25, yPos);
+        yPos += wrappedLines.length * 6 + 3;
+      }
+
+      // Footer on last page
+      const pageCount = pdf.internal.getNumberOfPages();
+      pdf.setPage(pageCount);
+      pdf.setFontSize(8);
+      pdf.setFont('helvetica', 'italic');
+      pdf.text(`Generated by DevSynth AI StackWizard+ | Page ${pageCount}`, 20, 285);
+
+      pdf.save(`${projectName}-development-strategy.pdf`);
       
       toast({
         title: "Success!",
-        description: "Strategy plan exported as PDF",
+        description: "Development strategy exported as PDF document",
       });
     } catch (error) {
+      console.error('PDF export error:', error);
       toast({
         title: "Error",
-        description: "Failed to export PDF",
+        description: "Failed to export PDF document",
         variant: "destructive",
       });
     }

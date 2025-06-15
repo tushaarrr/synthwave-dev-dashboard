@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { useAuth } from "./auth/AuthProvider";
+import { useNavigate, useLocation } from "react-router-dom";
 import { 
   Zap, 
   FileText, 
@@ -8,7 +9,8 @@ import {
   Settings as SettingsIcon, 
   Download,
   LogOut,
-  User
+  User,
+  FolderOpen
 } from "lucide-react";
 
 interface SidebarProps {
@@ -19,6 +21,8 @@ interface SidebarProps {
 const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const modules = [
     { id: 'stackwizard', name: 'StackWizard+', icon: Zap, color: 'text-neon-blue' },
@@ -35,6 +39,12 @@ const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
       console.error('Error signing out:', error);
     }
   };
+
+  const handleProjectsClick = () => {
+    navigate('/projects');
+  };
+
+  const isProjectsActive = location.pathname === '/projects';
 
   return (
     <div className={`glass-dark rounded-2xl p-4 transition-all duration-500 ${isExpanded ? 'w-64' : 'w-20'} animate-slide-in flex flex-col h-full`}>
@@ -54,19 +64,42 @@ const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
       </div>
 
       <nav className="space-y-3 flex-1">
+        {/* Saved Projects */}
+        <button
+          onClick={handleProjectsClick}
+          className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 hover:scale-105 ${
+            isProjectsActive 
+              ? 'glass neon-glow transform scale-105' 
+              : 'hover:bg-white/5'
+          }`}
+        >
+          <FolderOpen className={`w-6 h-6 ${isProjectsActive ? 'text-neon-green animate-glow' : 'text-muted-foreground'}`} />
+          <span className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 font-medium ${
+            isProjectsActive ? 'text-white' : 'text-muted-foreground'
+          }`}>
+            Saved Projects
+          </span>
+        </button>
+
+        {/* Module Separators */}
+        <div className="border-t border-white/10 my-4"></div>
+
         {modules.map((module) => (
           <button
             key={module.id}
-            onClick={() => onModuleChange(module.id)}
+            onClick={() => {
+              navigate('/');
+              onModuleChange(module.id);
+            }}
             className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 hover:scale-105 ${
-              activeModule === module.id 
+              activeModule === module.id && location.pathname === '/' 
                 ? 'glass neon-glow transform scale-105' 
                 : 'hover:bg-white/5'
             }`}
           >
-            <module.icon className={`w-6 h-6 ${activeModule === module.id ? module.color : 'text-muted-foreground'} ${activeModule === module.id ? 'animate-glow' : ''}`} />
+            <module.icon className={`w-6 h-6 ${activeModule === module.id && location.pathname === '/' ? module.color : 'text-muted-foreground'} ${activeModule === module.id && location.pathname === '/' ? 'animate-glow' : ''}`} />
             <span className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 font-medium ${
-              activeModule === module.id ? 'text-white' : 'text-muted-foreground'
+              activeModule === module.id && location.pathname === '/' ? 'text-white' : 'text-muted-foreground'
             }`}>
               {module.name}
             </span>
