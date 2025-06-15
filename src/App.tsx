@@ -12,6 +12,7 @@ import ProjectsPage from "./pages/ProjectsPage";
 import PromptHistoryPage from "./pages/PromptHistoryPage";
 import CodeHistoryPage from "./pages/CodeHistoryPage";
 import SQLHistoryPage from "./pages/SQLHistoryPage";
+import TestCasesPage from "./pages/TestCasesPage";
 import AboutPage from "./pages/AboutPage";
 import FeaturesPage from "./pages/FeaturesPage";
 import PricingPage from "./pages/PricingPage";
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/prompt-history" element={<PromptHistoryPage />} />
             <Route path="/code-history" element={<CodeHistoryPage />} />
             <Route path="/sql-history" element={<SQLHistoryPage />} />
+            <Route path="/test-cases" element={<TestCasesPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/features" element={<FeaturesPage />} />
             <Route path="/pricing" element={<PricingPage />} />
