@@ -40,12 +40,12 @@ const StackWizardDashboard = ({
   const budgetEstimate = planData?.budget_estimate || {};
   const productScope = planData?.product_scope || projectDescription;
 
-  console.log('Processed data:', {
-    techStack: typeof techStack,
-    timeline: typeof timeline,
-    suggestions: typeof suggestions,
-    modules: Array.isArray(modules),
-    bonusModules: Array.isArray(bonusModules),
+  console.log('Processed data for dashboard:', {
+    techStack,
+    timeline,
+    suggestions,
+    modules,
+    bonusModules,
     architecture,
     testingStrategy,
     teamPlan,
@@ -182,7 +182,7 @@ const StackWizardDashboard = ({
       }
 
       // Budget Estimate
-      if (budgetEstimate.total_mvp) {
+      if (budgetEstimate.development || budgetEstimate.total_mvp) {
         if (yPos > 220) {
           pdf.addPage();
           yPos = 30;
@@ -195,8 +195,10 @@ const StackWizardDashboard = ({
 
         pdf.setFontSize(12);
         pdf.setFont('helvetica', 'normal');
-        pdf.text(`Total MVP Cost: ${budgetEstimate.total_mvp}`, 25, yPos);
-        yPos += 10;
+        if (budgetEstimate.total_mvp) {
+          pdf.text(`Total MVP Cost: ${budgetEstimate.total_mvp}`, 25, yPos);
+          yPos += 10;
+        }
 
         if (budgetEstimate.development) {
           pdf.text(`Development Team: ${budgetEstimate.development.team_cost}`, 25, yPos);
@@ -314,16 +316,29 @@ const StackWizardDashboard = ({
 
       <div id="stackwizard-dashboard" className="space-y-12">
         {/* Tech Stack & Core Modules */}
-        <TechStackModule techStack={techStack} modules={modules} bonusModules={bonusModules} />
+        <TechStackModule 
+          techStack={techStack} 
+          modules={modules} 
+          bonusModules={bonusModules} 
+        />
 
         {/* Gantt Timeline */}
-        <GanttTimelineModule timeline={timeline} timelineData={timeline} />
+        <GanttTimelineModule 
+          timeline={timeline} 
+          timelineData={Array.isArray(timeline) ? timeline : []} 
+        />
 
         {/* Budget & Team Planning */}
-        <BudgetEstimationModule budgetEstimate={budgetEstimate} teamPlan={teamPlan} />
+        <BudgetEstimationModule 
+          budgetEstimate={budgetEstimate} 
+          teamPlan={teamPlan} 
+        />
 
         {/* Project Roadmap - Architecture & Testing */}
-        <ProjectRoadmapModule architecture={architecture} testingStrategy={testingStrategy} />
+        <ProjectRoadmapModule 
+          architecture={architecture} 
+          testingStrategy={testingStrategy} 
+        />
 
         {/* Pro Tips */}
         <ProTipsModule suggestions={suggestions} />
