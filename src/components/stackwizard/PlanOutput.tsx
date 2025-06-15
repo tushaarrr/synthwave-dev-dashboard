@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Copy, Download } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Copy, Download, Clock, Zap, Database, Globe, Server, Palette } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 interface PlanOutputProps {
@@ -76,131 +77,229 @@ const PlanOutput = ({ techStack, timeline, ganttChart, suggestions }: PlanOutput
     }
   };
 
-  const formatGanttChart = (ganttText: string) => {
-    const lines = ganttText.split('\n').filter(line => line.trim());
-    const tableRows = lines.filter(line => 
-      line.includes('|') || 
-      line.toLowerCase().includes('task') || 
-      line.toLowerCase().includes('week')
-    );
-    
-    if (tableRows.length === 0) {
-      return <div className="whitespace-pre-wrap">{ganttText}</div>;
-    }
+  const parseTechStack = (stackText: string) => {
+    const categories = {
+      Frontend: { icon: Palette, color: 'bg-blue-500', items: [] as string[] },
+      Backend: { icon: Server, color: 'bg-green-500', items: [] as string[] },
+      Database: { icon: Database, color: 'bg-purple-500', items: [] as string[] },
+      DevOps: { icon: Globe, color: 'bg-orange-500', items: [] as string[] },
+      Other: { icon: Zap, color: 'bg-pink-500', items: [] as string[] }
+    };
 
-    return (
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-b border-white/20">
-              <th className="text-left p-2 text-neon-blue">Task</th>
-              <th className="text-left p-2 text-neon-purple">Start Date</th>
-              <th className="text-left p-2 text-neon-pink">End Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableRows.slice(1).map((row, index) => {
-              const cells = row.split('|').map(cell => cell.trim()).filter(cell => cell);
-              if (cells.length >= 3) {
-                return (
-                  <tr key={index} className="border-b border-white/10">
-                    <td className="p-2">{cells[0]}</td>
-                    <td className="p-2">{cells[1]}</td>
-                    <td className="p-2">{cells[2]}</td>
-                  </tr>
-                );
-              }
-              return null;
-            })}
-          </tbody>
-        </table>
-      </div>
-    );
+    const lines = stackText.split('\n').filter(line => line.trim());
+    let currentCategory = 'Other';
+
+    lines.forEach(line => {
+      const cleanLine = line.replace(/[#*-]/g, '').trim();
+      if (!cleanLine) return;
+
+      if (cleanLine.toLowerCase().includes('frontend') || cleanLine.toLowerCase().includes('ui')) {
+        currentCategory = 'Frontend';
+      } else if (cleanLine.toLowerCase().includes('backend') || cleanLine.toLowerCase().includes('server') || cleanLine.toLowerCase().includes('api')) {
+        currentCategory = 'Backend';
+      } else if (cleanLine.toLowerCase().includes('database') || cleanLine.toLowerCase().includes('db') || cleanLine.toLowerCase().includes('storage')) {
+        currentCategory = 'Database';
+      } else if (cleanLine.toLowerCase().includes('deploy') || cleanLine.toLowerCase().includes('hosting') || cleanLine.toLowerCase().includes('devops')) {
+        currentCategory = 'DevOps';
+      } else if (!Object.keys(categories).some(cat => cleanLine.toLowerCase().includes(cat.toLowerCase()))) {
+        if (cleanLine.includes(':')) {
+          const [tech, desc] = cleanLine.split(':');
+          categories[currentCategory as keyof typeof categories].items.push(tech.trim());
+        } else if (cleanLine.length > 3) {
+          categories[currentCategory as keyof typeof categories].items.push(cleanLine);
+        }
+      }
+    });
+
+    return categories;
   };
 
+  const parseTimeline = (timelineText: string) => {
+    const weeks = [];
+    const lines = timelineText.split('\n').filter(line => line.trim());
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].replace(/[#*-]/g, '').trim();
+      if (line.toLowerCase().includes('week') && line.includes(':')) {
+        const [weekPart, ...taskParts] = line.split(':');
+        const weekNumber = weekPart.match(/\d+/)?.[0] || String(weeks.length + 1);
+        const tasks = taskParts.join(':').trim();
+        weeks.push({
+          week: parseInt(weekNumber),
+          title: `Week ${weekNumber}`,
+          tasks: tasks,
+          progress: Math.min(100, (parseInt(weekNumber) - 1) * 25)
+        });
+      }
+    }
+
+    return weeks.length > 0 ? weeks : [
+      { week: 1, title: 'Week 1', tasks: 'Project Setup & Planning', progress: 0 },
+      { week: 2, title: 'Week 2', tasks: 'Core Development', progress: 25 },
+      { week: 3, title: 'Week 3', tasks: 'Feature Implementation', progress: 50 },
+      { week: 4, title: 'Week 4', tasks: 'Testing & Deployment', progress: 75 }
+    ];
+  };
+
+  const parseSuggestions = (suggestionsText: string) => {
+    const lines = suggestionsText.split('\n').filter(line => line.trim());
+    const suggestions = [];
+    
+    for (const line of lines) {
+      const cleanLine = line.replace(/[#*-]/g, '').trim();
+      if (cleanLine.length > 10) {
+        suggestions.push(cleanLine);
+      }
+    }
+
+    return suggestions.length > 0 ? suggestions : [
+      'Consider implementing CI/CD pipelines from the start',
+      'Set up proper error tracking and monitoring',
+      'Plan for scalability in your architecture'
+    ];
+  };
+
+  const techCategories = parseTechStack(techStack);
+  const timelineData = parseTimeline(timeline);
+  const suggestionsList = parseSuggestions(suggestions);
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-end gap-3 mb-4">
-        <button
-          onClick={copyToClipboard}
-          className="glass-dark rounded-xl px-4 py-2 flex items-center gap-2 hover:scale-105 transition-all duration-300 neon-glow"
-        >
-          <Copy className="w-4 h-4 text-neon-green" />
-          <span className="text-sm font-medium">Copy All</span>
-        </button>
-        <button
-          onClick={exportToPDF}
-          className="glass-dark rounded-xl px-4 py-2 flex items-center gap-2 hover:scale-105 transition-all duration-300 neon-glow"
-        >
-          <Download className="w-4 h-4 text-neon-purple" />
-          <span className="text-sm font-medium">Export PDF</span>
-        </button>
+    <div className="space-y-8">
+      {/* Header Actions */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold font-sora bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink bg-clip-text text-transparent">
+            Your AI-Generated Project Plan
+          </h2>
+          <p className="text-muted-foreground mt-1">Optimized tech stack and development roadmap</p>
+        </div>
+        <div className="flex gap-3">
+          <button
+            onClick={copyToClipboard}
+            className="glass-dark rounded-xl px-4 py-2 flex items-center gap-2 hover:scale-105 transition-all duration-300 neon-glow"
+          >
+            <Copy className="w-4 h-4 text-neon-green" />
+            <span className="text-sm font-medium">Copy All</span>
+          </button>
+          <button
+            onClick={exportToPDF}
+            className="glass-dark rounded-xl px-4 py-2 flex items-center gap-2 hover:scale-105 transition-all duration-300 neon-glow"
+          >
+            <Download className="w-4 h-4 text-neon-purple" />
+            <span className="text-sm font-medium">Export PDF</span>
+          </button>
+        </div>
       </div>
 
-      <div id="stackwizard-output" className="space-y-4">
-        <Card className="glass-dark border-0 animate-fade-in">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold font-sora flex items-center justify-between">
-              Recommended Tech Stack
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-neon-blue text-black animate-glow">
-                AI Optimized
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-muted-foreground whitespace-pre-wrap">
-              {techStack}
-            </div>
-          </CardContent>
-        </Card>
+      <div id="stackwizard-output" className="space-y-8">
+        {/* Tech Stack Grid */}
+        <div className="space-y-4">
+          <h3 className="text-xl font-semibold font-sora flex items-center gap-2">
+            <Zap className="w-5 h-5 text-neon-blue" />
+            Technology Stack
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Object.entries(techCategories).map(([category, data], index) => {
+              const IconComponent = data.icon;
+              if (data.items.length === 0) return null;
+              
+              return (
+                <Card 
+                  key={category} 
+                  className="glass-dark border-0 animate-fade-in hover:scale-[1.02] transition-all duration-300"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                      <IconComponent className="w-4 h-4" />
+                      {category}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="flex flex-wrap gap-2">
+                      {data.items.slice(0, 6).map((item, itemIndex) => (
+                        <Badge 
+                          key={itemIndex}
+                          variant="secondary"
+                          className="text-xs bg-white/10 hover:bg-white/20 transition-colors"
+                        >
+                          {item}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
 
-        <Card className="glass-dark border-0 animate-fade-in" style={{ animationDelay: '100ms' }}>
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold font-sora flex items-center justify-between">
-              Development Timeline
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-neon-green text-black animate-glow">
-                4 Weeks
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-muted-foreground whitespace-pre-wrap">
-              {timeline}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="glass-dark border-0 animate-fade-in" style={{ animationDelay: '200ms' }}>
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold font-sora flex items-center justify-between">
-              Gantt Chart
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-neon-purple text-black animate-glow">
-                Schedule
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-muted-foreground">
-              {formatGanttChart(ganttChart)}
-            </div>
-          </CardContent>
-        </Card>
-
+        {/* Timeline Gantt Chart */}
         <Card className="glass-dark border-0 animate-fade-in" style={{ animationDelay: '300ms' }}>
           <CardHeader>
-            <CardTitle className="text-lg font-semibold font-sora flex items-center justify-between">
-              Suggestions
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-neon-orange text-black animate-glow">
-                Pro Tips
-              </span>
+            <CardTitle className="text-xl font-semibold font-sora flex items-center gap-2">
+              <Clock className="w-5 h-5 text-neon-green" />
+              Development Timeline
+              <Badge variant="secondary" className="ml-auto bg-neon-green text-black">
+                4 Weeks
+              </Badge>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-muted-foreground whitespace-pre-wrap">
-              {suggestions}
+            <div className="space-y-6">
+              {timelineData.map((week, index) => (
+                <div key={week.week} className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <Badge 
+                        variant="outline" 
+                        className="bg-neon-blue/20 border-neon-blue text-neon-blue"
+                      >
+                        {week.title}
+                      </Badge>
+                      <span className="text-sm text-muted-foreground">{week.tasks}</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">{week.progress}% complete</span>
+                  </div>
+                  <div className="relative">
+                    <div className="w-full bg-white/10 rounded-full h-2">
+                      <div 
+                        className="bg-gradient-to-r from-neon-blue to-neon-purple h-2 rounded-full transition-all duration-1000 ease-out"
+                        style={{ 
+                          width: `${week.progress}%`,
+                          animationDelay: `${index * 200}ms`
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
+
+        {/* Suggestions Grid */}
+        <div className="space-y-4">
+          <h3 className="text-xl font-semibold font-sora flex items-center gap-2">
+            <Zap className="w-5 h-5 text-neon-orange" />
+            Pro Tips & Recommendations
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {suggestionsList.map((suggestion, index) => (
+              <Card 
+                key={index}
+                className="glass-dark border-0 animate-fade-in hover:scale-[1.02] transition-all duration-300 border-l-4 border-l-neon-orange"
+                style={{ animationDelay: `${(index + 4) * 100}ms` }}
+              >
+                <CardContent className="p-4">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {suggestion}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
