@@ -25,8 +25,11 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-neon-blue"></div>
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="relative">
+          <div className="w-20 h-20 border-4 border-violet-500/30 border-t-violet-400 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-blue-400 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+        </div>
       </div>
     );
   }
@@ -54,8 +57,23 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="flex h-screen">
+    <div className="min-h-screen bg-black text-white">
+      {/* Animated Background */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-950/20 via-black to-blue-950/20"></div>
+        <div 
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px'
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 flex h-screen">
         <Sidebar 
           activeModule={activeModule} 
           onModuleChange={setActiveModule}
@@ -64,9 +82,11 @@ const Dashboard = () => {
         />
         <div className="flex-1 flex flex-col overflow-hidden">
           <TopNav activeModule={activeModule} />
-          <div className="flex-1 p-6 overflow-auto">
-            <div className="animate-fade-in">
-              {renderModule()}
+          <div className="flex-1 p-8 overflow-auto">
+            <div className="max-w-7xl mx-auto">
+              <div className="animate-fade-in">
+                {renderModule()}
+              </div>
             </div>
           </div>
         </div>

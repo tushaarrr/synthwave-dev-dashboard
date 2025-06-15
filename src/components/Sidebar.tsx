@@ -6,15 +6,15 @@ import {
   Zap, 
   FileText, 
   Code, 
-  Settings as SettingsIcon, 
+  Database, 
   Download,
   FolderOpen,
   History,
   CodeXml,
-  Database,
   ChevronLeft,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Activity
 } from "lucide-react";
 
 interface SidebarProps {
@@ -29,18 +29,72 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
   const location = useLocation();
 
   const modules = [
-    { id: 'stackwizard', name: 'StackWizard+', icon: Zap, color: 'text-neon-blue' },
-    { id: 'promptrefiner', name: 'PromptRefiner', icon: FileText, color: 'text-neon-purple' },
-    { id: 'codelens', name: 'CodeLens', icon: Code, color: 'text-neon-green' },
-    { id: 'sqldoctor', name: 'SQLDoctor', icon: SettingsIcon, color: 'text-neon-orange' },
-    { id: 'testcasegen', name: 'TestCaseGen', icon: Download, color: 'text-neon-pink' },
+    { 
+      id: 'stackwizard', 
+      name: 'StackWizard+', 
+      icon: Zap, 
+      gradient: 'from-violet-500 to-purple-600',
+      description: 'Tech stack & roadmap generation'
+    },
+    { 
+      id: 'promptrefiner', 
+      name: 'PromptRefiner', 
+      icon: FileText, 
+      gradient: 'from-blue-500 to-cyan-600',
+      description: 'AI prompt optimization'
+    },
+    { 
+      id: 'codelens', 
+      name: 'CodeLens', 
+      icon: Code, 
+      gradient: 'from-emerald-500 to-teal-600',
+      description: 'Code analysis & insights'
+    },
+    { 
+      id: 'sqldoctor', 
+      name: 'SQLDoctor', 
+      icon: Database, 
+      gradient: 'from-orange-500 to-red-500',
+      description: 'SQL optimization & debugging'
+    },
+    { 
+      id: 'testcasegen', 
+      name: 'TestCaseGen', 
+      icon: Download, 
+      gradient: 'from-pink-500 to-rose-600',
+      description: 'Automated test generation'
+    },
   ];
 
-  const historyRoutes = [
-    { path: '/projects', name: 'Projects', icon: FolderOpen, color: 'text-neon-green' },
-    { path: '/prompt-history', name: 'Prompt History', icon: History, color: 'text-neon-purple' },
-    { path: '/code-history', name: 'Code History', icon: CodeXml, color: 'text-neon-green' },
-    { path: '/sql-history', name: 'SQL History', icon: Database, color: 'text-neon-orange' },
+  const workspaceRoutes = [
+    { 
+      path: '/projects', 
+      name: 'Projects', 
+      icon: FolderOpen, 
+      gradient: 'from-emerald-500 to-green-600',
+      description: 'Manage your projects'
+    },
+    { 
+      path: '/prompt-history', 
+      name: 'Prompt History', 
+      icon: History, 
+      gradient: 'from-blue-500 to-indigo-600',
+      description: 'View prompt refinements'
+    },
+    { 
+      path: '/code-history', 
+      name: 'Code History', 
+      icon: CodeXml, 
+      gradient: 'from-emerald-500 to-teal-600',
+      description: 'Track code analysis'
+    },
+    { 
+      path: '/sql-history', 
+      name: 'SQL History', 
+      icon: Database, 
+      gradient: 'from-orange-500 to-amber-600',
+      description: 'SQL analysis history'
+    },
   ];
 
   const handleModuleClick = (moduleId: string) => {
@@ -51,22 +105,28 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
   const isOnDashboard = location.pathname === '/dashboard';
 
   return (
-    <div className={`glass-dark border-r border-white/10 transition-all duration-300 flex flex-col h-full relative ${
-      collapsed ? 'w-16' : 'w-64'
+    <div className={`relative backdrop-blur-xl bg-black/20 border-r border-white/10 transition-all duration-500 flex flex-col h-full ${
+      collapsed ? 'w-20' : 'w-80'
     }`}>
+      {/* Glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-b from-violet-500/5 via-transparent to-blue-500/5 pointer-events-none"></div>
+      
       {/* Header */}
-      <div className="p-4 border-b border-white/10">
+      <div className="relative p-6 border-b border-white/10">
         <div className="flex items-center justify-between">
           {!collapsed && (
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-neon-blue to-neon-purple rounded-lg flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white animate-glow" />
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="w-12 h-12 bg-gradient-to-r from-violet-500 to-blue-500 rounded-2xl flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-white" />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-blue-500 rounded-2xl blur opacity-50 animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-lg font-bold font-sora bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold font-sora bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
                   DevSynth AI
                 </h1>
-                <p className="text-xs text-muted-foreground">Developer Suite</p>
+                <p className="text-xs text-gray-400 font-medium">Developer Suite</p>
               </div>
             </div>
           )}
@@ -74,12 +134,12 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
           {onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
-              className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+              className="relative p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-110 group"
             >
               {collapsed ? (
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
               ) : (
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
               )}
             </button>
           )}
@@ -87,88 +147,128 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-6">
+      <nav className="flex-1 p-6 space-y-8 overflow-y-auto">
         {/* AI Modules */}
         <div>
           {!collapsed && (
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <Activity className="w-3 h-3" />
               AI Modules
             </h3>
           )}
-          <div className="space-y-1">
+          <div className="space-y-2">
             {modules.map((module) => (
               <button
                 key={module.id}
                 onClick={() => handleModuleClick(module.id)}
-                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:scale-105 group ${
+                className={`group relative w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 hover:scale-105 ${
                   activeModule === module.id && isOnDashboard
-                    ? 'bg-gradient-to-r from-white/10 to-white/5 border border-white/10 shadow-lg' 
-                    : 'hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-white/10 to-white/5 border border-white/20 shadow-2xl' 
+                    : 'hover:bg-white/5 border border-transparent hover:border-white/10'
                 }`}
                 title={collapsed ? module.name : undefined}
               >
-                <module.icon 
-                  className={`w-5 h-5 transition-colors ${
-                    activeModule === module.id && isOnDashboard 
-                      ? `${module.color} animate-glow` 
-                      : 'text-muted-foreground group-hover:text-white'
-                  }`} 
-                />
-                {!collapsed && (
-                  <span className={`font-medium transition-colors ${
-                    activeModule === module.id && isOnDashboard 
-                      ? 'text-white' 
-                      : 'text-muted-foreground group-hover:text-white'
-                  }`}>
-                    {module.name}
-                  </span>
+                {/* Glow effect for active module */}
+                {activeModule === module.id && isOnDashboard && (
+                  <div className={`absolute inset-0 bg-gradient-to-r ${module.gradient}/10 rounded-2xl`}></div>
                 )}
-                {!collapsed && activeModule === module.id && isOnDashboard && (
-                  <div className="ml-auto w-2 h-2 bg-neon-blue rounded-full animate-pulse"></div>
-                )}
+                
+                <div className="relative z-10 flex items-center gap-4 w-full">
+                  <div className={`relative p-3 rounded-xl bg-gradient-to-br ${module.gradient}/20 group-hover:scale-110 transition-transform duration-300`}>
+                    <module.icon 
+                      className={`w-5 h-5 transition-colors ${
+                        activeModule === module.id && isOnDashboard 
+                          ? 'text-white' 
+                          : 'text-gray-400 group-hover:text-white'
+                      }`} 
+                    />
+                    {activeModule === module.id && isOnDashboard && (
+                      <div className={`absolute inset-0 bg-gradient-to-br ${module.gradient}/30 rounded-xl blur`}></div>
+                    )}
+                  </div>
+                  
+                  {!collapsed && (
+                    <div className="flex-1 text-left">
+                      <div className={`font-semibold transition-colors ${
+                        activeModule === module.id && isOnDashboard 
+                          ? 'text-white' 
+                          : 'text-gray-300 group-hover:text-white'
+                      }`}>
+                        {module.name}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {module.description}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {!collapsed && activeModule === module.id && isOnDashboard && (
+                    <div className="w-2 h-2 bg-gradient-to-r from-violet-400 to-blue-400 rounded-full animate-pulse"></div>
+                  )}
+                </div>
               </button>
             ))}
           </div>
         </div>
 
-        {/* History & Projects */}
+        {/* Workspace */}
         <div>
           {!collapsed && (
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <FolderOpen className="w-3 h-3" />
               Workspace
             </h3>
           )}
-          <div className="space-y-1">
-            {historyRoutes.map((route) => (
+          <div className="space-y-2">
+            {workspaceRoutes.map((route) => (
               <button
                 key={route.path}
                 onClick={() => navigate(route.path)}
-                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:scale-105 group ${
+                className={`group relative w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-500 hover:scale-105 ${
                   location.pathname === route.path
-                    ? 'bg-gradient-to-r from-white/10 to-white/5 border border-white/10 shadow-lg' 
-                    : 'hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-white/10 to-white/5 border border-white/20 shadow-2xl' 
+                    : 'hover:bg-white/5 border border-transparent hover:border-white/10'
                 }`}
                 title={collapsed ? route.name : undefined}
               >
-                <route.icon 
-                  className={`w-5 h-5 transition-colors ${
-                    location.pathname === route.path 
-                      ? `${route.color} animate-glow` 
-                      : 'text-muted-foreground group-hover:text-white'
-                  }`} 
-                />
-                {!collapsed && (
-                  <span className={`font-medium transition-colors ${
-                    location.pathname === route.path 
-                      ? 'text-white' 
-                      : 'text-muted-foreground group-hover:text-white'
-                  }`}>
-                    {route.name}
-                  </span>
+                {/* Glow effect for active route */}
+                {location.pathname === route.path && (
+                  <div className={`absolute inset-0 bg-gradient-to-r ${route.gradient}/10 rounded-2xl`}></div>
                 )}
-                {!collapsed && location.pathname === route.path && (
-                  <div className="ml-auto w-2 h-2 bg-neon-green rounded-full animate-pulse"></div>
-                )}
+                
+                <div className="relative z-10 flex items-center gap-4 w-full">
+                  <div className={`relative p-3 rounded-xl bg-gradient-to-br ${route.gradient}/20 group-hover:scale-110 transition-transform duration-300`}>
+                    <route.icon 
+                      className={`w-5 h-5 transition-colors ${
+                        location.pathname === route.path 
+                          ? 'text-white' 
+                          : 'text-gray-400 group-hover:text-white'
+                      }`} 
+                    />
+                    {location.pathname === route.path && (
+                      <div className={`absolute inset-0 bg-gradient-to-br ${route.gradient}/30 rounded-xl blur`}></div>
+                    )}
+                  </div>
+                  
+                  {!collapsed && (
+                    <div className="flex-1 text-left">
+                      <div className={`font-semibold transition-colors ${
+                        location.pathname === route.path 
+                          ? 'text-white' 
+                          : 'text-gray-300 group-hover:text-white'
+                      }`}>
+                        {route.name}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {route.description}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {!collapsed && location.pathname === route.path && (
+                    <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-green-400 rounded-full animate-pulse"></div>
+                  )}
+                </div>
               </button>
             ))}
           </div>
@@ -177,13 +277,19 @@ const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleColl
 
       {/* Status Indicator */}
       {!collapsed && (
-        <div className="p-4 border-t border-white/10">
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-neon-green/10 to-neon-blue/10 border border-neon-green/20">
-            <div className="w-2 h-2 bg-neon-green rounded-full animate-pulse"></div>
-            <div className="flex-1">
-              <div className="text-sm font-medium text-neon-green">System Online</div>
-              <div className="text-xs text-muted-foreground">All modules operational</div>
+        <div className="p-6 border-t border-white/10">
+          <div className="relative p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-green-500/10 to-teal-500/10 border border-emerald-500/20 backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+                <div className="absolute inset-0 w-3 h-3 bg-emerald-400 rounded-full blur animate-pulse"></div>
+              </div>
+              <div className="flex-1">
+                <div className="text-sm font-semibold text-emerald-400">System Online</div>
+                <div className="text-xs text-gray-400">All modules operational</div>
+              </div>
             </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-green-500/5 rounded-2xl"></div>
           </div>
         </div>
       )}
