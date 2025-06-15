@@ -193,11 +193,11 @@ export const useStackWizard = () => {
 
       setResult(planData);
 
-      // Save to Supabase with new columns - fix the user_id column name
+      // Save to Supabase with new columns - using the correct column name from the schema
       const { error: saveError } = await supabase
         .from('plans')
         .insert({
-          user_id: user.id,
+          user_id: user.id, // This should match the actual column name in the database
           project_name: projectName,
           description,
           requirements,
