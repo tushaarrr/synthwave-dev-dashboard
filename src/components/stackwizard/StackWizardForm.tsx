@@ -11,9 +11,9 @@ interface StackWizardFormProps {
 }
 
 const StackWizardForm = ({ onSubmit, isLoading }: StackWizardFormProps) => {
-  const [projectName, setProjectName] = useState('');
-  const [description, setDescription] = useState('');
-  const [requirements, setRequirements] = useState('');
+  const [projectName, setProjectName] = useState('TaskFlow Pro');
+  const [description, setDescription] = useState('A collaborative project management SaaS that helps remote teams track tasks, manage deadlines, and communicate effectively. Features include real-time collaboration, automated reporting, team analytics, and integrations with popular tools like Slack and GitHub.');
+  const [requirements, setRequirements] = useState('Real-time updates, user authentication, file uploads, payment processing, mobile responsive, REST API');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
