@@ -2,156 +2,149 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Slider } from '@/components/ui/slider';
-import { DollarSign, Users, Server, TrendingUp } from 'lucide-react';
+import { DollarSign, Users, Calendar, TrendingUp } from 'lucide-react';
 
-const BudgetEstimationModule = () => {
-  const [teamSize, setTeamSize] = React.useState([2]);
-  const [projectDuration, setProjectDuration] = React.useState([3]);
-
-  const calculateCosts = () => {
-    const devCostPerMonth = 8000; // Average developer cost
-    const infraBaseCost = 100; // Base infrastructure cost
-    const infraScaling = teamSize[0] * 50; // Scaling factor
-    
-    const totalDevCost = teamSize[0] * devCostPerMonth * projectDuration[0];
-    const monthlyInfraCost = infraBaseCost + infraScaling;
-    const totalInfraCost = monthlyInfraCost * projectDuration[0];
-    
-    return {
-      totalDevCost,
-      monthlyInfraCost,
-      totalInfraCost,
-      totalProjectCost: totalDevCost + totalInfraCost
-    };
+interface BudgetEstimate {
+  development: {
+    team_cost: string;
+    duration: string;
+    total: string;
   };
+  infrastructure: {
+    hosting: string;
+    ai_services: string;
+    third_party: string;
+    total_monthly: string;
+  };
+  total_project: string;
+}
 
-  const costs = calculateCosts();
+interface TeamRole {
+  role: string;
+  responsibilities: string;
+}
 
-  const teamStructures = [
-    { size: 1, title: 'Solo Developer', roles: ['Full-stack Developer'], cost: costs.totalDevCost / teamSize[0] },
-    { size: 2, title: 'Small Team', roles: ['Frontend Dev', 'Backend Dev'], cost: costs.totalDevCost },
-    { size: 3, title: 'Core Team', roles: ['Frontend Dev', 'Backend Dev', 'DevOps'], cost: costs.totalDevCost * 1.5 },
-    { size: 5, title: 'Full Team', roles: ['Frontend Dev', 'Backend Dev', 'DevOps', 'Designer', 'PM'], cost: costs.totalDevCost * 2.5 }
-  ];
+interface TeamPlan {
+  roles: TeamRole[];
+  team_size: string;
+  duration: string;
+}
 
+interface BudgetEstimationModuleProps {
+  budgetEstimate: BudgetEstimate;
+  teamPlan: TeamPlan;
+}
+
+const BudgetEstimationModule = ({ budgetEstimate, teamPlan }: BudgetEstimationModuleProps) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Budget Calculator */}
+    <div className="grid md:grid-cols-2 gap-6">
+      {/* Budget Estimation */}
       <Card className="glass-dark border-0 animate-fade-in" style={{ animationDelay: '300ms' }}>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <DollarSign className="w-6 h-6 text-neon-orange" />
+            <DollarSign className="w-6 h-6 text-neon-green" />
             <div>
-              <div className="text-xl font-bold font-sora">Budget Estimation</div>
-              <div className="text-sm text-muted-foreground">Interactive cost calculator</div>
+              <div className="text-2xl font-bold font-sora">Budget Estimation</div>
+              <div className="text-sm text-muted-foreground">Project cost breakdown</div>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <div>
-              <div className="flex justify-between mb-2">
-                <label className="text-sm font-medium">Team Size</label>
-                <Badge variant="secondary">{teamSize[0]} developers</Badge>
-              </div>
-              <Slider
-                value={teamSize}
-                onValueChange={setTeamSize}
-                max={10}
-                min={1}
-                step={1}
-                className="w-full"
-              />
+          {budgetEstimate?.total_project && (
+            <div className="text-center p-4 rounded-lg bg-neon-green/10 border border-neon-green/20">
+              <div className="text-3xl font-bold text-neon-green">{budgetEstimate.total_project}</div>
+              <div className="text-sm text-muted-foreground mt-1">Total Project Cost</div>
             </div>
-            
-            <div>
-              <div className="flex justify-between mb-2">
-                <label className="text-sm font-medium">Project Duration</label>
-                <Badge variant="secondary">{projectDuration[0]} months</Badge>
-              </div>
-              <Slider
-                value={projectDuration}
-                onValueChange={setProjectDuration}
-                max={12}
-                min={1}
-                step={1}
-                className="w-full"
-              />
-            </div>
-          </div>
+          )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30">
-              <div className="flex items-center gap-2 mb-1">
-                <Users className="w-4 h-4 text-green-400" />
-                <span className="text-xs text-green-400">Development</span>
+          {budgetEstimate?.development && (
+            <div className="space-y-3">
+              <h4 className="font-semibold text-neon-coral">Development Costs</h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Team Cost:</span>
+                  <span className="font-medium">{budgetEstimate.development.team_cost}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Duration:</span>
+                  <span className="font-medium">{budgetEstimate.development.duration}</span>
+                </div>
+                <div className="flex justify-between border-t border-white/10 pt-2">
+                  <span>Development Total:</span>
+                  <span className="font-bold text-neon-green">{budgetEstimate.development.total}</span>
+                </div>
               </div>
-              <div className="text-lg font-bold">${costs.totalDevCost.toLocaleString()}</div>
             </div>
-            
-            <div className="p-4 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30">
-              <div className="flex items-center gap-2 mb-1">
-                <Server className="w-4 h-4 text-blue-400" />
-                <span className="text-xs text-blue-400">Infrastructure</span>
-              </div>
-              <div className="text-lg font-bold">${costs.monthlyInfraCost}/mo</div>
-            </div>
-          </div>
+          )}
 
-          <div className="p-4 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-purple-400" />
-                <span className="font-semibold">Total Project Cost</span>
-              </div>
-              <div className="text-xl font-bold text-purple-400">
-                ${costs.totalProjectCost.toLocaleString()}
+          {budgetEstimate?.infrastructure && (
+            <div className="space-y-3">
+              <h4 className="font-semibold text-neon-blue">Infrastructure (Monthly)</h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Hosting:</span>
+                  <span className="font-medium">{budgetEstimate.infrastructure.hosting}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>AI Services:</span>
+                  <span className="font-medium">{budgetEstimate.infrastructure.ai_services}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Third Party:</span>
+                  <span className="font-medium">{budgetEstimate.infrastructure.third_party}</span>
+                </div>
+                <div className="flex justify-between border-t border-white/10 pt-2">
+                  <span>Monthly Total:</span>
+                  <span className="font-bold text-neon-blue">{budgetEstimate.infrastructure.total_monthly}</span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
 
-      {/* Team Structure */}
-      <Card className="glass-dark border-0 animate-fade-in" style={{ animationDelay: '400ms' }}>
+      {/* Team Planning */}
+      <Card className="glass-dark border-0 animate-fade-in" style={{ animationDelay: '350ms' }}>
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
-            <Users className="w-6 h-6 text-neon-purple" />
+            <Users className="w-6 h-6 text-neon-coral" />
             <div>
-              <div className="text-xl font-bold font-sora">Team Planning</div>
-              <div className="text-sm text-muted-foreground">Recommended team structures</div>
+              <div className="text-2xl font-bold font-sora">Team Planning</div>
+              <div className="text-sm text-muted-foreground">Recommended team structure</div>
             </div>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {teamStructures.map((team, index) => (
-            <div 
-              key={team.size}
-              className={`p-4 rounded-lg border transition-all duration-200 hover:scale-[1.02] ${
-                teamSize[0] === team.size 
-                  ? 'border-neon-purple bg-purple-500/20' 
-                  : 'border-white/10 bg-white/5 hover:bg-white/10'
-              }`}
-            >
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <h4 className="font-semibold">{team.title}</h4>
-                  <div className="text-xs text-muted-foreground">{team.size} team members</div>
-                </div>
-                <Badge variant="outline" className="text-xs">
-                  ${Math.round(team.cost / 1000)}k
-                </Badge>
+        <CardContent className="space-y-6">
+          {teamPlan?.team_size && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-3 rounded-lg bg-neon-coral/10 border border-neon-coral/20">
+                <div className="text-xl font-bold text-neon-coral">{teamPlan.team_size}</div>
+                <div className="text-xs text-muted-foreground">Team Size</div>
               </div>
-              <div className="flex flex-wrap gap-1">
-                {team.roles.map((role) => (
-                  <Badge key={role} variant="secondary" className="text-xs bg-white/10">
-                    {role}
-                  </Badge>
+              <div className="text-center p-3 rounded-lg bg-neon-orange/10 border border-neon-orange/20">
+                <div className="text-xl font-bold text-neon-orange">{teamPlan.duration}</div>
+                <div className="text-xs text-muted-foreground">Duration</div>
+              </div>
+            </div>
+          )}
+
+          {teamPlan?.roles && teamPlan.roles.length > 0 && (
+            <div className="space-y-4">
+              <h4 className="font-semibold text-neon-yellow">Team Roles</h4>
+              <div className="space-y-3">
+                {teamPlan.roles.map((role, index) => (
+                  <div key={index} className="p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-neon-purple/20 border-neon-purple text-neon-purple">
+                        {role.role}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{role.responsibilities}</p>
+                  </div>
                 ))}
               </div>
             </div>
-          ))}
+          )}
         </CardContent>
       </Card>
     </div>

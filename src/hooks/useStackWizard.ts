@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -110,11 +111,38 @@ export const useStackWizard = () => {
           tech_stack: data.tech_stack,
           modules: data.modules || [],
           bonus_modules: data.bonus_modules || [],
-          architecture: data.architecture || {},
-          testing_strategy: data.testing_strategy || {},
+          architecture: data.architecture || {
+            pattern: '',
+            reason: '',
+            api_style: '',
+            api_reason: '',
+            database_type: '',
+            database_reason: ''
+          },
+          testing_strategy: data.testing_strategy || {
+            types: [],
+            tools: {}
+          },
           timeline: data.timeline || [],
-          team_plan: data.team_plan || {},
-          budget_estimate: data.budget_estimate || {},
+          team_plan: data.team_plan || {
+            roles: [],
+            team_size: '',
+            duration: ''
+          },
+          budget_estimate: data.budget_estimate || {
+            development: {
+              team_cost: '',
+              duration: '',
+              total: ''
+            },
+            infrastructure: {
+              hosting: '',
+              ai_services: '',
+              third_party: '',
+              total_monthly: ''
+            },
+            total_project: ''
+          },
           suggestions: data.suggestions || []
         };
       } else {
@@ -124,11 +152,38 @@ export const useStackWizard = () => {
           tech_stack: data.techStack || data.tech_stack,
           modules: [],
           bonus_modules: [],
-          architecture: {},
-          testing_strategy: {},
+          architecture: {
+            pattern: '',
+            reason: '',
+            api_style: '',
+            api_reason: '',
+            database_type: '',
+            database_reason: ''
+          },
+          testing_strategy: {
+            types: [],
+            tools: {}
+          },
           timeline: [],
-          team_plan: {},
-          budget_estimate: {},
+          team_plan: {
+            roles: [],
+            team_size: '',
+            duration: ''
+          },
+          budget_estimate: {
+            development: {
+              team_cost: '',
+              duration: '',
+              total: ''
+            },
+            infrastructure: {
+              hosting: '',
+              ai_services: '',
+              third_party: '',
+              total_monthly: ''
+            },
+            total_project: ''
+          },
           suggestions: typeof data.suggestions === 'string' ? [data.suggestions] : (data.suggestions || []),
           // Keep legacy fields for backward compatibility
           techStack: data.techStack,
@@ -138,7 +193,7 @@ export const useStackWizard = () => {
 
       setResult(planData);
 
-      // Save to Supabase with new columns
+      // Save to Supabase with new columns - fix the user_id column name
       const { error: saveError } = await supabase
         .from('plans')
         .insert({

@@ -6,8 +6,16 @@ import { Progress } from '@/components/ui/progress';
 import { Clock, ChevronDown, ChevronRight, CheckCircle, AlertCircle } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
+interface TimelineWeek {
+  week: number;
+  title: string;
+  tasks: string[];
+  progress: number;
+}
+
 interface GanttTimelineModuleProps {
   timeline: string;
+  timelineData?: TimelineWeek[];
 }
 
 interface Task {
@@ -22,10 +30,43 @@ interface Task {
   status: 'pending' | 'in-progress' | 'completed';
 }
 
-const GanttTimelineModule = ({ timeline }: GanttTimelineModuleProps) => {
+const GanttTimelineModule = ({ timeline, timelineData }: GanttTimelineModuleProps) => {
   const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
 
   const parseTimeline = (timelineText: string): Task[] => {
+    // If we have structured timeline data, use that instead
+    if (timelineData && timelineData.length > 0) {
+      return timelineData.map((week, index) => {
+        const baseDate = new Date();
+        const startDate = new Date(baseDate);
+        startDate.setDate(baseDate.getDate() + ((week.week - 1) * 7));
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6);
+
+        return {
+          id: `week-${week.week}`,
+          name: week.title,
+          duration: '7 days',
+          progress: week.progress || Math.min(100, (week.week - 1) * 25),
+          startDate: startDate.toLocaleDateString(),
+          endDate: endDate.toLocaleDateString(),
+          dependencies: week.week > 1 ? [`week-${week.week - 1}`] : [],
+          status: week.week === 1 ? 'in-progress' : week.week <= 2 ? 'pending' : 'completed',
+          subtasks: week.tasks.map((task, taskIndex) => ({
+            id: `${week.week}-${taskIndex}`,
+            name: task,
+            duration: '2-3 days',
+            progress: week.week === 1 ? 50 : 0,
+            startDate: startDate.toLocaleDateString(),
+            endDate: new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+            dependencies: [],
+            status: 'pending' as const
+          }))
+        };
+      });
+    }
+
+    // Fallback to text parsing
     const tasks: Task[] = [];
     const lines = timelineText.split('\n').filter(line => line.trim());
     
