@@ -130,31 +130,33 @@ const LandingPage = () => {
   return (
     <PageTransition>
       <div className="min-h-screen bg-zinc-900 text-white overflow-x-hidden relative">
-        {/* Prominent 3D Ring Animation */}
-        <FloatingGeometry scrollY={scrollY} />
+        {/* Prominent 3D Ring Animation - positioned higher in z-index */}
+        <div className="fixed inset-0 z-10 pointer-events-none">
+          <FloatingGeometry scrollY={scrollY} />
+        </div>
 
         {/* Clean Solid Background */}
         <div className="fixed inset-0 z-0 bg-zinc-900">
-          {/* Subtle ambient lighting effects only */}
+          {/* Minimal ambient lighting effects */}
           <motion.div 
-            className="absolute top-1/3 left-1/4 w-96 h-96 bg-orange-200/10 rounded-full blur-3xl"
+            className="absolute top-1/3 left-1/4 w-96 h-96 bg-orange-200/5 rounded-full blur-3xl"
             animate={{ 
               scale: [1, 1.2, 1],
-              opacity: [0.1, 0.15, 0.1]
+              opacity: [0.05, 0.08, 0.05]
             }}
             transition={{ duration: 8, repeat: Infinity }}
           />
           <motion.div 
-            className="absolute bottom-1/3 right-1/4 w-[28rem] h-[28rem] bg-orange-300/8 rounded-full blur-3xl"
+            className="absolute bottom-1/3 right-1/4 w-[28rem] h-[28rem] bg-orange-300/4 rounded-full blur-3xl"
             animate={{ 
               scale: [1.1, 0.9, 1.1],
-              opacity: [0.08, 0.12, 0.08]
+              opacity: [0.04, 0.06, 0.04]
             }}
             transition={{ duration: 10, repeat: Infinity }}
           />
         </div>
 
-        {/* Navigation */}
+        {/* Navigation - increased z-index to be above 3D ring */}
         <motion.nav 
           className="fixed top-0 w-full z-50 backdrop-blur-xl bg-zinc-900/95 border-b border-zinc-700"
           initial={{ y: -100 }}
@@ -236,10 +238,10 @@ const LandingPage = () => {
           </div>
         </motion.nav>
 
-        {/* Hero Section with Enhanced Text Visibility */}
-        <section className="relative min-h-screen flex items-center justify-center pt-20">
+        {/* Hero Section with Enhanced Text Visibility - positioned above 3D ring */}
+        <section className="relative min-h-screen flex items-center justify-center pt-20 z-20">
           <motion.div 
-            className="container mx-auto px-6 text-center relative z-10"
+            className="container mx-auto px-6 text-center relative z-30"
             style={{ y: heroY }}
           >
             <div className="max-w-5xl mx-auto">
@@ -319,7 +321,7 @@ const LandingPage = () => {
           </motion.div>
         </section>
 
-        <section id="features" className="py-32 relative bg-zinc-800/50">
+        <section id="features" className="py-32 relative bg-zinc-800/50 z-20">
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="text-center mb-20">
@@ -372,7 +374,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section id="modules" className="py-32 relative">
+        <section id="modules" className="py-32 relative z-20">
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="text-center mb-20">
@@ -425,7 +427,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section id="techstack" className="py-32 relative bg-zinc-800/50">
+        <section id="techstack" className="py-32 relative bg-zinc-800/50 z-20">
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="text-center mb-20">
@@ -480,7 +482,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section id="about" className="py-32 relative">
+        <section id="about" className="py-32 relative z-20">
           <div className="container mx-auto px-6">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <SlideIn direction="left">
@@ -611,7 +613,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section className="py-32 relative bg-zinc-800/50">
+        <section className="py-32 relative bg-zinc-800/50 z-20">
           <div className="container mx-auto px-6 text-center">
             <FadeInUp>
               <motion.div 
@@ -666,7 +668,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <footer className="border-t border-zinc-700 py-16 relative bg-zinc-900/80">
+        <footer className="border-t border-zinc-700 py-16 relative bg-zinc-900/80 z-20">
           <div className="container mx-auto px-6">
             <div className="grid md:grid-cols-4 gap-12 mb-12">
               <FadeInUp>
