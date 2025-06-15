@@ -6,15 +6,15 @@ import { Copy, Download, Clock, Zap, Database, Globe, Server, Palette } from 'lu
 import { toast } from '@/hooks/use-toast';
 
 interface PlanOutputProps {
-  techStack: string;
-  timeline: string;
+  techStack: any; // Changed from string to any to handle both formats
+  timeline: any; // Changed from string to any to handle both formats
   ganttChart: string;
-  suggestions: string;
+  suggestions: any; // Changed from string to any to handle both formats
 }
 
 const PlanOutput = ({ techStack, timeline, ganttChart, suggestions }: PlanOutputProps) => {
   const copyToClipboard = async () => {
-    const content = `Tech Stack:\n${techStack}\n\nTimeline:\n${timeline}\n\nGantt Chart:\n${ganttChart}\n\nSuggestions:\n${suggestions}`;
+    const content = `Tech Stack:\n${JSON.stringify(techStack, null, 2)}\n\nTimeline:\n${JSON.stringify(timeline, null, 2)}\n\nGantt Chart:\n${ganttChart}\n\nSuggestions:\n${JSON.stringify(suggestions, null, 2)}`;
     try {
       await navigator.clipboard.writeText(content);
       toast({
@@ -77,7 +77,7 @@ const PlanOutput = ({ techStack, timeline, ganttChart, suggestions }: PlanOutput
     }
   };
 
-  const parseTechStack = (stackText: string) => {
+  const parseTechStack = (stackData: any) => {
     const categories = {
       Frontend: { icon: Palette, color: 'bg-blue-500', items: [] as string[] },
       Backend: { icon: Server, color: 'bg-green-500', items: [] as string[] },
@@ -86,6 +86,21 @@ const PlanOutput = ({ techStack, timeline, ganttChart, suggestions }: PlanOutput
       Other: { icon: Zap, color: 'bg-pink-500', items: [] as string[] }
     };
 
+    // Handle new object format
+    if (typeof stackData === 'object' && stackData !== null) {
+      if (stackData.frontend) categories.Frontend.items = stackData.frontend;
+      if (stackData.backend) categories.Backend.items = stackData.backend;
+      if (stackData.database) categories.Database.items = stackData.database;
+      if (stackData.hosting) categories.DevOps.items = [...(categories.DevOps.items || []), ...stackData.hosting];
+      if (stackData.ai_services) categories.Other.items = [...(categories.Other.items || []), ...stackData.ai_services];
+      if (stackData.payments) categories.Other.items = [...(categories.Other.items || []), ...stackData.payments];
+      if (stackData.analytics) categories.Other.items = [...(categories.Other.items || []), ...stackData.analytics];
+      
+      return categories;
+    }
+
+    // Handle legacy string format
+    const stackText = typeof stackData === 'string' ? stackData : JSON.stringify(stackData);
     const lines = stackText.split('\n').filter(line => line.trim());
     let currentCategory = 'Other';
 
@@ -114,7 +129,19 @@ const PlanOutput = ({ techStack, timeline, ganttChart, suggestions }: PlanOutput
     return categories;
   };
 
-  const parseTimeline = (timelineText: string) => {
+  const parseTimeline = (timelineData: any) => {
+    // Handle new array format
+    if (Array.isArray(timelineData) && timelineData.length > 0) {
+      return timelineData.map(item => ({
+        week: item.week || 1,
+        title: item.title || `Week ${item.week || 1}`,
+        tasks: Array.isArray(item.tasks) ? item.tasks.join(', ') : (item.tasks || 'No tasks defined'),
+        progress: item.progress || 0
+      }));
+    }
+
+    // Handle legacy string format
+    const timelineText = typeof timelineData === 'string' ? timelineData : JSON.stringify(timelineData);
     const weeks = [];
     const lines = timelineText.split('\n').filter(line => line.trim());
     
@@ -141,7 +168,14 @@ const PlanOutput = ({ techStack, timeline, ganttChart, suggestions }: PlanOutput
     ];
   };
 
-  const parseSuggestions = (suggestionsText: string) => {
+  const parseSuggestions = (suggestionsData: any) => {
+    // Handle new array format
+    if (Array.isArray(suggestionsData)) {
+      return suggestionsData;
+    }
+
+    // Handle legacy string format
+    const suggestionsText = typeof suggestionsData === 'string' ? suggestionsData : JSON.stringify(suggestionsData);
     const lines = suggestionsText.split('\n').filter(line => line.trim());
     const suggestions = [];
     
@@ -241,7 +275,7 @@ const PlanOutput = ({ techStack, timeline, ganttChart, suggestions }: PlanOutput
               <Clock className="w-5 h-5 text-neon-green" />
               Development Timeline
               <Badge variant="secondary" className="ml-auto bg-neon-green text-black">
-                4 Weeks
+                {timelineData.length} Weeks
               </Badge>
             </CardTitle>
           </CardHeader>

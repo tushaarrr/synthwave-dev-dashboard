@@ -25,17 +25,29 @@ const StackWizardDashboard = ({
 }: StackWizardDashboardProps) => {
   const { user } = useAuth();
 
-  // Handle both legacy and new data formats
-  const techStack = planData.tech_stack || planData.techStack || '';
-  const timeline = planData.timeline || '';
-  const suggestions = planData.suggestions || [];
-  const modules = planData.modules || [];
-  const bonusModules = planData.bonus_modules || [];
-  const architecture = planData.architecture || {};
-  const testingStrategy = planData.testing_strategy || {};
-  const teamPlan = planData.team_plan || {};
-  const budgetEstimate = planData.budget_estimate || {};
-  const productScope = planData.product_scope || projectDescription;
+  console.log('=== StackWizardDashboard Debug ===');
+  console.log('Plan data received:', planData);
+  console.log('Plan data type:', typeof planData);
+
+  // Handle both legacy and new data formats safely
+  const techStack = planData?.tech_stack || planData?.techStack || {};
+  const timeline = planData?.timeline || [];
+  const suggestions = planData?.suggestions || [];
+  const modules = planData?.modules || [];
+  const bonusModules = planData?.bonus_modules || [];
+  const architecture = planData?.architecture || {};
+  const testingStrategy = planData?.testing_strategy || {};
+  const teamPlan = planData?.team_plan || {};
+  const budgetEstimate = planData?.budget_estimate || {};
+  const productScope = planData?.product_scope || projectDescription;
+
+  console.log('Processed data:', {
+    techStack: typeof techStack,
+    timeline: typeof timeline,
+    suggestions: typeof suggestions,
+    modules: Array.isArray(modules),
+    bonusModules: Array.isArray(bonusModules)
+  });
 
   const copyAllContent = async () => {
     const content = `Project: ${projectName}\n\nProduct Scope:\n${productScope}\n\nTech Stack:\n${JSON.stringify(techStack, null, 2)}\n\nModules:\n${JSON.stringify(modules, null, 2)}\n\nTimeline:\n${JSON.stringify(timeline, null, 2)}\n\nSuggestions:\n${JSON.stringify(suggestions, null, 2)}`;
@@ -302,7 +314,7 @@ const StackWizardDashboard = ({
         <TechStackModule techStack={techStack} modules={modules} bonusModules={bonusModules} />
 
         {/* Gantt Timeline */}
-        <GanttTimelineModule timeline={timeline} timelineData={planData.timeline} />
+        <GanttTimelineModule timeline={timeline} timelineData={timeline} />
 
         {/* Budget & Team Planning */}
         <BudgetEstimationModule budgetEstimate={budgetEstimate} teamPlan={teamPlan} />
