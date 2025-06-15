@@ -44,12 +44,16 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Neon colors */
+    /* Enhanced Neon Colors */
     --neon-blue: #00d4ff;
     --neon-purple: #9333ea;
     --neon-pink: #f472b6;
     --neon-green: #10b981;
     --neon-orange: #f97316;
+    --neon-cyan: #06b6d4;
+    --neon-violet: #8b5cf6;
+    --neon-emerald: #059669;
+    --neon-amber: #f59e0b;
   }
 
   .light {
@@ -136,6 +140,15 @@
     box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
   }
 
+  .neon-glow-purple {
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+  }
+
+  .neon-glow-green {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  }
+
+  /* Enhanced Neon Color Classes */
   .text-neon-blue {
     color: var(--neon-blue);
   }
@@ -156,6 +169,23 @@
     color: var(--neon-orange);
   }
 
+  .text-neon-cyan {
+    color: var(--neon-cyan);
+  }
+
+  .text-neon-violet {
+    color: var(--neon-violet);
+  }
+
+  .text-neon-emerald {
+    color: var(--neon-emerald);
+  }
+
+  .text-neon-amber {
+    color: var(--neon-amber);
+  }
+
+  /* Background Classes */
   .bg-neon-blue {
     background-color: var(--neon-blue);
   }
@@ -176,6 +206,22 @@
     background-color: var(--neon-orange);
   }
 
+  .bg-neon-cyan {
+    background-color: var(--neon-cyan);
+  }
+
+  .bg-neon-violet {
+    background-color: var(--neon-violet);
+  }
+
+  .bg-neon-emerald {
+    background-color: var(--neon-emerald);
+  }
+
+  .bg-neon-amber {
+    background-color: var(--neon-amber);
+  }
+
   .animate-glow {
     animation: glow 2s ease-in-out infinite alternate;
   }
@@ -194,6 +240,10 @@
 
   .animate-fade-in {
     animation: fade-in 0.6s ease-out;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
   }
 
   @keyframes glow {
@@ -245,5 +295,25 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
   }
 }
