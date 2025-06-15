@@ -85,10 +85,18 @@ export const useStackWizard = () => {
   const { user } = useAuth();
 
   const generatePlan = async (projectName: string, description: string, requirements: string) => {
-    if (!user) throw new Error('User not authenticated');
+    if (!user) {
+      console.error('No user authenticated');
+      throw new Error('User not authenticated');
+    }
+    
+    console.log('=== useStackWizard.generatePlan START ===');
+    console.log('User ID:', user.id);
+    console.log('Project name:', projectName);
     
     setIsLoading(true);
     try {
+      console.log('Calling supabase function...');
       const { data, error } = await supabase.functions.invoke('generate-stack-plan', {
         body: {
           projectName,
@@ -97,14 +105,18 @@ export const useStackWizard = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
 
-      console.log('Received plan data:', data);
+      console.log('Raw function response:', data);
 
       // Handle both new JSON format and legacy format
       let planData: ProjectPlan;
       
       if (data.product_scope && data.modules) {
+        console.log('Processing new JSON format');
         // New JSON format
         planData = {
           product_scope: data.product_scope,
@@ -146,6 +158,7 @@ export const useStackWizard = () => {
           suggestions: data.suggestions || []
         };
       } else {
+        console.log('Processing legacy format');
         // Legacy format - convert to new structure
         planData = {
           product_scope: description,
@@ -191,10 +204,12 @@ export const useStackWizard = () => {
         };
       }
 
+      console.log('Processed plan data:', planData);
       setResult(planData);
 
       // Save to Supabase - using type assertion to work around outdated types
       try {
+        console.log('Saving to database...');
         const { error: saveError } = await supabase
           .from('plans')
           .insert({
@@ -225,12 +240,16 @@ export const useStackWizard = () => {
         // Continue execution even if database save fails
       }
 
+      console.log('=== useStackWizard.generatePlan SUCCESS ===');
+      console.log('Final result set:', planData);
       return planData;
     } catch (error) {
+      console.error('=== useStackWizard.generatePlan ERROR ===');
       console.error('Error generating plan:', error);
       throw error;
     } finally {
       setIsLoading(false);
+      console.log('=== useStackWizard.generatePlan END ===');
     }
   };
 
