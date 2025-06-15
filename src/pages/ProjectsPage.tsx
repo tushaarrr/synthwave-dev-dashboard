@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Navigate } from 'react-router-dom';
@@ -117,147 +118,191 @@ const ProjectsPage = () => {
       const jsPDF = (await import('jspdf')).default;
       const pdf = new jsPDF();
       
-      // Helper function to parse JSON fields safely
-      const parseJsonField = (field: string) => {
-        if (!field) return null;
+      // Helper function to safely parse JSON or return fallback
+      const safeParseJson = (jsonString: string, fallback: any = null) => {
+        if (!jsonString) return fallback;
         try {
-          return typeof field === 'string' ? JSON.parse(field) : field;
+          return typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
         } catch {
-          return field; // Return as-is if not valid JSON
+          return fallback;
         }
       };
 
-      // Parse JSON fields
-      const techStack = parseJsonField(project.tech_stack);
-      const timeline = parseJsonField(project.timeline);
-      const suggestions = parseJsonField(project.suggestions);
-      
+      // Parse project data
+      const techStack = safeParseJson(project.tech_stack, {});
+      const timeline = safeParseJson(project.timeline, []);
+      const suggestions = safeParseJson(project.suggestions, []);
+
+      let yPos = 30;
+      const pageHeight = 280;
+      const margin = 20;
+      const lineHeight = 6;
+
+      // Helper to add new page if needed
+      const checkPageBreak = (requiredSpace: number) => {
+        if (yPos + requiredSpace > pageHeight) {
+          pdf.addPage();
+          yPos = 30;
+        }
+      };
+
       // Title
       pdf.setFontSize(20);
-      pdf.text(project.project_name || 'Untitled Project', 20, 30);
-      
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(project.project_name || 'Untitled Project', margin, yPos);
+      yPos += 20;
+
       // Date
       pdf.setFontSize(12);
-      pdf.text(`Generated: ${new Date(project.created_at).toLocaleDateString()}`, 20, 45);
-      
-      // Description
-      pdf.setFontSize(14);
-      pdf.text('Project Description:', 20, 65);
-      pdf.setFontSize(10);
-      const descLines = pdf.splitTextToSize(project.description || 'No description available', 170);
-      pdf.text(descLines, 20, 75);
-      
-      let yPos = 90 + (descLines.length * 5);
-      
-      // Tech Stack - Format properly
-      pdf.setFontSize(14);
-      pdf.text('Technology Stack:', 20, yPos);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`Generated: ${new Date(project.created_at).toLocaleDateString()}`, margin, yPos);
       yPos += 15;
-      
-      if (techStack && typeof techStack === 'object') {
-        pdf.setFontSize(12);
-        Object.entries(techStack).forEach(([category, items]) => {
-          if (Array.isArray(items) && items.length > 0) {
-            pdf.setFont('helvetica', 'bold');
-            pdf.text(`${category.charAt(0).toUpperCase() + category.slice(1)}:`, 25, yPos);
-            pdf.setFont('helvetica', 'normal');
-            pdf.setFontSize(10);
-            const itemsText = items.join(', ');
-            const itemLines = pdf.splitTextToSize(itemsText, 160);
-            pdf.text(itemLines, 30, yPos + 6);
-            yPos += 12 + (itemLines.length * 4);
+
+      // Project Description
+      checkPageBreak(30);
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Project Description', margin, yPos);
+      yPos += 10;
+
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
+      const descLines = pdf.splitTextToSize(project.description || 'No description available', 170);
+      pdf.text(descLines, margin, yPos);
+      yPos += descLines.length * lineHeight + 15;
+
+      // Technology Stack
+      checkPageBreak(40);
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('Technology Stack', margin, yPos);
+      yPos += 12;
+
+      if (techStack && typeof techStack === 'object' && Object.keys(techStack).length > 0) {
+        Object.entries(techStack).forEach(([category, technologies]) => {
+          checkPageBreak(20);
+          
+          pdf.setFontSize(12);
+          pdf.setFont('helvetica', 'bold');
+          const categoryTitle = category.charAt(0).toUpperCase() + category.slice(1).replace(/_/g, ' ');
+          pdf.text(`${categoryTitle}:`, margin + 5, yPos);
+          yPos += 8;
+
+          pdf.setFontSize(10);
+          pdf.setFont('helvetica', 'normal');
+          
+          if (Array.isArray(technologies)) {
+            const techText = `• ${technologies.join(', ')}`;
+            const techLines = pdf.splitTextToSize(techText, 160);
+            pdf.text(techLines, margin + 10, yPos);
+            yPos += techLines.length * lineHeight + 5;
+          } else if (typeof technologies === 'string') {
+            const techLines = pdf.splitTextToSize(`• ${technologies}`, 160);
+            pdf.text(techLines, margin + 10, yPos);
+            yPos += techLines.length * lineHeight + 5;
           }
         });
       } else {
         pdf.setFontSize(10);
-        const techLines = pdf.splitTextToSize(project.tech_stack || 'No tech stack specified', 170);
-        pdf.text(techLines, 20, yPos);
-        yPos += 15 + (techLines.length * 5);
+        pdf.text('No technology stack specified', margin + 5, yPos);
+        yPos += 15;
       }
-      
+
       yPos += 10;
-      
-      // Timeline - Format properly
-      if (yPos > 230) {
-        pdf.addPage();
-        yPos = 30;
-      }
-      
-      pdf.setFontSize(14);
+
+      // Development Timeline
+      checkPageBreak(40);
+      pdf.setFontSize(16);
       pdf.setFont('helvetica', 'bold');
-      pdf.text('Development Timeline:', 20, yPos);
-      yPos += 15;
-      
+      pdf.text('Development Timeline', margin, yPos);
+      yPos += 12;
+
       if (Array.isArray(timeline) && timeline.length > 0) {
-        timeline.forEach((week) => {
-          if (yPos > 250) {
-            pdf.addPage();
-            yPos = 30;
-          }
+        timeline.forEach((phase: any, index: number) => {
+          checkPageBreak(30);
           
           pdf.setFontSize(12);
           pdf.setFont('helvetica', 'bold');
-          pdf.text(`Week ${week.week}: ${week.title || `Week ${week.week}`}`, 25, yPos);
-          
+          const phaseTitle = phase.title || phase.week ? `Week ${phase.week}: ${phase.title || `Phase ${index + 1}`}` : `Phase ${index + 1}`;
+          pdf.text(phaseTitle, margin + 5, yPos);
+          yPos += 8;
+
           pdf.setFontSize(10);
           pdf.setFont('helvetica', 'normal');
-          
-          if (week.tasks) {
-            const tasks = Array.isArray(week.tasks) ? week.tasks.join(', ') : week.tasks;
-            const taskLines = pdf.splitTextToSize(`Tasks: ${tasks}`, 160);
-            pdf.text(taskLines, 30, yPos + 8);
-            yPos += 12 + (taskLines.length * 4);
+
+          // Tasks
+          if (phase.tasks) {
+            const tasks = Array.isArray(phase.tasks) ? phase.tasks : [phase.tasks];
+            tasks.forEach((task: string) => {
+              checkPageBreak(8);
+              const taskLines = pdf.splitTextToSize(`• ${task}`, 160);
+              pdf.text(taskLines, margin + 10, yPos);
+              yPos += taskLines.length * lineHeight;
+            });
           }
-          
-          if (week.deliverables && Array.isArray(week.deliverables)) {
-            const deliverables = week.deliverables.join(', ');
-            const deliverableLines = pdf.splitTextToSize(`Deliverables: ${deliverables}`, 160);
-            pdf.text(deliverableLines, 30, yPos + 4);
-            yPos += 8 + (deliverableLines.length * 4);
+
+          // Deliverables
+          if (phase.deliverables && Array.isArray(phase.deliverables)) {
+            yPos += 3;
+            pdf.setFont('helvetica', 'italic');
+            pdf.text('Deliverables:', margin + 10, yPos);
+            yPos += 6;
+            pdf.setFont('helvetica', 'normal');
+            
+            phase.deliverables.forEach((deliverable: string) => {
+              checkPageBreak(8);
+              const deliverableLines = pdf.splitTextToSize(`- ${deliverable}`, 155);
+              pdf.text(deliverableLines, margin + 15, yPos);
+              yPos += deliverableLines.length * lineHeight;
+            });
           }
-          
+
           yPos += 8;
         });
       } else {
         pdf.setFontSize(10);
-        const timelineLines = pdf.splitTextToSize(project.timeline || 'No timeline specified', 170);
-        pdf.text(timelineLines, 20, yPos);
-        yPos += 15 + (timelineLines.length * 5);
+        pdf.text('No timeline specified', margin + 5, yPos);
+        yPos += 15;
       }
-      
+
       yPos += 10;
-      
-      // Suggestions/Recommendations
-      if (yPos > 230) {
-        pdf.addPage();
-        yPos = 30;
-      }
-      
-      pdf.setFontSize(14);
+
+      // Recommendations/Suggestions
+      checkPageBreak(40);
+      pdf.setFontSize(16);
       pdf.setFont('helvetica', 'bold');
-      pdf.text('Recommendations:', 20, yPos);
-      yPos += 15;
-      
+      pdf.text('Recommendations & Best Practices', margin, yPos);
+      yPos += 12;
+
       if (Array.isArray(suggestions) && suggestions.length > 0) {
-        pdf.setFontSize(10);
-        pdf.setFont('helvetica', 'normal');
-        suggestions.forEach((suggestion, index) => {
-          if (yPos > 250) {
-            pdf.addPage();
-            yPos = 30;
-          }
+        suggestions.forEach((suggestion: any, index: number) => {
+          checkPageBreak(15);
           
-          const suggestionText = typeof suggestion === 'object' ? suggestion.text || suggestion.content || JSON.stringify(suggestion) : suggestion;
+          pdf.setFontSize(10);
+          pdf.setFont('helvetica', 'normal');
+          
+          const suggestionText = typeof suggestion === 'object' 
+            ? suggestion.text || suggestion.content || suggestion.title || JSON.stringify(suggestion)
+            : suggestion;
+          
           const suggestionLines = pdf.splitTextToSize(`${index + 1}. ${suggestionText}`, 170);
-          pdf.text(suggestionLines, 25, yPos);
-          yPos += 8 + (suggestionLines.length * 4);
+          pdf.text(suggestionLines, margin + 5, yPos);
+          yPos += suggestionLines.length * lineHeight + 5;
         });
       } else {
         pdf.setFontSize(10);
-        const suggestionLines = pdf.splitTextToSize(project.suggestions || 'No recommendations available', 170);
-        pdf.text(suggestionLines, 20, yPos);
+        pdf.text('No specific recommendations provided', margin + 5, yPos);
       }
-      
+
+      // Footer
+      const totalPages = (pdf as any).internal.pages.length - 1;
+      for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i);
+        pdf.setFontSize(8);
+        pdf.setFont('helvetica', 'italic');
+        pdf.text(`Generated by DevSynth AI | Page ${i} of ${totalPages}`, margin, 290);
+      }
+
       pdf.save(`${project.project_name || 'project'}-development-plan.pdf`);
       
       toast({
