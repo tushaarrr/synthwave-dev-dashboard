@@ -18,7 +18,7 @@ const ThemeToggle = () => {
       onClick={() => setIsDark(!isDark)}
       className="glass-dark rounded-xl p-3 hover:scale-110 transition-all duration-300 neon-glow animate-pulse-glow"
     >
-      <Settings className="w-5 h-5 text-neon-aqua animate-glow" />
+      <Settings className="w-5 h-5 text-orange-200 animate-glow" />
     </button>
   );
 };
