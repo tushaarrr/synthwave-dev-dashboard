@@ -80,20 +80,20 @@ const FeaturesPage = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-white text-gray-900 relative overflow-hidden">
+      <div className="min-h-screen bg-zinc-900 text-orange-200 relative overflow-hidden">
         {/* 3D Background */}
         <FloatingGeometry />
         <FloatingOrb />
 
-        {/* Animated Background - matching Dashboard */}
+        {/* Exact same background as ContactPage */}
         <div className="fixed inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-orange-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-200/10 via-zinc-900 to-orange-200/10"></div>
           <motion.div 
             className="absolute inset-0 opacity-[0.02]"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(251, 146, 60, 0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(251, 146, 60, 0.3) 1px, transparent 1px)
+                linear-gradient(rgba(253, 186, 116, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(253, 186, 116, 0.3) 1px, transparent 1px)
               `,
               backgroundSize: '50px 50px'
             }}
@@ -109,25 +109,25 @@ const FeaturesPage = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="relative z-10 p-6 backdrop-blur-xl bg-white/80 border-b border-orange-200/20 shadow-sm">
+        <nav className="relative z-10 p-6 glass-dark border-b border-orange-200/10">
           <div className="container mx-auto flex items-center justify-between">
             <button
               onClick={() => navigate('/')}
-              className="flex items-center gap-2 text-gray-600 hover:text-orange-500 transition-all duration-300 group"
+              className="flex items-center gap-2 text-orange-300 hover:text-orange-200 transition-all duration-300 group"
             >
               <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
               <span className="font-medium">Back to Home</span>
             </button>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3">
-                <Zap className="w-6 h-6 text-orange-500" />
-                <span className="text-2xl font-bold font-sora text-gray-800">
-                  OneAI
+                <Zap className="w-6 h-6 text-orange-400" />
+                <span className="text-2xl font-bold font-sora gradient-text">
+                  DevSynth
                 </span>
               </div>
               <button
                 onClick={() => navigate('/login')}
-                className="px-6 py-3 bg-orange-500 text-white rounded-xl text-sm font-semibold hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                className="px-6 py-2 bg-gradient-to-r from-orange-400 to-orange-500 rounded-xl font-semibold text-zinc-900 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-orange-400/25"
               >
                 Try Now
               </button>
@@ -140,26 +140,16 @@ const FeaturesPage = () => {
           <FadeInUp>
             <div className="text-center mb-20">
               <div className="flex items-center justify-center gap-3 mb-6">
-                <motion.div
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                >
-                  <Sparkles className="w-8 h-8 text-orange-500" />
-                </motion.div>
-                <h1 className="text-6xl font-bold font-sora bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 bg-clip-text text-transparent">
+                <Sparkles className="w-8 h-8 text-orange-400 animate-pulse" />
+                <h1 className="text-6xl font-bold font-sora gradient-text">
                   Powerful AI Features
                 </h1>
-                <motion.div
-                  animate={{ rotate: [360, 0] }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                >
-                  <Sparkles className="w-8 h-8 text-orange-500" />
-                </motion.div>
+                <Sparkles className="w-8 h-8 text-orange-300 animate-pulse" />
               </div>
-              <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+              <p className="text-xl text-orange-200/80 max-w-4xl mx-auto leading-relaxed">
                 Discover the comprehensive suite of AI-powered tools designed to 
-                <span className="text-orange-500 font-semibold"> supercharge your development workflow</span> and 
-                <span className="text-orange-600 font-semibold"> accelerate your productivity</span>
+                <span className="text-orange-300 font-semibold"> supercharge your development workflow</span> and 
+                <span className="text-orange-400 font-semibold"> accelerate your productivity</span>
               </p>
             </div>
           </FadeInUp>
@@ -176,22 +166,22 @@ const FeaturesPage = () => {
                   {/* Feature Content */}
                   <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
                     <motion.div
-                      className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 border border-orange-200/20 shadow-lg"
+                      className="glass-dark rounded-3xl p-8 border border-orange-200/10 hover:border-orange-300/30 transition-all duration-500"
                       whileHover={{
-                        boxShadow: "0 25px 50px rgba(251, 146, 60, 0.1)"
+                        boxShadow: "0 25px 50px rgba(253, 186, 116, 0.1)"
                       }}
                     >
                       <div className="flex items-center gap-4 mb-8">
                         <motion.div 
-                          className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg border border-orange-300/20"
+                          className="w-16 h-16 bg-gradient-to-br from-orange-400/20 to-orange-500/20 rounded-2xl flex items-center justify-center"
                           whileHover={{ scale: 1.1, rotate: 5 }}
                           transition={{ type: "spring", stiffness: 300 }}
                         >
-                          <feature.icon className="w-8 h-8 text-white" />
+                          <feature.icon className="w-8 h-8 text-orange-400" />
                         </motion.div>
                         <div>
-                          <h2 className="text-3xl font-bold text-gray-900 font-sora">{feature.title}</h2>
-                          <p className="text-gray-600 mt-1">{feature.description}</p>
+                          <h2 className="text-3xl font-bold text-orange-200 font-sora">{feature.title}</h2>
+                          <p className="text-orange-200/60 mt-1">{feature.description}</p>
                         </div>
                       </div>
 
@@ -204,30 +194,32 @@ const FeaturesPage = () => {
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ delay: i * 0.15 }}
                           >
-                            <div className="w-6 h-6 bg-orange-400 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
-                              <CheckCircle className="w-4 h-4 text-white" />
+                            <div className="w-6 h-6 bg-gradient-to-r from-orange-400 to-orange-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                              <CheckCircle className="w-4 h-4 text-zinc-900" />
                             </div>
-                            <span className="text-gray-700 group-hover:text-gray-900 transition-colors font-medium">{benefit}</span>
+                            <span className="text-orange-200/80 group-hover:text-orange-200 transition-colors font-medium">{benefit}</span>
                           </motion.div>
                         ))}
                       </div>
 
-                      <button
-                        onClick={() => navigate('/login')}
-                        className="group px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-semibold text-sm hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-                      >
-                        <span className="relative z-10 flex items-center gap-2">
-                          Try {feature.title}
-                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </span>
-                      </button>
+                      <HoverGlow>
+                        <button
+                          onClick={() => navigate('/login')}
+                          className="px-8 py-4 bg-gradient-to-r from-orange-400 to-orange-500 rounded-xl font-semibold text-zinc-900 hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-orange-400/25"
+                        >
+                          <span className="flex items-center gap-2">
+                            Try {feature.title}
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          </span>
+                        </button>
+                      </HoverGlow>
                     </motion.div>
                   </div>
 
                   {/* Feature Demo */}
                   <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
                     <motion.div
-                      className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-orange-200/20 hover:border-orange-300/40 transition-all duration-500 shadow-lg hover:shadow-xl"
+                      className="glass-dark rounded-2xl p-6 border border-orange-200/10 hover:border-orange-300/30 transition-all duration-500"
                       whileHover={{ scale: 1.02, y: -5 }}
                       transition={{ duration: 0.3 }}
                     >
@@ -238,7 +230,7 @@ const FeaturesPage = () => {
                             <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                           </div>
-                          <span className="text-sm text-orange-600 font-medium bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+                          <span className="text-sm text-orange-400 font-medium bg-orange-400/10 px-3 py-1 rounded-full border border-orange-400/20">
                             {feature.title.toLowerCase()}.ai
                           </span>
                         </div>
@@ -246,17 +238,17 @@ const FeaturesPage = () => {
                         {feature.demoFeatures.map((demo, i) => (
                           <motion.div
                             key={i}
-                            className="flex items-center gap-3 p-3 rounded-xl bg-orange-50/80 backdrop-blur-sm border border-orange-100 hover:border-orange-200 transition-all duration-300 hover:shadow-md"
+                            className="flex items-center gap-3 p-3 rounded-xl bg-orange-400/5 border border-orange-400/10 hover:border-orange-400/20 transition-all duration-300"
                             initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ delay: i * 0.2 }}
                             whileHover={{ scale: 1.02 }}
                           >
                             <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-                            <span className="text-gray-700 font-medium">{demo}</span>
+                            <span className="text-orange-200/80 font-medium">{demo}</span>
                             <div className="ml-auto flex items-center gap-2">
                               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                              <span className="text-xs text-green-600 font-medium">Active</span>
+                              <span className="text-xs text-green-400 font-medium">Active</span>
                             </div>
                           </motion.div>
                         ))}
@@ -272,57 +264,38 @@ const FeaturesPage = () => {
           <FadeInUp delay={1.0}>
             <div className="text-center mt-24">
               <motion.div 
-                className="bg-white/90 backdrop-blur-xl rounded-3xl p-12 border border-orange-200/20 relative overflow-hidden shadow-xl"
+                className="glass-dark rounded-3xl p-12 border border-orange-200/10 relative overflow-hidden"
                 whileHover={{
-                  boxShadow: "0 25px 50px rgba(251, 146, 60, 0.15)"
+                  boxShadow: "0 25px 50px rgba(253, 186, 116, 0.15)"
                 }}
               >
-                {/* Glow Effect */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-orange-400/5 via-transparent to-orange-300/5 rounded-3xl"
-                  animate={{
-                    opacity: [0.5, 0.8, 0.5],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                />
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-400/5 via-orange-300/5 to-orange-500/5"></div>
 
                 <div className="relative z-10">
                   <div className="flex items-center justify-center gap-4 mb-8">
-                    <motion.div
-                      animate={{ rotate: [0, 360] }}
-                      transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                    >
-                      <Sparkles className="w-8 h-8 text-orange-500" />
-                    </motion.div>
-                    <h2 className="text-4xl font-bold font-sora bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 bg-clip-text text-transparent">
+                    <Sparkles className="w-8 h-8 text-orange-400 animate-pulse" />
+                    <h2 className="text-4xl font-bold font-sora gradient-text">
                       Ready to Experience the Future?
                     </h2>
-                    <motion.div
-                      animate={{ rotate: [360, 0] }}
-                      transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                    >
-                      <Sparkles className="w-8 h-8 text-orange-500" />
-                    </motion.div>
+                    <Sparkles className="w-8 h-8 text-orange-300 animate-pulse" />
                   </div>
-                  <p className="text-lg text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-                    Join <span className="text-orange-500 font-bold">thousands of developers</span> who are already building faster with 
-                    <span className="text-orange-600 font-bold"> OneAI</span>
+                  <p className="text-lg text-orange-200/80 mb-10 max-w-2xl mx-auto leading-relaxed">
+                    Join <span className="text-orange-300 font-bold">thousands of developers</span> who are already building faster with 
+                    <span className="text-orange-400 font-bold"> DevSynth AI</span>
                   </p>
-                  <motion.button
-                    onClick={() => navigate('/login')}
-                    className="px-10 py-5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl text-lg font-bold hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl group"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <span className="flex items-center gap-3">
-                      Start Building Now
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-                    </span>
-                  </motion.button>
+                  <HoverGlow>
+                    <motion.button
+                      onClick={() => navigate('/login')}
+                      className="px-12 py-4 bg-gradient-to-r from-orange-400 to-orange-500 rounded-2xl text-lg font-bold text-zinc-900 hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-orange-400/25"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <span className="flex items-center gap-3">
+                        Start Building Now
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                      </span>
+                    </motion.button>
+                  </HoverGlow>
                 </div>
               </motion.div>
             </div>
