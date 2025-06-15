@@ -193,11 +193,11 @@ export const useStackWizard = () => {
 
       setResult(planData);
 
-      // Save to Supabase with new columns - using the correct column name from the schema
+      // Save to Supabase with new columns - convert user.id to string for text column
       const { error: saveError } = await supabase
         .from('plans')
         .insert({
-          user_id: user.id, // This should match the actual column name in the database
+          user_id: user.id.toString(), // Convert UUID to string for text column
           project_name: projectName,
           description,
           requirements,
