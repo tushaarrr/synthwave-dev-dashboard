@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -7,7 +6,7 @@ import { toast } from '@/hooks/use-toast';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface ProTipsModuleProps {
-  suggestions: string;
+  suggestions: string | string[];
 }
 
 const ProTipsModule = ({ suggestions }: ProTipsModuleProps) => {
@@ -70,8 +69,16 @@ const ProTipsModule = ({ suggestions }: ProTipsModuleProps) => {
     }
   ];
 
-  // Parse additional suggestions from the AI
-  const aiSuggestions = suggestions.split('\n').filter(line => line.trim().length > 10).slice(0, 3);
+  // Parse additional suggestions from the AI - handle both string and array formats
+  const aiSuggestions = (() => {
+    if (Array.isArray(suggestions)) {
+      return suggestions.slice(0, 3);
+    }
+    if (typeof suggestions === 'string') {
+      return suggestions.split('\n').filter(line => line.trim().length > 10).slice(0, 3);
+    }
+    return [];
+  })();
 
   const copyTip = async (tip: string) => {
     try {
@@ -187,10 +194,10 @@ const ProTipsModule = ({ suggestions }: ProTipsModuleProps) => {
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    {suggestion.replace(/[#*-]/g, '').trim()}
+                    {typeof suggestion === 'string' ? suggestion.replace(/[#*-]/g, '').trim() : String(suggestion)}
                   </p>
                   <button
-                    onClick={() => copyTip(suggestion)}
+                    onClick={() => copyTip(typeof suggestion === 'string' ? suggestion : String(suggestion))}
                     className="mt-2 text-xs bg-purple-500/20 hover:bg-purple-500/30 px-2 py-1 rounded transition-colors flex items-center gap-1"
                   >
                     <Copy className="w-3 h-3" />
