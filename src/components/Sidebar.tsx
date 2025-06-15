@@ -8,22 +8,23 @@ import {
   Code, 
   Settings as SettingsIcon, 
   Download,
-  LogOut,
-  User,
   FolderOpen,
   History,
   CodeXml,
-  Database
+  Database,
+  ChevronLeft,
+  ChevronRight,
+  Sparkles
 } from "lucide-react";
 
 interface SidebarProps {
   activeModule: string;
   onModuleChange: (module: string) => void;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
-const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
-  const [isExpanded, setIsExpanded] = useState(true);
-  const { user, signOut } = useAuth();
+const Sidebar = ({ activeModule, onModuleChange, collapsed = false, onToggleCollapse }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -35,168 +36,155 @@ const Sidebar = ({ activeModule, onModuleChange }: SidebarProps) => {
     { id: 'testcasegen', name: 'TestCaseGen', icon: Download, color: 'text-neon-pink' },
   ];
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
+  const historyRoutes = [
+    { path: '/projects', name: 'Projects', icon: FolderOpen, color: 'text-neon-green' },
+    { path: '/prompt-history', name: 'Prompt History', icon: History, color: 'text-neon-purple' },
+    { path: '/code-history', name: 'Code History', icon: CodeXml, color: 'text-neon-green' },
+    { path: '/sql-history', name: 'SQL History', icon: Database, color: 'text-neon-orange' },
+  ];
+
+  const handleModuleClick = (moduleId: string) => {
+    navigate('/dashboard');
+    onModuleChange(moduleId);
   };
 
-  const handleProjectsClick = () => {
-    navigate('/projects');
-  };
-
-  const handlePromptHistoryClick = () => {
-    navigate('/prompt-history');
-  };
-
-  const handleCodeHistoryClick = () => {
-    navigate('/code-history');
-  };
-
-  const handleSQLHistoryClick = () => {
-    navigate('/sql-history');
-  };
-
-  const isProjectsActive = location.pathname === '/projects';
-  const isPromptHistoryActive = location.pathname === '/prompt-history';
-  const isCodeHistoryActive = location.pathname === '/code-history';
-  const isSQLHistoryActive = location.pathname === '/sql-history';
+  const isOnDashboard = location.pathname === '/dashboard';
 
   return (
-    <div className={`glass-dark rounded-2xl p-4 transition-all duration-500 ${isExpanded ? 'w-64' : 'w-20'} animate-slide-in flex flex-col h-full`}>
-      <div className="flex items-center justify-between mb-8">
-        <div className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>
-          <h1 className="text-2xl font-bold font-sora bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
-            DevSynth AI
-          </h1>
-          <p className="text-sm text-muted-foreground">Productivity Suite</p>
-        </div>
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-        >
-          <Code className="w-5 h-5" />
-        </button>
-      </div>
-
-      <nav className="space-y-3 flex-1">
-        {/* Saved Projects */}
-        <button
-          onClick={handleProjectsClick}
-          className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 hover:scale-105 ${
-            isProjectsActive 
-              ? 'glass neon-glow transform scale-105' 
-              : 'hover:bg-white/5'
-          }`}
-        >
-          <FolderOpen className={`w-6 h-6 ${isProjectsActive ? 'text-neon-green animate-glow' : 'text-muted-foreground'}`} />
-          <span className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 font-medium ${
-            isProjectsActive ? 'text-white' : 'text-muted-foreground'
-          }`}>
-            Saved Projects
-          </span>
-        </button>
-
-        {/* Prompt History */}
-        <button
-          onClick={handlePromptHistoryClick}
-          className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 hover:scale-105 ${
-            isPromptHistoryActive 
-              ? 'glass neon-glow transform scale-105' 
-              : 'hover:bg-white/5'
-          }`}
-        >
-          <History className={`w-6 h-6 ${isPromptHistoryActive ? 'text-neon-purple animate-glow' : 'text-muted-foreground'}`} />
-          <span className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 font-medium ${
-            isPromptHistoryActive ? 'text-white' : 'text-muted-foreground'
-          }`}>
-            Prompt History
-          </span>
-        </button>
-
-        {/* Code History */}
-        <button
-          onClick={handleCodeHistoryClick}
-          className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 hover:scale-105 ${
-            isCodeHistoryActive 
-              ? 'glass neon-glow transform scale-105' 
-              : 'hover:bg-white/5'
-          }`}
-        >
-          <CodeXml className={`w-6 h-6 ${isCodeHistoryActive ? 'text-neon-green animate-glow' : 'text-muted-foreground'}`} />
-          <span className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 font-medium ${
-            isCodeHistoryActive ? 'text-white' : 'text-muted-foreground'
-          }`}>
-            Code History
-          </span>
-        </button>
-
-        {/* SQL History */}
-        <button
-          onClick={handleSQLHistoryClick}
-          className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 hover:scale-105 ${
-            isSQLHistoryActive 
-              ? 'glass neon-glow transform scale-105' 
-              : 'hover:bg-white/5'
-          }`}
-        >
-          <Database className={`w-6 h-6 ${isSQLHistoryActive ? 'text-neon-orange animate-glow' : 'text-muted-foreground'}`} />
-          <span className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 font-medium ${
-            isSQLHistoryActive ? 'text-white' : 'text-muted-foreground'
-          }`}>
-            SQL History
-          </span>
-        </button>
-
-        {/* Module Separators */}
-        <div className="border-t border-white/10 my-4"></div>
-
-        {modules.map((module) => (
-          <button
-            key={module.id}
-            onClick={() => {
-              navigate('/');
-              onModuleChange(module.id);
-            }}
-            className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 hover:scale-105 ${
-              activeModule === module.id && location.pathname === '/' 
-                ? 'glass neon-glow transform scale-105' 
-                : 'hover:bg-white/5'
-            }`}
-          >
-            <module.icon className={`w-6 h-6 ${activeModule === module.id && location.pathname === '/' ? module.color : 'text-muted-foreground'} ${activeModule === module.id && location.pathname === '/' ? 'animate-glow' : ''}`} />
-            <span className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 font-medium ${
-              activeModule === module.id && location.pathname === '/' ? 'text-white' : 'text-muted-foreground'
-            }`}>
-              {module.name}
-            </span>
-          </button>
-        ))}
-      </nav>
-
-      {user && (
-        <div className="mt-auto pt-4 border-t border-white/10">
-          <div className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 mb-3`}>
-            <div className="flex items-center gap-3 p-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center">
-                <User className="w-4 h-4" />
+    <div className={`glass-dark border-r border-white/10 transition-all duration-300 flex flex-col h-full relative ${
+      collapsed ? 'w-16' : 'w-64'
+    }`}>
+      {/* Header */}
+      <div className="p-4 border-b border-white/10">
+        <div className="flex items-center justify-between">
+          {!collapsed && (
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-neon-blue to-neon-purple rounded-lg flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white animate-glow" />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{user.email}</p>
+              <div>
+                <h1 className="text-lg font-bold font-sora bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
+                  DevSynth AI
+                </h1>
+                <p className="text-xs text-muted-foreground">Developer Suite</p>
               </div>
             </div>
+          )}
+          
+          {onToggleCollapse && (
+            <button
+              onClick={onToggleCollapse}
+              className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+            >
+              {collapsed ? (
+                <ChevronRight className="w-4 h-4" />
+              ) : (
+                <ChevronLeft className="w-4 h-4" />
+              )}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 p-4 space-y-6">
+        {/* AI Modules */}
+        <div>
+          {!collapsed && (
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+              AI Modules
+            </h3>
+          )}
+          <div className="space-y-1">
+            {modules.map((module) => (
+              <button
+                key={module.id}
+                onClick={() => handleModuleClick(module.id)}
+                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:scale-105 group ${
+                  activeModule === module.id && isOnDashboard
+                    ? 'bg-gradient-to-r from-white/10 to-white/5 border border-white/10 shadow-lg' 
+                    : 'hover:bg-white/5'
+                }`}
+                title={collapsed ? module.name : undefined}
+              >
+                <module.icon 
+                  className={`w-5 h-5 transition-colors ${
+                    activeModule === module.id && isOnDashboard 
+                      ? `${module.color} animate-glow` 
+                      : 'text-muted-foreground group-hover:text-white'
+                  }`} 
+                />
+                {!collapsed && (
+                  <span className={`font-medium transition-colors ${
+                    activeModule === module.id && isOnDashboard 
+                      ? 'text-white' 
+                      : 'text-muted-foreground group-hover:text-white'
+                  }`}>
+                    {module.name}
+                  </span>
+                )}
+                {!collapsed && activeModule === module.id && isOnDashboard && (
+                  <div className="ml-auto w-2 h-2 bg-neon-blue rounded-full animate-pulse"></div>
+                )}
+              </button>
+            ))}
           </div>
-          <button
-            onClick={handleSignOut}
-            className="w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 hover:bg-red-500/10 text-red-400 hover:text-red-300"
-          >
-            <LogOut className="w-5 h-5" />
-            <span className={`${isExpanded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 font-medium`}>
-              Sign Out
-            </span>
-          </button>
+        </div>
+
+        {/* History & Projects */}
+        <div>
+          {!collapsed && (
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+              Workspace
+            </h3>
+          )}
+          <div className="space-y-1">
+            {historyRoutes.map((route) => (
+              <button
+                key={route.path}
+                onClick={() => navigate(route.path)}
+                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:scale-105 group ${
+                  location.pathname === route.path
+                    ? 'bg-gradient-to-r from-white/10 to-white/5 border border-white/10 shadow-lg' 
+                    : 'hover:bg-white/5'
+                }`}
+                title={collapsed ? route.name : undefined}
+              >
+                <route.icon 
+                  className={`w-5 h-5 transition-colors ${
+                    location.pathname === route.path 
+                      ? `${route.color} animate-glow` 
+                      : 'text-muted-foreground group-hover:text-white'
+                  }`} 
+                />
+                {!collapsed && (
+                  <span className={`font-medium transition-colors ${
+                    location.pathname === route.path 
+                      ? 'text-white' 
+                      : 'text-muted-foreground group-hover:text-white'
+                  }`}>
+                    {route.name}
+                  </span>
+                )}
+                {!collapsed && location.pathname === route.path && (
+                  <div className="ml-auto w-2 h-2 bg-neon-green rounded-full animate-pulse"></div>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      {/* Status Indicator */}
+      {!collapsed && (
+        <div className="p-4 border-t border-white/10">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-neon-green/10 to-neon-blue/10 border border-neon-green/20">
+            <div className="w-2 h-2 bg-neon-green rounded-full animate-pulse"></div>
+            <div className="flex-1">
+              <div className="text-sm font-medium text-neon-green">System Online</div>
+              <div className="text-xs text-muted-foreground">All modules operational</div>
+            </div>
+          </div>
         </div>
       )}
     </div>
